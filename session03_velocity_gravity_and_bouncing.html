@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Motion: velocity, gravity, and bouncing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* Lecture Light: built for a projector in a room with the lights on.
+   Light ground, near-black text, few accents, no hairlines. */
+:root{
+  --paper:#F4F0E6;
+  --card:#FFFDF7;
+  --ink:#17181B;
+  --ink-soft:#4A4D53;
+  --rule:#D3CBB8;
+  --teal:#0E4D52;
+  --teal-deep:#0A3A3E;
+  --clay:#9C2B22;
+  --ochre:#8A5A00;
+  --ochre-line:#D99B12;
+  --ochre-tint:#FBF2DC;
+  --green:#1D5B39;
+  --green-tint:#E8F1E9;
+  --green-ink:#122B1C;
+  --code-bg:#EDE7D9;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:'DM Sans',system-ui,sans-serif; font-size:18px; font-weight:500;
+  line-height:1.65;
+}
+header.top{
+  background:var(--teal); color:#FFFDF7;
+  border-bottom:6px solid var(--ochre-line); padding:30px 22px 26px;
+}
+.wrap{max-width:900px; margin:0 auto}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.14em;
+  text-transform:uppercase; color:#F2D89B; margin:0 0 10px; font-weight:700;
+}
+h1{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:800;
+  font-size:clamp(29px,4.8vw,44px); line-height:1.1; margin:0 0 10px;
+}
+h2{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:25px; line-height:1.2; margin:0 0 12px; color:var(--teal-deep);
+}
+h3{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:20px; margin:0 0 8px; color:var(--teal-deep);
+}
+header.top h1,header.top h2{color:#FFFDF7}
+.sub{color:#EAE3D2; margin:0 0 16px; font-size:19px; font-weight:400}
+.dates{
+  display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;
+  font-family:'JetBrains Mono',monospace; font-size:13.5px;
+}
+.pill{
+  border:2px solid rgba(255,253,247,.4); border-radius:999px; padding:5px 13px;
+  background:rgba(255,253,247,.08);
+}
+.pill b{color:#F2D89B; font-weight:700}
+main{padding:28px 22px 12px}
+section{
+  background:var(--card); border:2px solid var(--rule); border-radius:6px;
+  padding:22px 24px; margin:0 0 20px;
+}
+section.opener{border-left:8px solid var(--green)}
+section.chunk{border-left:8px solid var(--ochre-line)}
+section.hinge{border-left:8px solid var(--clay)}
+section.brief{border-left:8px solid var(--teal)}
+.chunk-no{
+  font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--ochre); margin:0 0 8px; font-weight:700;
+}
+p{margin:0 0 14px}
+ul,ol{margin:0 0 14px; padding-left:24px}
+li{margin:0 0 8px}
+code,pre{
+  /* JetBrains Mono ligatures turn != into a slashed equals and <= into a single
+     glyph; students then type a character that does not exist. Keep every
+     operator as the keys that produce it. */
+  font-variant-ligatures:none; font-feature-settings:"liga" 0,"calt" 0,"dlig" 0;
+}
+code{
+  font-family:'JetBrains Mono',monospace; font-size:.9em; font-weight:700;
+  background:var(--code-bg); color:#1E2A2B;
+  padding:2px 6px; border-radius:3px;
+}
+pre{
+  font-family:'JetBrains Mono',monospace; font-size:15.5px; line-height:1.6;
+  background:var(--code-bg); color:var(--ink); border:2px solid var(--rule);
+  border-left:6px solid #B9AF96; border-radius:4px;
+  padding:16px 18px; overflow-x:auto; margin:0 0 16px; font-weight:500;
+}
+/* Code colours by role, from VS Code's Light+ theme. Four are darkened within the same
+   hue so every one clears 4.5:1 on the code background. Colour only, never bold or
+   italic, so every character keeps its width. */
+.tk-ctl{color:#9A00C2}  /* control words: if elif else for while return import */
+.tk-kw{color:#0000FF}   /* def, class, and, or, not, True, False, None, f-string parts */
+.tk-str{color:#A31515}  /* strings */
+.tk-num{color:#06704A}  /* numbers */
+.tk-com{color:#3B6E2A}  /* comments */
+.tk-fn{color:#795E26}   /* functions */
+.tk-cls{color:#1D6A80}  /* classes, types, modules */
+.tk-var{color:#001080}  /* variables */
+pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
+pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
+pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
+pre.anatomy .nm{background:#E3EDEE; border-bottom:3px solid var(--teal); padding:1px 2px}
+pre.anatomy .arg{background:#F7E4E1; border-bottom:3px solid var(--clay); padding:1px 2px}
+pre.anatomy .lbl{color:var(--ink-soft); font-weight:700}
+pre.anatomy .lbl-n{color:var(--teal)}
+pre.anatomy .lbl-a{color:var(--clay)}
+.legend i.n{background:#E3EDEE; border-bottom:3px solid var(--teal)}
+.legend i.a{background:#F7E4E1; border-bottom:3px solid var(--clay)}
+pre.anatomy .lbl-c{color:var(--ochre)}
+pre.anatomy .lbl-b{color:var(--green)}
+.legend{display:flex; flex-wrap:wrap; gap:10px 22px; font-size:16px; margin:0 0 16px}
+.legend span{display:inline-flex; align-items:center; gap:8px; margin-right:18px}
+.legend i{display:inline-block; width:22px; height:16px; border-radius:2px; margin-right:8px}
+.legend i.c{background:#FBF2DC; border-bottom:3px solid var(--ochre-line)}
+.legend i.b{background:#E8F1E9; border-left:3px solid var(--green)}
+pre.out{
+  background:var(--green-tint); border-color:#A9C6B2;
+  border-left:6px solid var(--green); color:var(--green-ink);
+}
+.outlabel{
+  font-family:'JetBrains Mono',monospace; font-size:12.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--green); margin:0 0 7px; font-weight:700;
+}
+.predict{
+  border:2px dashed var(--ochre); border-radius:5px;
+  padding:16px 18px; margin:0 0 16px; background:var(--ochre-tint);
+}
+.predict p{margin:0 0 12px}
+.predict .q{font-weight:700}
+button.rev{
+  font-family:'DM Sans',sans-serif; font-size:16px; font-weight:700;
+  background:var(--teal); color:#FFFDF7; border:0; border-radius:4px;
+  padding:10px 18px; cursor:pointer;
+}
+button.rev:hover{background:var(--teal-deep)}
+button.rev.hint{background:var(--card); color:var(--ochre); border:2px solid var(--ochre-line); margin:0 10px 10px 0}
+button.rev.hint:hover{background:var(--ochre-tint)}
+.hints .ans{margin:0 0 12px; padding-top:10px; border-top:2px solid var(--ochre-line)}
+.ans{display:none; margin-top:16px; padding-top:16px; border-top:2px solid var(--rule)}
+.ans.open{display:block}
+table{border-collapse:collapse; width:100%; margin:0 0 16px; font-size:16.5px}
+th,td{border:2px solid var(--rule); padding:9px 11px; text-align:left; vertical-align:top}
+th{background:#EFE9DA; font-weight:700; font-size:15px; color:var(--teal-deep)}
+td.fill{background:#FBF9F3; min-width:100px}
+.exits{display:grid; gap:14px; grid-template-columns:1fr}
+@media(min-width:760px){.exits{grid-template-columns:repeat(3,1fr)}}
+.exit{border:2px solid var(--rule); border-radius:5px; padding:16px}
+.exit .tag{
+  font-family:'JetBrains Mono',monospace; font-size:12.5px; letter-spacing:.1em;
+  text-transform:uppercase; margin:0 0 8px; font-weight:700;
+}
+.exit.floor{border-top:6px solid var(--green)}
+.exit.floor .tag{color:var(--green)}
+.exit.middle{border-top:6px solid var(--ochre-line)}
+.exit.middle .tag{color:var(--ochre)}
+.exit.stretch{border-top:6px solid var(--clay)}
+.exit.stretch .tag{color:var(--clay)}
+details.teacher{
+  background:var(--card); border:2px solid var(--rule);
+  border-left:8px solid var(--clay); border-radius:6px;
+  padding:18px 22px; margin:0 0 20px;
+}
+details.teacher summary{
+  cursor:pointer; font-family:'Bricolage Grotesque','DM Sans',sans-serif;
+  font-weight:700; font-size:21px; color:var(--clay);
+}
+details.teacher[open] summary{margin-bottom:14px}
+.note{
+  font-size:16.5px; color:var(--ink-soft); border-left:4px solid var(--rule);
+  padding-left:14px; margin:0 0 14px;
+}
+.pager{
+  max-width:900px; margin:0 auto; padding:8px 22px 34px;
+  display:flex; justify-content:space-between; gap:12px;
+  font-family:'JetBrains Mono',monospace; font-size:14px;
+}
+.pager a{
+  color:var(--teal); text-decoration:none; font-weight:700;
+  border:2px solid var(--rule); background:var(--card);
+  border-radius:4px; padding:10px 14px;
+}
+.pager a:hover{background:#EFE9DA}
+footer{
+  background:#EAE4D5; border-top:4px solid var(--teal); padding:22px 22px 36px;
+  font-size:15px; color:var(--ink-soft);
+}
+footer a{color:var(--teal); font-weight:700}
+a{color:var(--teal)}
+.toolbar{display:flex; gap:12px; flex-wrap:wrap; margin:0 0 20px}
+a.btn{
+  display:inline-block; font-family:'DM Sans',sans-serif; font-size:17px; font-weight:700;
+  background:var(--teal); color:#FFFDF7; text-decoration:none; border-radius:4px;
+  padding:12px 20px; border:2px solid var(--teal);
+}
+a.btn:hover{background:var(--teal-deep)}
+a.btn.quiet{background:var(--card); color:var(--teal)}
+a.btn.quiet:hover{background:#EFE9DA}
+.grid2{display:grid; gap:16px; grid-template-columns:1fr}
+@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.card{border:2px solid var(--rule); border-radius:5px; padding:16px; background:#FFFDF7}
+.card h3{margin-bottom:8px}
+.sessionlist{list-style:none; padding:0; margin:0}
+.sessionlist li{
+  border:2px solid var(--rule); border-left:8px solid var(--teal);
+  border-radius:5px; margin:0 0 12px; padding:14px 16px;
+  display:flex; gap:16px; align-items:flex-start; background:#FFFDF7;
+}
+.sessionlist .n{
+  font-family:'JetBrains Mono',monospace; font-size:24px; font-weight:700;
+  color:var(--teal); min-width:38px;
+}
+.sessionlist a{font-weight:700; text-decoration:none; font-size:19px}
+.sessionlist .meta{
+  font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--ink-soft);
+  display:block; margin-top:4px;
+}
+.bonus{border-left-color:var(--clay)}
+.bonus .n{color:var(--clay)}
+.flag{
+  background:#F7E4E1; border:2px solid var(--clay); border-left:8px solid var(--clay);
+  border-radius:5px; padding:14px 16px; margin:0 0 18px; font-size:16.5px;
+  color:#3A1512;
+}
+.stamp{
+  border:3px dashed #BFB49A; border-radius:5px; padding:14px;
+  font-size:15px; min-height:100px; background:#FFFDF7;
+}
+.stampgrid{display:grid; gap:12px; grid-template-columns:1fr 1fr}
+@media(min-width:820px){.stampgrid{grid-template-columns:repeat(3,1fr)}}
+.stamp .no{
+  font-family:'JetBrains Mono',monospace; color:var(--ochre); font-size:12.5px;
+  letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:6px;
+  font-weight:700;
+}
+@media print{
+  body{background:#fff; font-size:11pt}
+  header.top{background:#fff; color:#111; border-bottom:3px solid #111}
+  header.top h1,header.top .sub,header.top .eyebrow,.pill b{color:#111}
+  .pill{border-color:#666}
+  footer,.pager,details.teacher{background:#fff}
+  section,.stamp,.card{background:#fff; break-inside:avoid}
+  .noprint,.toolbar{display:none}
+  a{color:#111}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+<p class="eyebrow">Python in 3D &middot; VPython &middot; Session 3 of 10</p>
+<h1>Motion: velocity, gravity, and bouncing</h1>
+<p class="sub">A ball that moves because it has a velocity, falls because gravity changes that velocity, and bounces because one gate flips a sign</p>
+<div class="dates">
+<span class="pill"><b>Length</b> 90 minutes</span>
+<span class="pill"><b>Ages</b> 10 to 11</span>
+<span class="pill"><b>New</b> 8 items</span>
+</div></div></header>
+<main><div class="wrap">
+<section><h2>What is new today</h2><p>velocity as a vector, dt, gravity changes velocity, the floor gate, flipping a sign to bounce, losing speed on each bounce, keys that push instead of move, round(x, 2).</p>
+<p><b>Deliberately re-used:</b> Session 1: the loop with rate(30), keysdown, and pos.y on its own. Session 2: vector arithmetic.</p>
+<p class="note">The whole session is two lines, <code>vel = vel + gravity * dt</code> and <code>ball.pos = ball.pos + vel * dt</code>, and a gate. Keep saying which line changes the velocity and which line changes the position. Students who mix them up write gravity into pos and get a ball that falls at one speed.</p></section>
+<section class="opener"><p class="chunk-no">Opener &middot; 10 minutes</p><h2>Retrieval: the loop, the middle, and vectors</h2>
+<p>Paper first.</p>
+<div class="predict"><p class="q">Question: What does <code>rate(30)</code> do, and what goes wrong without it?</p><button class="rev" data-target="s3-op0" aria-controls="s3-op0" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s3-op0"><p>It pauses the loop so that it runs 30 passes a second and no more. Without it the loop runs as fast as the computer can and the tab has no time to draw.</p></div></div>
+<div class="predict"><p class="q">Question: The loop adds 0.1 to <code>ball.pos.x</code> on every pass. How far does the ball move in one second, and what is the one number to change to make it move twice as fast?</p><button class="rev" data-target="s3-op1" aria-controls="s3-op1" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s3-op1"><p>3 units: 30 passes, 0.1 each. Change the 0.1 to 0.2. Today that number gets a name, velocity, and its own vector.</p></div></div>
+<div class="predict"><p class="q">Question: What is <code>vec(2, 0, 0) + vec(0, 3, 0)</code>? And why does a cone's pos plus its axis give the point of the cone?</p><button class="rev" data-target="s3-op2" aria-controls="s3-op2" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s3-op2"><p><code>&lt;2, 3, 0&gt;</code>: each number adds to its partner. The cone's pos is its flat end and its axis is the vector from there to the point, so adding them gives where the point is.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 1 of 6</p>
+<h2>Velocity is a vector, and dt is a slice of a second</h2>
+<p><b>Velocity</b> is how far something moves in one second, and in which direction. <code>vel = vec(2, 0, 0)</code> means 2 units to the right every second.</p><p>The loop runs 30 passes a second, so each pass is one thirtieth of a second. That slice is called <code>dt</code>. On each pass the ball moves <code>vel * dt</code>: the velocity, scaled down to one pass. After 30 passes the ball has moved exactly <code>vel</code>.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">ball</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(-<span class="tk-num">5</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.5</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">yellow</span>)
+<span class="tk-var">vel</span> = <span class="tk-fn">vec</span>(<span class="tk-num">2</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>)
+<span class="tk-var">dt</span> = <span class="tk-num">1</span> / <span class="tk-num">30</span>
+<span class="tk-var">passes</span> = <span class="tk-num">0</span>
+
+<span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
+    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+    <span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span> + <span class="tk-var">vel</span> * <span class="tk-var">dt</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">passes</span> == <span class="tk-num">30</span>:
+        <span class="tk-fn">print</span>(<span class="tk-str">"after 1 second the ball is at"</span>, <span class="tk-var">ball</span>.<span class="tk-var">pos</span>)
+    <span class="tk-ctl">if</span> <span class="tk-var">passes</span> == <span class="tk-num">60</span>:
+        <span class="tk-fn">print</span>(<span class="tk-str">"after 2 seconds the ball is at"</span>, <span class="tk-var">ball</span>.<span class="tk-var">pos</span>)</pre>
+<div class="predict"><p class="q">Predict: The ball starts at x = -5 and its velocity is 2 to the right. Where is it after one second, and after two?</p><button class="rev" data-target="s3-c1" aria-controls="s3-c1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s3-c1"><p class="outlabel">What it actually prints (run without a browser, quit after 60 passes of the loop)</p><pre class="out">after 1 second the ball is at &lt;-3, 0, 0&gt;
+after 2 seconds the ball is at &lt;-1, 0, 0&gt;</pre><p>After one second it is at <code>&lt;-3, 0, 0&gt;</code>, and after two at <code>&lt;-1, 0, 0&gt;</code>. Two units per second, so two seconds moves it four.</p><p>Session 1 wrote <code>ball.pos.x + 0.1</code>. This does the same thing with the speed written as a whole number per second, so you can read the speed straight off the program.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 2 of 6</p>
+<h2>Gravity changes the velocity, and the velocity changes the position</h2>
+<p>Gravity is not a push on the position. It is a change to the velocity: on every pass, the downward speed grows by a little. Then the velocity, which is now bigger, moves the ball. Two lines, in that order.</p><p><code>gravity = vec(0, -9.8, 0)</code> is the real value: a falling thing gains 9.8 units of speed every second. After 30 passes the ball falls at 9.8 per second.</p><p><code>round(x, 2)</code> keeps two decimal places, so the printed numbers are readable.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">ball</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">5</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.5</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">yellow</span>)
+<span class="tk-var">vel</span> = <span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>)
+<span class="tk-var">gravity</span> = <span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-num">9.8</span>, <span class="tk-num">0</span>)
+<span class="tk-var">dt</span> = <span class="tk-num">1</span> / <span class="tk-num">30</span>
+<span class="tk-var">passes</span> = <span class="tk-num">0</span>
+
+<span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
+    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+
+    <span class="tk-var">vel</span> = <span class="tk-var">vel</span> + <span class="tk-var">gravity</span> * <span class="tk-var">dt</span>
+    <span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span> + <span class="tk-var">vel</span> * <span class="tk-var">dt</span>
+
+    <span class="tk-ctl">if</span> <span class="tk-var">passes</span> <span class="tk-kw">in</span> [<span class="tk-num">10</span>, <span class="tk-num">20</span>, <span class="tk-num">30</span>]:
+        <span class="tk-fn">print</span>(<span class="tk-str">"pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  falling at"</span>, <span class="tk-fn">round</span>(-<span class="tk-var">vel</span>.<span class="tk-var">y</span>, <span class="tk-num">2</span>), <span class="tk-str">"per second   height"</span>, <span class="tk-fn">round</span>(<span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span>, <span class="tk-num">2</span>))</pre>
+<div class="predict"><p class="q">Predict: Gravity adds the same amount to the speed on every pass. How fast is the ball falling after 30 passes? And does the height drop by more between passes 20 and 30 than between passes 10 and 20?</p><button class="rev" data-target="s3-c2" aria-controls="s3-c2" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s3-c2"><p class="outlabel">What it actually prints (run without a browser, quit after 30 passes of the loop)</p><pre class="out">pass 10   falling at 3.27 per second   height 4.4
+pass 20   falling at 6.53 per second   height 2.71
+pass 30   falling at 9.8 per second   height -0.06</pre><p>After 30 passes it falls at 9.8 per second, the gravity number, because one second of passes has gone by. It falls at 3.27 after 10 passes and 6.53 after 20, so the speed grows by the same 3.27 each ten passes.</p><p>The height drops by 1.69 between passes 10 and 20, and by 2.77 between 20 and 30. More, because the ball is going faster by then. The speed changes evenly; the height does not.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 3 of 6</p>
+<h2>The floor gate flips the sign</h2>
+<p>A bounce is one gate. When the ball is below the floor, put it back on the floor and turn its downward velocity into an upward one. <code>vel.y = -vel.y</code> does that: a speed of -9.47 becomes +9.47, the same size in the opposite direction.</p><p>The gate compares <code>ball.pos.y</code> with <code>ball.radius</code>, not with 0, because pos is the middle of the ball and the bottom of the ball touches the floor when the middle is one radius up.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">ground</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-num">0.1</span>, <span class="tk-num">0</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">10</span>, <span class="tk-num">0.2</span>, <span class="tk-num">10</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">green</span>)
+<span class="tk-var">ball</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">5</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.5</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">yellow</span>)
+<span class="tk-var">vel</span> = <span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>)
+<span class="tk-var">gravity</span> = <span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-num">9.8</span>, <span class="tk-num">0</span>)
+<span class="tk-var">dt</span> = <span class="tk-num">1</span> / <span class="tk-num">30</span>
+<span class="tk-var">passes</span> = <span class="tk-num">0</span>
+
+<span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
+    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+
+    <span class="tk-var">vel</span> = <span class="tk-var">vel</span> + <span class="tk-var">gravity</span> * <span class="tk-var">dt</span>
+    <span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span> + <span class="tk-var">vel</span> * <span class="tk-var">dt</span>
+
+    <span class="tk-ctl">if</span> <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> &lt; <span class="tk-var">ball</span>.<span class="tk-var">radius</span>:
+        <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> = <span class="tk-var">ball</span>.<span class="tk-var">radius</span>
+        <span class="tk-var">vel</span>.<span class="tk-var">y</span> = -<span class="tk-var">vel</span>.<span class="tk-var">y</span>
+        <span class="tk-fn">print</span>(<span class="tk-str">"bounce on pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  going up at"</span>, <span class="tk-fn">round</span>(<span class="tk-var">vel</span>.<span class="tk-var">y</span>, <span class="tk-num">2</span>), <span class="tk-str">"per second"</span>)</pre>
+<div class="predict"><p class="q">Predict: The ball reaches the floor at about 9.5 per second. What is <code>vel.y</code> right after the first bounce? And on the second bounce, is the ball going faster, slower, or the same?</p><button class="rev" data-target="s3-c3" aria-controls="s3-c3" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s3-c3"><p class="outlabel">What it actually prints (run without a browser, quit after 100 passes of the loop)</p><pre class="out">bounce on pass 29   going up at 9.47 per second
+bounce on pass 86   going up at 9.15 per second</pre><p>Right after the first bounce <code>vel.y</code> is 9.47: the same number with the sign flipped, so the ball goes up as fast as it came down. The second bounce, on pass 86, is at 9.15, a little slower. No line in the program takes speed away on purpose. The small loss comes from the line <code>ball.pos.y = ball.radius</code>: the ball had gone a little under the floor, that bit of the move is thrown away when the ball is put back on the floor, and the speed that bit would have cost is lost with it.</p><p>That line still has to be there. Without it the ball can still be under the floor on the next pass, the gate opens again, the sign flips back, and the ball is stuck in the floor.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 4 of 6</p>
+<h2>Walls are the same gate, on x</h2>
+<p>A wall on the right is at x = 5. The ball's edge reaches it when its middle is at <code>5 - ball.radius</code>. Flip <code>vel.x</code> there, and flip it again at the left wall. The pattern is the floor gate with x in place of y.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">ground</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-num">0.1</span>, <span class="tk-num">0</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">10</span>, <span class="tk-num">0.2</span>, <span class="tk-num">10</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">green</span>)
+<span class="tk-var">wall_left</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(-<span class="tk-num">5</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0.2</span>, <span class="tk-num">2</span>, <span class="tk-num">10</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-fn">gray</span>(<span class="tk-num">0.7</span>))
+<span class="tk-var">wall_right</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">5</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0.2</span>, <span class="tk-num">2</span>, <span class="tk-num">10</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-fn">gray</span>(<span class="tk-num">0.7</span>))
+<span class="tk-var">ball</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.5</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">yellow</span>)
+<span class="tk-var">vel</span> = <span class="tk-fn">vec</span>(<span class="tk-num">6</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>)
+<span class="tk-var">dt</span> = <span class="tk-num">1</span> / <span class="tk-num">30</span>
+<span class="tk-var">passes</span> = <span class="tk-num">0</span>
+
+<span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
+    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+    <span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span> + <span class="tk-var">vel</span> * <span class="tk-var">dt</span>
+
+    <span class="tk-ctl">if</span> <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> &gt; <span class="tk-num">5</span> - <span class="tk-var">ball</span>.<span class="tk-var">radius</span>:
+        <span class="tk-var">vel</span>.<span class="tk-var">x</span> = -<span class="tk-var">vel</span>.<span class="tk-var">x</span>
+        <span class="tk-fn">print</span>(<span class="tk-str">"hit the right wall on pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  vel is now"</span>, <span class="tk-var">vel</span>)
+    <span class="tk-ctl">if</span> <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> &lt; -<span class="tk-num">5</span> + <span class="tk-var">ball</span>.<span class="tk-var">radius</span>:
+        <span class="tk-var">vel</span>.<span class="tk-var">x</span> = -<span class="tk-var">vel</span>.<span class="tk-var">x</span>
+        <span class="tk-fn">print</span>(<span class="tk-str">"hit the left wall on pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  vel is now"</span>, <span class="tk-var">vel</span>)</pre>
+<div class="predict"><p class="q">Predict: The ball starts in the middle, moving right at 6 per second. The wall is 5 away, so the ball's edge touches it 4.5 from the start. Which wall does it hit first, and on about which pass?</p><button class="rev" data-target="s3-c4" aria-controls="s3-c4" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s3-c4"><p class="outlabel">What it actually prints (run without a browser, quit after 100 passes of the loop)</p><pre class="out">hit the right wall on pass 23   vel is now &lt;-6, 0, 0&gt;
+hit the left wall on pass 69   vel is now &lt;6, 0, 0&gt;</pre><p>The right wall, on pass 23. At 6 per second, 4.5 units take three quarters of a second, which is 22.5 passes, so pass 23 is the first pass where the ball is past the line. The velocity becomes <code>&lt;-6, 0, 0&gt;</code>.</p><p>The left wall comes 46 passes later, on pass 69, because the ball has to cross the whole room, 9 units, at 6 per second.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 5 of 6</p>
+<h2>Losing a little speed on every bounce</h2>
+<p>A real ball does not bounce back to the same height. Multiply the flipped velocity by a number less than 1 and each bounce is a bit lower than the one before. <code>vel.y = -vel.y * 0.7</code> keeps 7 tenths of the speed.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">ground</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-num">0.1</span>, <span class="tk-num">0</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">10</span>, <span class="tk-num">0.2</span>, <span class="tk-num">10</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">green</span>)
+<span class="tk-var">ball</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">5</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.5</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">yellow</span>)
+<span class="tk-var">vel</span> = <span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>)
+<span class="tk-var">gravity</span> = <span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-num">9.8</span>, <span class="tk-num">0</span>)
+<span class="tk-var">dt</span> = <span class="tk-num">1</span> / <span class="tk-num">30</span>
+<span class="tk-var">passes</span> = <span class="tk-num">0</span>
+
+<span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
+    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+
+    <span class="tk-var">vel</span> = <span class="tk-var">vel</span> + <span class="tk-var">gravity</span> * <span class="tk-var">dt</span>
+    <span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span> + <span class="tk-var">vel</span> * <span class="tk-var">dt</span>
+
+    <span class="tk-ctl">if</span> <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> &lt; <span class="tk-var">ball</span>.<span class="tk-var">radius</span>:
+        <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> = <span class="tk-var">ball</span>.<span class="tk-var">radius</span>
+        <span class="tk-var">vel</span>.<span class="tk-var">y</span> = -<span class="tk-var">vel</span>.<span class="tk-var">y</span> * <span class="tk-num">0.7</span>
+        <span class="tk-fn">print</span>(<span class="tk-str">"bounce on pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  going up at"</span>, <span class="tk-fn">round</span>(<span class="tk-var">vel</span>.<span class="tk-var">y</span>, <span class="tk-num">2</span>))</pre>
+<div class="predict"><p class="q">Predict: The first bounce sends the ball up at about 6.6 per second instead of 9.5. Will the gap between bounces get longer or shorter each time? Will the ball ever stop bouncing?</p><button class="rev" data-target="s3-c5" aria-controls="s3-c5" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s3-c5"><p class="outlabel">What it actually prints (run without a browser, quit after 130 passes of the loop)</p><pre class="out">bounce on pass 29   going up at 6.63
+bounce on pass 69   going up at 4.5
+bounce on pass 96   going up at 3.02
+bounce on pass 114   going up at 2.0
+bounce on pass 126   going up at 1.34</pre><p>Shorter. A slower ball does not go as high, so it comes back sooner: the bounces are 40 passes apart, then 27, then 18, then 12. The speeds shrink each time: 6.63, 4.5, 3.02, 2.0, 1.34.</p><p>The bounces get smaller and closer together until, after about five seconds, they are too small to see and the ball looks like it is resting on the floor. The program is still bouncing it a tiny amount on every pass. Seven tenths of a small number is a smaller number, not zero.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 6 of 6</p>
+<h2>Keys that push</h2>
+<p>In session 1 the arrow keys changed the position. Here they change the velocity. Holding right adds <code>push</code> to <code>vel.x</code> on every pass, so the longer you hold, the faster the ball rolls. Letting go does not stop it, because nothing takes the velocity away.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">scene</span>.<span class="tk-var">caption</span> = <span class="tk-str">"Click the scene, then tap the right arrow."</span>
+<span class="tk-var">ground</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-num">0.1</span>, <span class="tk-num">0</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">10</span>, <span class="tk-num">0.2</span>, <span class="tk-num">10</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">green</span>)
+<span class="tk-var">ball</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.5</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">yellow</span>)
+<span class="tk-var">vel</span> = <span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>)
+<span class="tk-var">push</span> = <span class="tk-num">0.3</span>
+<span class="tk-var">dt</span> = <span class="tk-num">1</span> / <span class="tk-num">30</span>
+<span class="tk-var">passes</span> = <span class="tk-num">0</span>
+
+<span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
+    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+    <span class="tk-var">keys</span> = <span class="tk-fn">keysdown</span>()
+
+    <span class="tk-ctl">if</span> <span class="tk-str">"right"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
+        <span class="tk-var">vel</span>.<span class="tk-var">x</span> = <span class="tk-var">vel</span>.<span class="tk-var">x</span> + <span class="tk-var">push</span>
+    <span class="tk-ctl">if</span> <span class="tk-str">"left"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
+        <span class="tk-var">vel</span>.<span class="tk-var">x</span> = <span class="tk-var">vel</span>.<span class="tk-var">x</span> - <span class="tk-var">push</span>
+
+    <span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span> + <span class="tk-var">vel</span> * <span class="tk-var">dt</span>
+
+    <span class="tk-ctl">if</span> <span class="tk-var">passes</span> <span class="tk-kw">in</span> [<span class="tk-num">3</span>, <span class="tk-num">5</span>, <span class="tk-num">8</span>]:
+        <span class="tk-fn">print</span>(<span class="tk-str">"pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  vel.x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">vel</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>), <span class="tk-str">"  x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>))</pre>
+<div class="predict"><p class="q">Predict: The right arrow is held on passes 2, 3 and 4 and then let go. What is <code>vel.x</code> on pass 5, and on pass 8? Does the ball stop when the key is let go?</p><button class="rev" data-target="s3-c6" aria-controls="s3-c6" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s3-c6"><p class="outlabel">What it actually prints (run without a browser, quit after 8 passes of the loop)</p><pre class="out">pass 3   vel.x = 0.6   x = 0.03
+pass 5   vel.x = 0.9   x = 0.09
+pass 8   vel.x = 0.9   x = 0.18</pre><p class="note">Fed in by the build script: the right arrow key held on passes 2 to 4.</p><p>On pass 5 <code>vel.x</code> is 0.9: three passes of 0.3. On pass 8 it is still 0.9, because no gate opened after pass 4 and nothing subtracts from the velocity. The ball does not stop; x keeps growing, 0.09 at pass 5 and 0.18 at pass 8.</p><p>To make it slow down on its own, multiply <code>vel.x</code> by 0.98 on every pass. That is friction, and it is the stretch exit.</p></div></div>
+</section>
+<section class="hinge"><p class="chunk-no">Hinge question &middot; from today's chunks</p><h2>Before you build</h2>
+<div class="predict"><p class="q">Question: Program A adds <code>vec(0.1, 0, 0)</code> to the ball's pos on every pass. Program B adds <code>vel * dt</code> with <code>vel = vec(3, 0, 0)</code> and <code>dt = 1 / 30</code>. Both run at <code>rate(30)</code>. Which ball is faster? Now both programs change to <code>rate(60)</code>, and B changes dt to <code>1 / 60</code>. Which ball changes speed?</p><button class="rev" data-target="s3-hinge" aria-controls="s3-hinge" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s3-hinge"><p>At rate(30) they are the same speed: A moves 0.1 thirty times a second, which is 3 per second, and B moves 3 per second by definition.</p><p>At rate(60), A doubles to 6 per second, because it still moves 0.1 on each of 60 passes. B stays at 3 per second, because each pass now moves half as much. Writing motion as <code>vel * dt</code> is what keeps the speed you wrote, whatever the rate.</p></div></div>
+</section>
+<section class="brief"><p class="chunk-no">Build &middot; 20 minutes</p><h2>Build: the bouncy room</h2>
+<p>A ball in a room 10 by 10 with four walls 2 tall. Gravity pulls it down and the floor bounces it with 8 tenths of its speed. The arrow keys push it along x and z. Pressing r puts the ball back at the top with no velocity. The camera is tilted so you can see the floor, and the ball cannot leave the room.</p>
+<ol>
+<li>Start from chunk 5: the ground, gravity, and the floor gate with 0.8 in place of 0.7.</li>
+<li>Add the two walls and the two x gates from chunk 4. Then add two walls at z = 5 and z = -5 and the two z gates from the card below.</li>
+<li>Add the key gates from chunk 6 for left and right on <code>vel.x</code>, and for up and down on <code>vel.z</code>. Remember that up is negative z.</li>
+<li>Add a gate inside the loop: if <code>"r"</code> is in the held keys, put the ball at <code>vec(0, 5, 0)</code> and set <code>vel</code> to <code>vec(0, 0, 0)</code>.</li>
+<li>Put <code>scene.forward = vec(0, -0.5, -1)</code> above the loop so the camera looks down into the room, and write a caption that names the keys.</li>
+</ol>
+<h3>The two gates for the z walls</h3>
+<p>The far wall is at z = -5 and the near wall at z = 5. They are the x gates with z in place of x and the signs the other way round for the far wall.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">ground</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-num">0.1</span>, <span class="tk-num">0</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">10</span>, <span class="tk-num">0.2</span>, <span class="tk-num">10</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">green</span>)
+<span class="tk-var">wall_far</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, -<span class="tk-num">5</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">10</span>, <span class="tk-num">2</span>, <span class="tk-num">0.2</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-fn">gray</span>(<span class="tk-num">0.7</span>))
+<span class="tk-var">wall_near</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">5</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">10</span>, <span class="tk-num">2</span>, <span class="tk-num">0.2</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-fn">gray</span>(<span class="tk-num">0.7</span>), <span class="tk-var">opacity</span>=<span class="tk-num">0.3</span>)
+<span class="tk-var">ball</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.5</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">yellow</span>)
+<span class="tk-var">vel</span> = <span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, -<span class="tk-num">6</span>)
+<span class="tk-var">dt</span> = <span class="tk-num">1</span> / <span class="tk-num">30</span>
+<span class="tk-var">passes</span> = <span class="tk-num">0</span>
+
+<span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
+    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+    <span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span> + <span class="tk-var">vel</span> * <span class="tk-var">dt</span>
+
+    <span class="tk-ctl">if</span> <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span> &lt; -<span class="tk-num">5</span> + <span class="tk-var">ball</span>.<span class="tk-var">radius</span>:
+        <span class="tk-var">vel</span>.<span class="tk-var">z</span> = -<span class="tk-var">vel</span>.<span class="tk-var">z</span>
+        <span class="tk-fn">print</span>(<span class="tk-str">"hit the far wall on pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  vel is now"</span>, <span class="tk-var">vel</span>)
+    <span class="tk-ctl">if</span> <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span> &gt; <span class="tk-num">5</span> - <span class="tk-var">ball</span>.<span class="tk-var">radius</span>:
+        <span class="tk-var">vel</span>.<span class="tk-var">z</span> = -<span class="tk-var">vel</span>.<span class="tk-var">z</span>
+        <span class="tk-fn">print</span>(<span class="tk-str">"hit the near wall on pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  vel is now"</span>, <span class="tk-var">vel</span>)</pre>
+<div class="predict"><p class="q">Predict: The ball starts moving away from you at 6 per second. Which wall does it hit first, and what is <code>vel</code> after that hit?</p><button class="rev" data-target="s3-card1" aria-controls="s3-card1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s3-card1"><p class="outlabel">What it actually prints (run without a browser, quit after 100 passes of the loop)</p><pre class="out">hit the far wall on pass 23   vel is now &lt;0, 0, 6&gt;
+hit the near wall on pass 69   vel is now &lt;0, 0, -6&gt;</pre><p>The far wall, on pass 23, because away from you is negative z and the far wall is at z = -5. After the hit <code>vel</code> is <code>&lt;0, 0, 6&gt;</code>, so the ball comes back toward you. The near wall is see-through, opacity 0.3, so the ball stays visible when it is close to the camera.</p></div></div>
+<h3>Expected and got</h3><p>Fill in the left column before you run. Fill in the right column after.</p>
+<table><tr><th>Expected</th><th>Got</th></tr>
+<tr><td>The ball never sinks below the floor, even after many bounces</td><td class="fill"></td></tr>
+<tr><td>Each bounce is lower than the one before</td><td class="fill"></td></tr>
+<tr><td>The ball cannot leave the room through any of the four walls</td><td class="fill"></td></tr>
+<tr><td>Pushing while the ball is in the air changes where it lands</td><td class="fill"></td></tr>
+<tr><td>r puts the ball back at the top, not moving</td><td class="fill"></td></tr>
+</table></section>
+<section><h2>Where you can stop</h2><p>All three are real places to stop. Nobody is behind for finishing at the floor.</p><div class="exits">
+<div class="exit floor"><p class="tag">Floor</p><p>A ball that falls with gravity and bounces on the floor, printing its speed at each bounce.</p></div>
+<div class="exit middle"><p class="tag">Middle</p><p>The bouncy room: four walls, bounces that lose speed, arrow keys that push, r to reset.</p></div>
+<div class="exit stretch"><p class="tag">Stretch</p><p>Friction: multiply <code>vel.x</code> and <code>vel.z</code> by 0.98 on every pass so the ball rolls to a stop. Then a second ball with its own <code>vel2</code>, and a gate that swaps the two velocities when <code>mag(ball.pos - ball2.pos)</code> is less than the two radii added together.</p></div>
+</div></section>
+<section><h2>Ledger card</h2><p>Stamp 3: <code>vel</code> is a vector of units per second, <code>dt = 1 / 30</code>, <code>pos = pos + vel * dt</code> moves, <code>vel = vel + gravity * dt</code> changes the speed, the floor gate compares with the radius and flips the sign, <code>* 0.7</code> loses speed, keys that push add to vel, <code>round(x, 2)</code>.</p><p><a href="vpython_ledger_card.html?v=1">Open the course ledger card</a></p></section>
+<details class="teacher"><summary>Teacher panel</summary>
+<h3>Timing, 90 minutes</h3><ul>
+<li>0:00 retrieval opener, 10 min</li>
+<li>0:10 chunk 1, velocity and dt, 10 min</li>
+<li>0:20 chunk 2, gravity, 12 min (the order of the two lines is the teaching point)</li>
+<li>0:32 chunk 3, the floor gate, 13 min</li>
+<li>0:45 chunks 4 and 5, walls and losing speed, 15 min</li>
+<li>1:00 chunk 6, pushing, 8 min</li>
+<li>1:08 hinge question, 7 min</li>
+<li>1:15 build brief, 10 min</li>
+<li>1:25 exits, ledger stamp, 5 min</li>
+</ul><p class="note">Pacing: most rooms will not reach the end of the build brief. The exits exist so that stopping there is a finish, not a failure.</p>
+<h3>What you will see, and what to do</h3><table><tr><th>In the room</th><th>Redirect</th></tr>
+<tr><td>Writes <code>ball.pos = ball.pos + gravity * dt</code> and gets a ball that falls at one steady speed.</td><td>Gravity changes the velocity, not the position. Print <code>vel.y</code> on each pass: in their version it never changes.</td></tr>
+<tr><td>Compares with 0 in the floor gate and half the ball goes under the floor before it bounces.</td><td>pos is the middle. The bottom of the ball is one radius below pos, which is why the gate uses <code>ball.radius</code>.</td></tr>
+<tr><td>Leaves out <code>ball.pos.y = ball.radius</code> and the ball jitters on the floor or sinks through.</td><td>The gate can open twice in a row if the ball is still under the floor on the next pass, and the second flip sends it down again. Putting the ball on the floor makes the gate close.</td></tr>
+<tr><td>Flips <code>vel</code> instead of <code>vel.y</code> at the floor.</td><td><code>-vel</code> flips all three numbers, so a ball rolling right starts rolling left at every bounce. Only the number for the direction of the wall flips.</td></tr>
+<tr><td>Expects the ball to stop when the arrow key is let go.</td><td>Nothing subtracts from the velocity, so it keeps the speed it has. That is what velocity means. Friction, <code>vel.x * 0.98</code>, is the stretch.</td></tr>
+</table>
+<h3>Mapped to</h3>
+<table><tr><th>Code</th><th>Jurisdiction</th><th>Framework</th><th>Grade</th><th>Statement</th></tr><tr><td><code>NY-6.EE.9</code></td><td>New York</td><td>NY Next Generation Mathematics Learning Standards</td><td>6</td><td>Use variables to represent two quantities in a real-world problem that change in relationship to one another. Given a verbal context and an equation, identify the dependent variable, in terms of the other quantity, thought of as the independent variable. Analyze the relationship between the dependent and independent variables using graphs and tables, and relate these to the equation.</td></tr><tr><td><code>NY-6.NS.5</code></td><td>New York</td><td>NY Next Generation Mathematics Learning Standards</td><td>6</td><td>Understand that positive and negative numbers are used together to describe quantities having opposite directions or values. Use positive and negative numbers to represent quantities in real-world contexts, explaining the meaning of 0 in each situation.</td></tr><tr><td><code>MP8</code></td><td>Multi-State</td><td>Standards for Mathematical Practice</td><td>K-12</td><td>Look for and express regularity in repeated reasoning.</td></tr></table>
+<h3>If time runs out</h3><p>Chunk 5 can be folded into chunk 3 by changing the 0.7 live on the projector. Keep the hinge's seven minutes; it is the one idea that separates this session from session 1. If the room is behind, the build is chunks 3 and 4 combined and the z walls become the stretch.</p>
+</details>
+<section><h2>Running this in VS Code</h2><div class="grid2"><div class="card"><h3>Once, before the first run</h3><p>Open the terminal in VS Code and install the library: <code>pip install vpython</code>. Check it worked with <code>python -c "import vpython"</code>. It should print nothing at all and give you the prompt back. A traceback here is an install problem, not a problem with your program.</p></div><div class="card"><h3>Every run after that</h3><p>Save your file as <code>YourName_vpython03.py</code>: your first name, an underscore, then <code>vpython03</code>. Run it from the terminal. The 3D scene opens in a new browser tab, sometimes behind VS Code, so look for it before deciding that nothing happened. Click inside the scene before pressing any key. To end the program, close the tab or press Ctrl+C in the terminal. The program is written to run until you do. Run the file again and you get a fresh tab.</p></div></div><p class="note">VPython draws solid shapes that you can turn and zoom. Everything you print still goes to the terminal, and everything you draw goes to the browser tab. Words in the terminal, pictures in the tab.</p></section>
+</div></main>
+<nav class="pager"><a href="session02_shapes_and_a_model_from_a_function.html?v=1">&larr; Shapes, and a model built by a function</a><a href="vpython_course_hub.html?v=1">Course home</a><a href="session04_turning_things_and_the_camera.html?v=1">Turning things, and turning the camera &rarr;</a></nav>
+<footer><div class="wrap"><p>Python in 3D: ten sessions of VPython for ages 10 to 11, in the Lecture Light style, light ground for a projector, predict before reveal, three places to stop in every session.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-10-05. <a href="standards_map.html?v=1">Full standards map</a> &middot; <a href="vpython_ledger_card.html?v=1">Ledger card</a></p></div></footer>
+<script>
+document.addEventListener('click', function(e){
+  var b = e.target.closest('button.rev');
+  if(!b) return;
+  var t = document.getElementById(b.getAttribute('data-target'));
+  if(!t) return;
+  var open = t.classList.toggle('open');
+  b.setAttribute('aria-expanded', open ? 'true' : 'false');
+  b.textContent = open ? b.getAttribute('data-hide') : b.getAttribute('data-show');
+});
+</script>
+</body>
+</html>

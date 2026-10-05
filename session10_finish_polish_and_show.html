@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finish, polish, and show</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* Lecture Light: built for a projector in a room with the lights on.
+   Light ground, near-black text, few accents, no hairlines. */
+:root{
+  --paper:#F4F0E6;
+  --card:#FFFDF7;
+  --ink:#17181B;
+  --ink-soft:#4A4D53;
+  --rule:#D3CBB8;
+  --teal:#0E4D52;
+  --teal-deep:#0A3A3E;
+  --clay:#9C2B22;
+  --ochre:#8A5A00;
+  --ochre-line:#D99B12;
+  --ochre-tint:#FBF2DC;
+  --green:#1D5B39;
+  --green-tint:#E8F1E9;
+  --green-ink:#122B1C;
+  --code-bg:#EDE7D9;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:'DM Sans',system-ui,sans-serif; font-size:18px; font-weight:500;
+  line-height:1.65;
+}
+header.top{
+  background:var(--teal); color:#FFFDF7;
+  border-bottom:6px solid var(--ochre-line); padding:30px 22px 26px;
+}
+.wrap{max-width:900px; margin:0 auto}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.14em;
+  text-transform:uppercase; color:#F2D89B; margin:0 0 10px; font-weight:700;
+}
+h1{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:800;
+  font-size:clamp(29px,4.8vw,44px); line-height:1.1; margin:0 0 10px;
+}
+h2{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:25px; line-height:1.2; margin:0 0 12px; color:var(--teal-deep);
+}
+h3{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:20px; margin:0 0 8px; color:var(--teal-deep);
+}
+header.top h1,header.top h2{color:#FFFDF7}
+.sub{color:#EAE3D2; margin:0 0 16px; font-size:19px; font-weight:400}
+.dates{
+  display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;
+  font-family:'JetBrains Mono',monospace; font-size:13.5px;
+}
+.pill{
+  border:2px solid rgba(255,253,247,.4); border-radius:999px; padding:5px 13px;
+  background:rgba(255,253,247,.08);
+}
+.pill b{color:#F2D89B; font-weight:700}
+main{padding:28px 22px 12px}
+section{
+  background:var(--card); border:2px solid var(--rule); border-radius:6px;
+  padding:22px 24px; margin:0 0 20px;
+}
+section.opener{border-left:8px solid var(--green)}
+section.chunk{border-left:8px solid var(--ochre-line)}
+section.hinge{border-left:8px solid var(--clay)}
+section.brief{border-left:8px solid var(--teal)}
+.chunk-no{
+  font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--ochre); margin:0 0 8px; font-weight:700;
+}
+p{margin:0 0 14px}
+ul,ol{margin:0 0 14px; padding-left:24px}
+li{margin:0 0 8px}
+code,pre{
+  /* JetBrains Mono ligatures turn != into a slashed equals and <= into a single
+     glyph; students then type a character that does not exist. Keep every
+     operator as the keys that produce it. */
+  font-variant-ligatures:none; font-feature-settings:"liga" 0,"calt" 0,"dlig" 0;
+}
+code{
+  font-family:'JetBrains Mono',monospace; font-size:.9em; font-weight:700;
+  background:var(--code-bg); color:#1E2A2B;
+  padding:2px 6px; border-radius:3px;
+}
+pre{
+  font-family:'JetBrains Mono',monospace; font-size:15.5px; line-height:1.6;
+  background:var(--code-bg); color:var(--ink); border:2px solid var(--rule);
+  border-left:6px solid #B9AF96; border-radius:4px;
+  padding:16px 18px; overflow-x:auto; margin:0 0 16px; font-weight:500;
+}
+/* Code colours by role, from VS Code's Light+ theme. Four are darkened within the same
+   hue so every one clears 4.5:1 on the code background. Colour only, never bold or
+   italic, so every character keeps its width. */
+.tk-ctl{color:#9A00C2}  /* control words: if elif else for while return import */
+.tk-kw{color:#0000FF}   /* def, class, and, or, not, True, False, None, f-string parts */
+.tk-str{color:#A31515}  /* strings */
+.tk-num{color:#06704A}  /* numbers */
+.tk-com{color:#3B6E2A}  /* comments */
+.tk-fn{color:#795E26}   /* functions */
+.tk-cls{color:#1D6A80}  /* classes, types, modules */
+.tk-var{color:#001080}  /* variables */
+pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
+pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
+pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
+pre.anatomy .nm{background:#E3EDEE; border-bottom:3px solid var(--teal); padding:1px 2px}
+pre.anatomy .arg{background:#F7E4E1; border-bottom:3px solid var(--clay); padding:1px 2px}
+pre.anatomy .lbl{color:var(--ink-soft); font-weight:700}
+pre.anatomy .lbl-n{color:var(--teal)}
+pre.anatomy .lbl-a{color:var(--clay)}
+.legend i.n{background:#E3EDEE; border-bottom:3px solid var(--teal)}
+.legend i.a{background:#F7E4E1; border-bottom:3px solid var(--clay)}
+pre.anatomy .lbl-c{color:var(--ochre)}
+pre.anatomy .lbl-b{color:var(--green)}
+.legend{display:flex; flex-wrap:wrap; gap:10px 22px; font-size:16px; margin:0 0 16px}
+.legend span{display:inline-flex; align-items:center; gap:8px; margin-right:18px}
+.legend i{display:inline-block; width:22px; height:16px; border-radius:2px; margin-right:8px}
+.legend i.c{background:#FBF2DC; border-bottom:3px solid var(--ochre-line)}
+.legend i.b{background:#E8F1E9; border-left:3px solid var(--green)}
+pre.out{
+  background:var(--green-tint); border-color:#A9C6B2;
+  border-left:6px solid var(--green); color:var(--green-ink);
+}
+.outlabel{
+  font-family:'JetBrains Mono',monospace; font-size:12.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--green); margin:0 0 7px; font-weight:700;
+}
+.predict{
+  border:2px dashed var(--ochre); border-radius:5px;
+  padding:16px 18px; margin:0 0 16px; background:var(--ochre-tint);
+}
+.predict p{margin:0 0 12px}
+.predict .q{font-weight:700}
+button.rev{
+  font-family:'DM Sans',sans-serif; font-size:16px; font-weight:700;
+  background:var(--teal); color:#FFFDF7; border:0; border-radius:4px;
+  padding:10px 18px; cursor:pointer;
+}
+button.rev:hover{background:var(--teal-deep)}
+button.rev.hint{background:var(--card); color:var(--ochre); border:2px solid var(--ochre-line); margin:0 10px 10px 0}
+button.rev.hint:hover{background:var(--ochre-tint)}
+.hints .ans{margin:0 0 12px; padding-top:10px; border-top:2px solid var(--ochre-line)}
+.ans{display:none; margin-top:16px; padding-top:16px; border-top:2px solid var(--rule)}
+.ans.open{display:block}
+table{border-collapse:collapse; width:100%; margin:0 0 16px; font-size:16.5px}
+th,td{border:2px solid var(--rule); padding:9px 11px; text-align:left; vertical-align:top}
+th{background:#EFE9DA; font-weight:700; font-size:15px; color:var(--teal-deep)}
+td.fill{background:#FBF9F3; min-width:100px}
+.exits{display:grid; gap:14px; grid-template-columns:1fr}
+@media(min-width:760px){.exits{grid-template-columns:repeat(3,1fr)}}
+.exit{border:2px solid var(--rule); border-radius:5px; padding:16px}
+.exit .tag{
+  font-family:'JetBrains Mono',monospace; font-size:12.5px; letter-spacing:.1em;
+  text-transform:uppercase; margin:0 0 8px; font-weight:700;
+}
+.exit.floor{border-top:6px solid var(--green)}
+.exit.floor .tag{color:var(--green)}
+.exit.middle{border-top:6px solid var(--ochre-line)}
+.exit.middle .tag{color:var(--ochre)}
+.exit.stretch{border-top:6px solid var(--clay)}
+.exit.stretch .tag{color:var(--clay)}
+details.teacher{
+  background:var(--card); border:2px solid var(--rule);
+  border-left:8px solid var(--clay); border-radius:6px;
+  padding:18px 22px; margin:0 0 20px;
+}
+details.teacher summary{
+  cursor:pointer; font-family:'Bricolage Grotesque','DM Sans',sans-serif;
+  font-weight:700; font-size:21px; color:var(--clay);
+}
+details.teacher[open] summary{margin-bottom:14px}
+.note{
+  font-size:16.5px; color:var(--ink-soft); border-left:4px solid var(--rule);
+  padding-left:14px; margin:0 0 14px;
+}
+.pager{
+  max-width:900px; margin:0 auto; padding:8px 22px 34px;
+  display:flex; justify-content:space-between; gap:12px;
+  font-family:'JetBrains Mono',monospace; font-size:14px;
+}
+.pager a{
+  color:var(--teal); text-decoration:none; font-weight:700;
+  border:2px solid var(--rule); background:var(--card);
+  border-radius:4px; padding:10px 14px;
+}
+.pager a:hover{background:#EFE9DA}
+footer{
+  background:#EAE4D5; border-top:4px solid var(--teal); padding:22px 22px 36px;
+  font-size:15px; color:var(--ink-soft);
+}
+footer a{color:var(--teal); font-weight:700}
+a{color:var(--teal)}
+.toolbar{display:flex; gap:12px; flex-wrap:wrap; margin:0 0 20px}
+a.btn{
+  display:inline-block; font-family:'DM Sans',sans-serif; font-size:17px; font-weight:700;
+  background:var(--teal); color:#FFFDF7; text-decoration:none; border-radius:4px;
+  padding:12px 20px; border:2px solid var(--teal);
+}
+a.btn:hover{background:var(--teal-deep)}
+a.btn.quiet{background:var(--card); color:var(--teal)}
+a.btn.quiet:hover{background:#EFE9DA}
+.grid2{display:grid; gap:16px; grid-template-columns:1fr}
+@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.card{border:2px solid var(--rule); border-radius:5px; padding:16px; background:#FFFDF7}
+.card h3{margin-bottom:8px}
+.sessionlist{list-style:none; padding:0; margin:0}
+.sessionlist li{
+  border:2px solid var(--rule); border-left:8px solid var(--teal);
+  border-radius:5px; margin:0 0 12px; padding:14px 16px;
+  display:flex; gap:16px; align-items:flex-start; background:#FFFDF7;
+}
+.sessionlist .n{
+  font-family:'JetBrains Mono',monospace; font-size:24px; font-weight:700;
+  color:var(--teal); min-width:38px;
+}
+.sessionlist a{font-weight:700; text-decoration:none; font-size:19px}
+.sessionlist .meta{
+  font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--ink-soft);
+  display:block; margin-top:4px;
+}
+.bonus{border-left-color:var(--clay)}
+.bonus .n{color:var(--clay)}
+.flag{
+  background:#F7E4E1; border:2px solid var(--clay); border-left:8px solid var(--clay);
+  border-radius:5px; padding:14px 16px; margin:0 0 18px; font-size:16.5px;
+  color:#3A1512;
+}
+.stamp{
+  border:3px dashed #BFB49A; border-radius:5px; padding:14px;
+  font-size:15px; min-height:100px; background:#FFFDF7;
+}
+.stampgrid{display:grid; gap:12px; grid-template-columns:1fr 1fr}
+@media(min-width:820px){.stampgrid{grid-template-columns:repeat(3,1fr)}}
+.stamp .no{
+  font-family:'JetBrains Mono',monospace; color:var(--ochre); font-size:12.5px;
+  letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:6px;
+  font-weight:700;
+}
+@media print{
+  body{background:#fff; font-size:11pt}
+  header.top{background:#fff; color:#111; border-bottom:3px solid #111}
+  header.top h1,header.top .sub,header.top .eyebrow,.pill b{color:#111}
+  .pill{border-color:#666}
+  footer,.pager,details.teacher{background:#fff}
+  section,.stamp,.card{background:#fff; break-inside:avoid}
+  .noprint,.toolbar{display:none}
+  a{color:#111}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+<p class="eyebrow">Python in 3D &middot; VPython &middot; Session 10 of 10</p>
+<h1>Finish, polish, and show</h1>
+<p class="sub">A start screen, a Reset that puts everything back, three lines of polish, a partner&#x27;s test, and a two-minute demo</p>
+<div class="dates">
+<span class="pill"><b>Length</b> 90 minutes</span>
+<span class="pill"><b>Ages</b> 10 to 11</span>
+<span class="pill"><b>New</b> 5 items</span>
+</div></div></header>
+<main><div class="wrap">
+<section><h2>What is new today</h2><p>a start state and a space key, a home attribute for Reset, scene.background and scene.title, a partner test, the demo script.</p>
+<p><b>Deliberately re-used:</b> Everything.</p>
+<p class="note">The demo is a report on a topic, and the topic is the student's own program. Two minutes, four sentences, one key and one click shown. The partner test in the second section is what finds the bug the author cannot see, so it comes before the polish, not after.</p></section>
+<section class="opener"><p class="chunk-no">Opener &middot; 5 minutes</p><h2>Retrieval: the plan sheet</h2>
+<p>Open your plan sheet from session 9.</p>
+<div class="predict"><p class="q">Question: Read box 3 of your sheet, what the program remembers. For each thing on it, say where it lives in your program now: a plain variable in the loop, or an attribute on which object. Is anything on the sheet that the program does not keep yet?</p><button class="rev" data-target="s10-op0" aria-controls="s10-op0" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s10-op0"><p>Any honest answer is right. Something on the sheet that the program does not keep yet is the first thing to add today, before any polish.</p></div></div>
+<div class="predict"><p class="q">Question: Read box 2, the controls. Which of them work now, and which does the caption promise that do not work yet?</p><button class="rev" data-target="s10-op1" aria-controls="s10-op1" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s10-op1"><p>A control the caption promises and the program does not do is a bug a visitor will find in the first ten seconds. Either make it work or take it out of the caption, and do that first.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 1 of 3</p>
+<h2>A start screen: a title, and a key that begins</h2>
+<p>A program that starts moving the moment it opens gives the viewer no time to read the caption. Keep a <code>state</code> that starts as <code>"start"</code>, show a title label, and gate everything that moves on <code>state == "play"</code>. The space key, which arrives as the string <code>" "</code>, changes the state and hides the title. This is session 6's state name with one more value.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">scene</span>.<span class="tk-var">caption</span> = <span class="tk-str">"Press space to start. Arrow keys move the ball."</span>
+<span class="tk-var">ground</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-num">0.1</span>, <span class="tk-num">0</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">12</span>, <span class="tk-num">0.2</span>, <span class="tk-num">12</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">green</span>)
+<span class="tk-var">ball</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.5</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">yellow</span>)
+<span class="tk-var">title</span> = <span class="tk-fn">label</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">3</span>, <span class="tk-num">0</span>), <span class="tk-var">text</span>=<span class="tk-str">"BALL RUN"</span>, <span class="tk-var">height</span>=<span class="tk-num">30</span>, <span class="tk-var">box</span>=<span class="tk-kw">False</span>)
+<span class="tk-var">ground</span>.<span class="tk-var">state</span> = <span class="tk-str">"start"</span>
+
+<span class="tk-kw">def</span> <span class="tk-fn">begin</span>(<span class="tk-var">evt</span>):
+    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">" "</span> <span class="tk-kw">and</span> <span class="tk-var">ground</span>.<span class="tk-var">state</span> == <span class="tk-str">"start"</span>:
+        <span class="tk-var">ground</span>.<span class="tk-var">state</span> = <span class="tk-str">"play"</span>
+        <span class="tk-var">title</span>.<span class="tk-var">visible</span> = <span class="tk-kw">False</span>
+        <span class="tk-fn">print</span>(<span class="tk-str">"space pressed: state is now"</span>, <span class="tk-var">ground</span>.<span class="tk-var">state</span>)
+
+<span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"keydown"</span>, <span class="tk-var">begin</span>)
+<span class="tk-var">passes</span> = <span class="tk-num">0</span>
+
+<span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
+    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+    <span class="tk-var">keys</span> = <span class="tk-fn">keysdown</span>()
+
+    <span class="tk-ctl">if</span> <span class="tk-var">ground</span>.<span class="tk-var">state</span> == <span class="tk-str">"play"</span> <span class="tk-kw">and</span> <span class="tk-str">"right"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
+        <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> + <span class="tk-num">0.2</span>
+
+    <span class="tk-ctl">if</span> <span class="tk-var">passes</span> <span class="tk-kw">in</span> [<span class="tk-num">3</span>, <span class="tk-num">6</span>]:
+        <span class="tk-fn">print</span>(<span class="tk-str">"pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  state"</span>, <span class="tk-var">ground</span>.<span class="tk-var">state</span>, <span class="tk-str">"  ball at"</span>, <span class="tk-var">ball</span>.<span class="tk-var">pos</span>)</pre>
+<div class="predict"><p class="q">Predict: The right arrow is held on pass 2, before space is pressed, and again on passes 5 and 6, after it. Does the ball move on pass 2? Where is it on pass 6?</p><button class="rev" data-target="s10-c1" aria-controls="s10-c1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s10-c1"><p class="outlabel">What it actually prints (run without a browser, quit after 6 passes of the loop)</p><pre class="out">pass 3   state start   ball at &lt;0, 0.5, 0&gt;
+space pressed: state is now play
+pass 6   state play   ball at &lt;0.4, 0.5, 0&gt;</pre><p class="note">Fed in by the build script: the right arrow key held on pass 2, the space key pressed on pass 4, the right arrow key held on passes 5 to 6.</p><p>No. On pass 2 the state is still start, so the gate <code>ground.state == "play" and "right" in keys</code> is False and the ball stays at x = 0; the pass 3 line shows that. After space on pass 4, the state is play, and the two held passes move the ball to x = 0.4 by pass 6.</p><p>The state lives on the ground, because the bound function and the loop both need it. The space key's name is a single space character, which is easy to miss when reading the program.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 2 of 3</p>
+<h2>Reset puts everything back, because every thing knows its home</h2>
+<p>A Reset that works has to know where everything started. Give each moving thing a <code>home</code> attribute holding a copy of its starting pos, made with <code>vec(thing.pos.x, thing.pos.y, thing.pos.z)</code>. The Reset function loops over the list and puts each thing back at its home. Copying matters: <code>thing.home = thing.pos</code> would make <code>home</code> the same vector as the pos, and it would move with the thing.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">ground</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-num">0.1</span>, <span class="tk-num">0</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">12</span>, <span class="tk-num">0.2</span>, <span class="tk-num">12</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">green</span>)
+<span class="tk-var">things</span> = []
+<span class="tk-var">things</span>.<span class="tk-fn">append</span>(<span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">orange</span>))
+<span class="tk-var">things</span>.<span class="tk-fn">append</span>(<span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">3</span>, <span class="tk-num">0.5</span>, -<span class="tk-num">2</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.5</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">cyan</span>))
+<span class="tk-ctl">for</span> <span class="tk-var">thing</span> <span class="tk-ctl">in</span> <span class="tk-var">things</span>:
+    <span class="tk-var">thing</span>.<span class="tk-var">home</span> = <span class="tk-fn">vec</span>(<span class="tk-var">thing</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-var">thing</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span>, <span class="tk-var">thing</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span>)
+
+<span class="tk-kw">def</span> <span class="tk-fn">reset</span>(<span class="tk-var">b</span>):
+    <span class="tk-ctl">for</span> <span class="tk-var">thing</span> <span class="tk-ctl">in</span> <span class="tk-var">things</span>:
+        <span class="tk-var">thing</span>.<span class="tk-var">pos</span> = <span class="tk-var">thing</span>.<span class="tk-var">home</span>
+        <span class="tk-var">thing</span>.<span class="tk-var">visible</span> = <span class="tk-kw">True</span>
+    <span class="tk-fn">print</span>(<span class="tk-str">"reset: box at"</span>, <span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">pos</span>, <span class="tk-str">" ball at"</span>, <span class="tk-var">things</span>[<span class="tk-num">1</span>].<span class="tk-var">pos</span>)
+
+<span class="tk-fn">button</span>(<span class="tk-var">text</span>=<span class="tk-str">"Reset"</span>, <span class="tk-var">bind</span>=<span class="tk-var">reset</span>)
+<span class="tk-var">passes</span> = <span class="tk-num">0</span>
+
+<span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
+    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+    <span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">pos</span>.<span class="tk-var">x</span> + <span class="tk-num">0.5</span>
+    <span class="tk-var">things</span>[<span class="tk-num">1</span>].<span class="tk-var">pos</span>.<span class="tk-var">z</span> = <span class="tk-var">things</span>[<span class="tk-num">1</span>].<span class="tk-var">pos</span>.<span class="tk-var">z</span> + <span class="tk-num">0.5</span>
+
+    <span class="tk-ctl">if</span> <span class="tk-var">passes</span> == <span class="tk-num">4</span>:
+        <span class="tk-fn">print</span>(<span class="tk-str">"pass 4: box at"</span>, <span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">pos</span>, <span class="tk-str">" ball at"</span>, <span class="tk-var">things</span>[<span class="tk-num">1</span>].<span class="tk-var">pos</span>, <span class="tk-str">" box home is still"</span>, <span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">home</span>)</pre>
+<div class="predict"><p class="q">Predict: The box and the ball move 0.5 on every pass. Reset is clicked on pass 6. Where are they after the click, and why is the box's <code>home</code> on pass 4 still <code>&lt;0, 0.5, 0&gt;</code> after four moves?</p><button class="rev" data-target="s10-c2" aria-controls="s10-c2" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s10-c2"><p class="outlabel">What it actually prints (run without a browser, quit after 8 passes of the loop)</p><pre class="out">pass 4: box at &lt;2, 0.5, 0&gt;  ball at &lt;3, 0.5, 0&gt;  box home is still &lt;0, 0.5, 0&gt;
+reset: box at &lt;0, 0.5, 0&gt;  ball at &lt;3, 0.5, -2&gt;</pre><p class="note">Fed in by the build script: the widget bound to reset clicked on pass 6.</p><p>After the click the box is back at <code>&lt;0, 0.5, 0&gt;</code> and the ball at <code>&lt;3, 0.5, -2&gt;</code>, their starting places. The loop then moves them again from there.</p><p>The home is unchanged on pass 4 because it is a copy: a new vector built from the three numbers the pos had at the start. The moves change the pos and never touch the copy. Written as <code>thing.home = thing.pos</code> with no copy, the home would be the pos itself, and Reset would put each thing back exactly where it already was.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 3 of 3</p>
+<h2>Three lines of polish</h2>
+<p><code>scene.background</code> is the colour behind everything. <code>scene.title</code> is a heading above the scene. Opacity on the ground lets a viewer see a thing that is behind it from a low camera. None of these change what the program does; all of them change what the viewer sees first.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">scene</span>.<span class="tk-var">title</span> = <span class="tk-str">"Ball Run, by Jonathan\n"</span>
+<span class="tk-var">scene</span>.<span class="tk-var">background</span> = <span class="tk-fn">vec</span>(<span class="tk-num">0.1</span>, <span class="tk-num">0.1</span>, <span class="tk-num">0.25</span>)
+<span class="tk-var">ground</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-num">0.1</span>, <span class="tk-num">0</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">12</span>, <span class="tk-num">0.2</span>, <span class="tk-num">12</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">green</span>, <span class="tk-var">opacity</span>=<span class="tk-num">0.8</span>)
+<span class="tk-var">ball</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.5</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">yellow</span>)
+<span class="tk-fn">print</span>(<span class="tk-str">"title:"</span>, <span class="tk-var">scene</span>.<span class="tk-var">title</span>)
+<span class="tk-fn">print</span>(<span class="tk-str">"background:"</span>, <span class="tk-var">scene</span>.<span class="tk-var">background</span>, <span class="tk-str">"  ground opacity:"</span>, <span class="tk-var">ground</span>.<span class="tk-var">opacity</span>)</pre>
+<div class="predict"><p class="q">Predict: What colour is <code>vec(0.1, 0.1, 0.25)</code>: dark or light, and closer to blue or to red? Where does the title appear?</p><button class="rev" data-target="s10-c3" aria-controls="s10-c3" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s10-c3"><p class="outlabel">What it actually prints (run without a browser)</p><pre class="out">title: Ball Run, by Jonathan
+
+background: &lt;0.1, 0.1, 0.25&gt;   ground opacity: 0.8</pre><p>Dark, because all three numbers are small, and closer to blue, because the third number is the biggest of the three. A night sky. The title appears above the scene, in the tab, with its <code>\n</code> putting a blank line between it and the scene.</p><p>Keep the polish to lines like these. A feature added in the last ten minutes is where the demo breaks.</p></div></div>
+</section>
+<section><h2>The partner test, 10 minutes</h2><p>Swap seats with a neighbour. Do not explain your program. Your partner reads the caption, and only the caption, and tries every control it names. For each one they write a line on your expected-and-got sheet: what the caption said, what happened. Then swap back.</p><p>Three things a partner finds that an author does not: a control the caption names that does nothing, a key that does something the caption does not say, and a thing that can go wrong when the controls are used in an order the author never tried. Fix the first kind first.</p></section>
+<section><h2>The demo: two minutes, four sentences</h2><p>Each demo is two minutes. Say these four things, in this order, then show one key and one click:</p><ol><li><b>What it is.</b> One sentence: a game where you dodge falling blocks; a solar system with a moon; an editor for building a village.</li><li><b>What it does when you use it.</b> Name the controls as you show them: press space, hold right, click a block.</li><li><b>One thing that was hard, and how you fixed it.</b> The bug, the line, the fix.</li><li><b>What you would add next.</b> One feature, from your plan sheet.</li></ol><p>Before your turn: the tab is open, the scene has been clicked so the keys work, and the program has been restarted so it is at its start screen. During your turn, if something breaks, say what you think it is and move on. A demo with a bug and a sentence about the bug is a complete demo.</p></section>
+<section><h2>Demo order and what the room does</h2><p>The order is the order of the plan sheets on the desk, so nobody is first because of where they sit. While one person shows, everyone else writes one line on a slip: one thing the program did that they want to try in their own. The slips go to the author at the end.</p><p>The teacher keeps the time and says nothing about the program until all demos are done.</p></section>
+<section class="hinge"><p class="chunk-no">Hinge question &middot; reaches back to session 1</p><h2>Before you build</h2>
+<div class="predict"><p class="q">Question: From session 1: during a demo, a visitor presses the left arrow and nothing happens. Name the two things that could be true, and say how to check each one in five seconds.</p><button class="rev" data-target="s10-hinge" aria-controls="s10-hinge" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s10-hinge"><p>One: the browser tab does not have the focus, so the key went to the editor or somewhere else. Check by clicking once inside the 3D scene and pressing the key again.</p><p>Two: the program has stopped. Check the terminal: if the prompt is back, the loop at the bottom is not running, because the program ended or an error stopped it, and the traceback above the prompt says which line. Run it again.</p></div></div>
+</section>
+<section class="brief"><p class="chunk-no">Build &middot; 30 minutes</p><h2>Build: finish, test, polish, show</h2>
+<p>Finish the features on your plan sheet, in the order the sheet says, one at a time. Then the start screen and the Reset from chunks 1 and 2, if your project needs them. Then the partner test. Then the three lines of polish. Then the demo.</p>
+<ol>
+<li>Make every control the caption promises work, or take it out of the caption.</li>
+<li>Add the start state and the space key if anything moves on its own, so the viewer can read the caption first.</li>
+<li>Add the Reset button with a <code>home</code> on every moving thing, or an r key if your numbers live in the loop.</li>
+<li>Partner test. Fix what the partner found, first kind first.</li>
+<li>Title, background, opacity. Nothing else new.</li>
+<li>Restart the program, click the scene, and leave it at the start screen for the demo.</li>
+</ol>
+<h3>Expected and got</h3><p>Fill in the left column before you run. Fill in the right column after.</p>
+<table><tr><th>Expected</th><th>Got</th></tr>
+<tr><td>Every control named in the caption does what the caption says</td><td class="fill"></td></tr>
+<tr><td>Nothing moves before space is pressed</td><td class="fill"></td></tr>
+<tr><td>Reset puts every moving thing back where it started</td><td class="fill"></td></tr>
+<tr><td>A partner found the controls from the caption alone</td><td class="fill"></td></tr>
+<tr><td>The program is at its start screen when the demo begins</td><td class="fill"></td></tr>
+</table></section>
+<section><h2>Where you can stop</h2><p>All three are real places to stop. Nobody is behind for finishing at the floor.</p><div class="exits">
+<div class="exit floor"><p class="tag">Floor</p><p>The project as it was at the end of session 9, with a caption that only promises what works, and a two-minute demo of it.</p></div>
+<div class="exit middle"><p class="tag">Middle</p><p>The project with a start screen, a Reset, a partner test done, and the demo.</p></div>
+<div class="exit stretch"><p class="tag">Stretch</p><p>The project with every feature on the plan sheet, a visitor's slip of ideas read, and one of those ideas added.</p></div>
+</div></section>
+<section><h2>Ledger card</h2><p>Stamp 10: a <code>state</code> that starts as start, the space key is <code>" "</code>, a <code>home</code> copy on every moving thing (<code>vec(p.x, p.y, p.z)</code>), Reset loops over the list, <code>scene.title</code>, <code>scene.background</code>, the partner test from the caption alone, the demo: what it is, what it does, what was hard, what is next.</p><p><a href="vpython_ledger_card.html?v=1">Open the course ledger card</a></p></section>
+<details class="teacher"><summary>Teacher panel</summary>
+<h3>Timing, 90 minutes</h3><ul>
+<li>0:00 plan sheet opener, 5 min</li>
+<li>0:05 chunks 1 to 3, start screen, Reset, polish, 15 min</li>
+<li>0:20 hinge question, 5 min</li>
+<li>0:25 build brief, finishing and the partner test, 30 min</li>
+<li>0:55 demos, 30 min (two minutes each, the teacher keeps time)</li>
+<li>1:25 slips to authors, ledger stamp, 5 min</li>
+</ul><p class="note">Pacing: most rooms will not reach the end of the build brief. The exits exist so that stopping there is a finish, not a failure.</p>
+<h3>What you will see, and what to do</h3><table><tr><th>In the room</th><th>Redirect</th></tr>
+<tr><td>Adds a new feature during the polish step and the demo breaks.</td><td>Polish is three lines that change nothing the program does. A feature is not polish. If it is not working ten minutes before demos, comment it out and take it out of the caption.</td></tr>
+<tr><td>Writes <code>thing.home = thing.pos</code> and Reset does nothing.</td><td>The home is the same vector as the pos, so it moves with the thing. Chunk 2's reveal. Build the copy from the three numbers.</td></tr>
+<tr><td>Skips the partner test because the program works.</td><td>It works for the author, who knows what not to press. The partner presses it.</td></tr>
+<tr><td>Starts the demo with the tab unfocused and says the keys are broken.</td><td>The hinge. Click the scene first. Make it the first thing every demo does.</td></tr>
+<tr><td>Tells the room every line of the program.</td><td>Four sentences, one key, one click. The slips are for the rest.</td></tr>
+</table>
+<h3>Mapped to</h3>
+<table><tr><th>Code</th><th>Jurisdiction</th><th>Framework</th><th>Grade</th><th>Statement</th></tr><tr><td><code>5SL4</code></td><td>New York</td><td>NY Next Generation ELA Learning Standards</td><td>5</td><td>Report on a topic or text, sequencing ideas logically and using appropriate facts and relevant, descriptive details to support central ideas or themes; speak clearly at an understandable pace and volume appropriate for audience.</td></tr><tr><td><code>MP1</code></td><td>Multi-State</td><td>Standards for Mathematical Practice</td><td>K-12</td><td>Make sense of problems and persevere in solving them.</td></tr><tr><td><code>MP6</code></td><td>Multi-State</td><td>Standards for Mathematical Practice</td><td>K-12</td><td>Attend to precision.</td></tr></table>
+<h3>If time runs out</h3><p>If the room has more than twelve students, demos are ninety seconds and the build is 25 minutes. Chunk 3 can be cut to one line on the projector. The partner test cannot be cut; it is the only check that is not the author's own.</p>
+</details>
+<section><h2>Running this in VS Code</h2><div class="grid2"><div class="card"><h3>Once, before the first run</h3><p>Open the terminal in VS Code and install the library: <code>pip install vpython</code>. Check it worked with <code>python -c "import vpython"</code>. It should print nothing at all and give you the prompt back. A traceback here is an install problem, not a problem with your program.</p></div><div class="card"><h3>Every run after that</h3><p>Save your file as <code>YourName_vpython10.py</code>: your first name, an underscore, then <code>vpython10</code>. Run it from the terminal. The 3D scene opens in a new browser tab, sometimes behind VS Code, so look for it before deciding that nothing happened. Click inside the scene before pressing any key. To end the program, close the tab or press Ctrl+C in the terminal. The program is written to run until you do. Run the file again and you get a fresh tab.</p></div></div><p class="note">VPython draws solid shapes that you can turn and zoom. Everything you print still goes to the terminal, and everything you draw goes to the browser tab. Words in the terminal, pictures in the tab.</p></section>
+</div></main>
+<nav class="pager"><a href="session09_your_project.html?v=1">&larr; Your project</a><a href="vpython_course_hub.html?v=1">Course home</a><span></span></nav>
+<footer><div class="wrap"><p>Python in 3D: ten sessions of VPython for ages 10 to 11, in the Lecture Light style, light ground for a projector, predict before reveal, three places to stop in every session.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-10-05. <a href="standards_map.html?v=1">Full standards map</a> &middot; <a href="vpython_ledger_card.html?v=1">Ledger card</a></p></div></footer>
+<script>
+document.addEventListener('click', function(e){
+  var b = e.target.closest('button.rev');
+  if(!b) return;
+  var t = document.getElementById(b.getAttribute('data-target'));
+  if(!t) return;
+  var open = t.classList.toggle('open');
+  b.setAttribute('aria-expanded', open ? 'true' : 'false');
+  b.textContent = open ? b.getAttribute('data-hide') : b.getAttribute('data-show');
+});
+</script>
+</body>
+</html>

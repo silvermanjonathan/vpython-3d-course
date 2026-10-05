@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3D models that answer keys and clicks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* Lecture Light: built for a projector in a room with the lights on.
+   Light ground, near-black text, few accents, no hairlines. */
+:root{
+  --paper:#F4F0E6;
+  --card:#FFFDF7;
+  --ink:#17181B;
+  --ink-soft:#4A4D53;
+  --rule:#D3CBB8;
+  --teal:#0E4D52;
+  --teal-deep:#0A3A3E;
+  --clay:#9C2B22;
+  --ochre:#8A5A00;
+  --ochre-line:#D99B12;
+  --ochre-tint:#FBF2DC;
+  --green:#1D5B39;
+  --green-tint:#E8F1E9;
+  --green-ink:#122B1C;
+  --code-bg:#EDE7D9;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:'DM Sans',system-ui,sans-serif; font-size:18px; font-weight:500;
+  line-height:1.65;
+}
+header.top{
+  background:var(--teal); color:#FFFDF7;
+  border-bottom:6px solid var(--ochre-line); padding:30px 22px 26px;
+}
+.wrap{max-width:900px; margin:0 auto}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.14em;
+  text-transform:uppercase; color:#F2D89B; margin:0 0 10px; font-weight:700;
+}
+h1{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:800;
+  font-size:clamp(29px,4.8vw,44px); line-height:1.1; margin:0 0 10px;
+}
+h2{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:25px; line-height:1.2; margin:0 0 12px; color:var(--teal-deep);
+}
+h3{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:20px; margin:0 0 8px; color:var(--teal-deep);
+}
+header.top h1,header.top h2{color:#FFFDF7}
+.sub{color:#EAE3D2; margin:0 0 16px; font-size:19px; font-weight:400}
+.dates{
+  display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;
+  font-family:'JetBrains Mono',monospace; font-size:13.5px;
+}
+.pill{
+  border:2px solid rgba(255,253,247,.4); border-radius:999px; padding:5px 13px;
+  background:rgba(255,253,247,.08);
+}
+.pill b{color:#F2D89B; font-weight:700}
+main{padding:28px 22px 12px}
+section{
+  background:var(--card); border:2px solid var(--rule); border-radius:6px;
+  padding:22px 24px; margin:0 0 20px;
+}
+section.opener{border-left:8px solid var(--green)}
+section.chunk{border-left:8px solid var(--ochre-line)}
+section.hinge{border-left:8px solid var(--clay)}
+section.brief{border-left:8px solid var(--teal)}
+.chunk-no{
+  font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--ochre); margin:0 0 8px; font-weight:700;
+}
+p{margin:0 0 14px}
+ul,ol{margin:0 0 14px; padding-left:24px}
+li{margin:0 0 8px}
+code,pre{
+  /* JetBrains Mono ligatures turn != into a slashed equals and <= into a single
+     glyph; students then type a character that does not exist. Keep every
+     operator as the keys that produce it. */
+  font-variant-ligatures:none; font-feature-settings:"liga" 0,"calt" 0,"dlig" 0;
+}
+code{
+  font-family:'JetBrains Mono',monospace; font-size:.9em; font-weight:700;
+  background:var(--code-bg); color:#1E2A2B;
+  padding:2px 6px; border-radius:3px;
+}
+pre{
+  font-family:'JetBrains Mono',monospace; font-size:15.5px; line-height:1.6;
+  background:var(--code-bg); color:var(--ink); border:2px solid var(--rule);
+  border-left:6px solid #B9AF96; border-radius:4px;
+  padding:16px 18px; overflow-x:auto; margin:0 0 16px; font-weight:500;
+}
+/* Code colours by role, from VS Code's Light+ theme. Four are darkened within the same
+   hue so every one clears 4.5:1 on the code background. Colour only, never bold or
+   italic, so every character keeps its width. */
+.tk-ctl{color:#9A00C2}  /* control words: if elif else for while return import */
+.tk-kw{color:#0000FF}   /* def, class, and, or, not, True, False, None, f-string parts */
+.tk-str{color:#A31515}  /* strings */
+.tk-num{color:#06704A}  /* numbers */
+.tk-com{color:#3B6E2A}  /* comments */
+.tk-fn{color:#795E26}   /* functions */
+.tk-cls{color:#1D6A80}  /* classes, types, modules */
+.tk-var{color:#001080}  /* variables */
+pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
+pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
+pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
+pre.anatomy .nm{background:#E3EDEE; border-bottom:3px solid var(--teal); padding:1px 2px}
+pre.anatomy .arg{background:#F7E4E1; border-bottom:3px solid var(--clay); padding:1px 2px}
+pre.anatomy .lbl{color:var(--ink-soft); font-weight:700}
+pre.anatomy .lbl-n{color:var(--teal)}
+pre.anatomy .lbl-a{color:var(--clay)}
+.legend i.n{background:#E3EDEE; border-bottom:3px solid var(--teal)}
+.legend i.a{background:#F7E4E1; border-bottom:3px solid var(--clay)}
+pre.anatomy .lbl-c{color:var(--ochre)}
+pre.anatomy .lbl-b{color:var(--green)}
+.legend{display:flex; flex-wrap:wrap; gap:10px 22px; font-size:16px; margin:0 0 16px}
+.legend span{display:inline-flex; align-items:center; gap:8px; margin-right:18px}
+.legend i{display:inline-block; width:22px; height:16px; border-radius:2px; margin-right:8px}
+.legend i.c{background:#FBF2DC; border-bottom:3px solid var(--ochre-line)}
+.legend i.b{background:#E8F1E9; border-left:3px solid var(--green)}
+pre.out{
+  background:var(--green-tint); border-color:#A9C6B2;
+  border-left:6px solid var(--green); color:var(--green-ink);
+}
+.outlabel{
+  font-family:'JetBrains Mono',monospace; font-size:12.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--green); margin:0 0 7px; font-weight:700;
+}
+.predict{
+  border:2px dashed var(--ochre); border-radius:5px;
+  padding:16px 18px; margin:0 0 16px; background:var(--ochre-tint);
+}
+.predict p{margin:0 0 12px}
+.predict .q{font-weight:700}
+button.rev{
+  font-family:'DM Sans',sans-serif; font-size:16px; font-weight:700;
+  background:var(--teal); color:#FFFDF7; border:0; border-radius:4px;
+  padding:10px 18px; cursor:pointer;
+}
+button.rev:hover{background:var(--teal-deep)}
+button.rev.hint{background:var(--card); color:var(--ochre); border:2px solid var(--ochre-line); margin:0 10px 10px 0}
+button.rev.hint:hover{background:var(--ochre-tint)}
+.hints .ans{margin:0 0 12px; padding-top:10px; border-top:2px solid var(--ochre-line)}
+.ans{display:none; margin-top:16px; padding-top:16px; border-top:2px solid var(--rule)}
+.ans.open{display:block}
+table{border-collapse:collapse; width:100%; margin:0 0 16px; font-size:16.5px}
+th,td{border:2px solid var(--rule); padding:9px 11px; text-align:left; vertical-align:top}
+th{background:#EFE9DA; font-weight:700; font-size:15px; color:var(--teal-deep)}
+td.fill{background:#FBF9F3; min-width:100px}
+.exits{display:grid; gap:14px; grid-template-columns:1fr}
+@media(min-width:760px){.exits{grid-template-columns:repeat(3,1fr)}}
+.exit{border:2px solid var(--rule); border-radius:5px; padding:16px}
+.exit .tag{
+  font-family:'JetBrains Mono',monospace; font-size:12.5px; letter-spacing:.1em;
+  text-transform:uppercase; margin:0 0 8px; font-weight:700;
+}
+.exit.floor{border-top:6px solid var(--green)}
+.exit.floor .tag{color:var(--green)}
+.exit.middle{border-top:6px solid var(--ochre-line)}
+.exit.middle .tag{color:var(--ochre)}
+.exit.stretch{border-top:6px solid var(--clay)}
+.exit.stretch .tag{color:var(--clay)}
+details.teacher{
+  background:var(--card); border:2px solid var(--rule);
+  border-left:8px solid var(--clay); border-radius:6px;
+  padding:18px 22px; margin:0 0 20px;
+}
+details.teacher summary{
+  cursor:pointer; font-family:'Bricolage Grotesque','DM Sans',sans-serif;
+  font-weight:700; font-size:21px; color:var(--clay);
+}
+details.teacher[open] summary{margin-bottom:14px}
+.note{
+  font-size:16.5px; color:var(--ink-soft); border-left:4px solid var(--rule);
+  padding-left:14px; margin:0 0 14px;
+}
+.pager{
+  max-width:900px; margin:0 auto; padding:8px 22px 34px;
+  display:flex; justify-content:space-between; gap:12px;
+  font-family:'JetBrains Mono',monospace; font-size:14px;
+}
+.pager a{
+  color:var(--teal); text-decoration:none; font-weight:700;
+  border:2px solid var(--rule); background:var(--card);
+  border-radius:4px; padding:10px 14px;
+}
+.pager a:hover{background:#EFE9DA}
+footer{
+  background:#EAE4D5; border-top:4px solid var(--teal); padding:22px 22px 36px;
+  font-size:15px; color:var(--ink-soft);
+}
+footer a{color:var(--teal); font-weight:700}
+a{color:var(--teal)}
+.toolbar{display:flex; gap:12px; flex-wrap:wrap; margin:0 0 20px}
+a.btn{
+  display:inline-block; font-family:'DM Sans',sans-serif; font-size:17px; font-weight:700;
+  background:var(--teal); color:#FFFDF7; text-decoration:none; border-radius:4px;
+  padding:12px 20px; border:2px solid var(--teal);
+}
+a.btn:hover{background:var(--teal-deep)}
+a.btn.quiet{background:var(--card); color:var(--teal)}
+a.btn.quiet:hover{background:#EFE9DA}
+.grid2{display:grid; gap:16px; grid-template-columns:1fr}
+@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.card{border:2px solid var(--rule); border-radius:5px; padding:16px; background:#FFFDF7}
+.card h3{margin-bottom:8px}
+.sessionlist{list-style:none; padding:0; margin:0}
+.sessionlist li{
+  border:2px solid var(--rule); border-left:8px solid var(--teal);
+  border-radius:5px; margin:0 0 12px; padding:14px 16px;
+  display:flex; gap:16px; align-items:flex-start; background:#FFFDF7;
+}
+.sessionlist .n{
+  font-family:'JetBrains Mono',monospace; font-size:24px; font-weight:700;
+  color:var(--teal); min-width:38px;
+}
+.sessionlist a{font-weight:700; text-decoration:none; font-size:19px}
+.sessionlist .meta{
+  font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--ink-soft);
+  display:block; margin-top:4px;
+}
+.bonus{border-left-color:var(--clay)}
+.bonus .n{color:var(--clay)}
+.flag{
+  background:#F7E4E1; border:2px solid var(--clay); border-left:8px solid var(--clay);
+  border-radius:5px; padding:14px 16px; margin:0 0 18px; font-size:16.5px;
+  color:#3A1512;
+}
+.stamp{
+  border:3px dashed #BFB49A; border-radius:5px; padding:14px;
+  font-size:15px; min-height:100px; background:#FFFDF7;
+}
+.stampgrid{display:grid; gap:12px; grid-template-columns:1fr 1fr}
+@media(min-width:820px){.stampgrid{grid-template-columns:repeat(3,1fr)}}
+.stamp .no{
+  font-family:'JetBrains Mono',monospace; color:var(--ochre); font-size:12.5px;
+  letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:6px;
+  font-weight:700;
+}
+@media print{
+  body{background:#fff; font-size:11pt}
+  header.top{background:#fff; color:#111; border-bottom:3px solid #111}
+  header.top h1,header.top .sub,header.top .eyebrow,.pill b{color:#111}
+  .pill{border-color:#666}
+  footer,.pager,details.teacher{background:#fff}
+  section,.stamp,.card{background:#fff; break-inside:avoid}
+  .noprint,.toolbar{display:none}
+  a{color:#111}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+<p class="eyebrow">Python in 3D &middot; VPython &middot; Session 1 of 10</p>
+<h1>3D models that answer keys and clicks</h1>
+<p class="sub">A world made of boxes and spheres, three numbers for every place, and the first program that does something when you press a key or click the mouse</p>
+<div class="dates">
+<span class="pill"><b>Length</b> 90 minutes</span>
+<span class="pill"><b>Ages</b> 10 to 11</span>
+<span class="pill"><b>New</b> 9 items</span>
+</div></div></header>
+<main><div class="wrap">
+<section><h2>What is new today</h2><p>from vpython import *, sphere and box, vec(x, y, z), pos, size, radius, color, while True with rate(30), scene.bind and evt.key, keysdown(), scene.mouse.pick, button and slider.</p>
+<p><b>Deliberately re-used:</b> Variables, if gates, a while loop, def with one parameter, and a list.</p>
+<p class="note">Nothing today needs a new Python idea except the library. Every program on this page has the same four parts: make the objects, write a function, bind it, and keep the loop at the bottom running. Say that before chunk 5, because the four programs in chunks 5 to 8 otherwise look like four different shapes.</p></section>
+<section class="opener"><p class="chunk-no">Opener &middot; 10 minutes</p><h2>Retrieval: graphs, functions, and loops</h2>
+<p>Paper first. Three questions about things you already know, because every one of them does a job in today's programs.</p>
+<div class="predict"><p class="q">Question: A point on a graph is written (2, 3). Which number says how far across, and which says how far up?</p><button class="rev" data-target="s1-op0" aria-controls="s1-op0" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s1-op0"><p>The first number, 2, is across. The second number, 3, is up. Today every place gets a third number that says how far toward you, so a place is three numbers instead of two.</p></div></div>
+<pre><span class="tk-kw">def</span> <span class="tk-fn">hello</span>(<span class="tk-var">name</span>):
+    <span class="tk-fn">print</span>(<span class="tk-str">"hello"</span>, <span class="tk-var">name</span>)</pre>
+<div class="predict"><p class="q">Question: Does the print line run when Python reads the <code>def</code>, or only later?</p><button class="rev" data-target="s1-op1" aria-controls="s1-op1" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s1-op1"><p>Only later, when something calls <code>hello</code>. The def makes the function and stores it under the name <code>hello</code>. Today you write functions that you never call yourself. VPython calls them when a key goes down or the mouse is clicked.</p></div></div>
+<div class="predict"><p class="q">Question: What does a <code>while</code> loop do that an <code>if</code> gate does not?</p><button class="rev" data-target="s1-op2" aria-controls="s1-op2" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s1-op2"><p>It repeats. The gate checks its condition once and runs its body once or not at all. The loop checks its condition before every pass and runs the body again each time the condition is True. Every program today ends with a loop whose condition is always True, so it runs until you stop it.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 1 of 8</p>
+<h2>One line makes a world</h2>
+<p>VPython is a library: a file of functions that someone else wrote. <code>from vpython import *</code> gives your program every one of them. <code>sphere()</code> makes a ball and opens a browser tab to show it. The tab is where the pictures go. The terminal still shows what you print.</p><p>Every object has a <b>pos</b>: three numbers that say where its middle is. The program never gives the sphere a pos, so it gets the starting value.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">ball</span> = <span class="tk-fn">sphere</span>()
+<span class="tk-fn">print</span>(<span class="tk-str">"the ball is at"</span>, <span class="tk-var">ball</span>.<span class="tk-var">pos</span>)
+<span class="tk-fn">print</span>(<span class="tk-str">"its radius is"</span>, <span class="tk-var">ball</span>.<span class="tk-var">radius</span>)</pre>
+<div class="predict"><p class="q">Predict: The program never says where to put the ball. The first print line shows <code>ball.pos</code> as three numbers. What are the three numbers, and what is the radius?</p><button class="rev" data-target="s1-c1" aria-controls="s1-c1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s1-c1"><p class="outlabel">What it actually prints (run without a browser)</p><pre class="out">the ball is at &lt;0, 0, 0&gt;
+its radius is 1.0</pre><p>All three numbers are 0, printed as <code>&lt;0, 0, 0&gt;</code>. That is the middle of the world, and the camera looks straight at it. The radius is 1. Both are the starting values VPython gives a sphere when you do not say otherwise. Right-drag inside the tab to turn the camera, and scroll to zoom. Close the tab, or press Ctrl+C in the terminal, when you are done looking.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 2 of 8</p>
+<h2>Three numbers for every place</h2>
+<p><code>vec(2, 0, 0)</code> is a <b>vector</b>: three numbers held in one value, in the order x, y, z. x is how far to the right. y is how far up. z is how far toward you, out of the screen. A negative number goes the other way: left, down, or away from you.</p><p>You can add two vectors. Each number adds to its own partner: x with x, y with y, z with z. Adding <code>vec(0, 3, 0)</code> to a pos leaves x and z alone and raises y by 3.</p><p>The three arrows are the axes. Red points along x, green along y, blue along z. Keep them in your programs until the directions feel obvious.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-fn">arrow</span>(<span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">3</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">red</span>)
+<span class="tk-fn">arrow</span>(<span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">3</span>, <span class="tk-num">0</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">green</span>)
+<span class="tk-fn">arrow</span>(<span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">3</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">blue</span>)
+
+<span class="tk-var">crate</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">2</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">orange</span>)
+<span class="tk-fn">print</span>(<span class="tk-str">"crate is at"</span>, <span class="tk-var">crate</span>.<span class="tk-var">pos</span>)
+
+<span class="tk-var">crate</span>.<span class="tk-var">pos</span> = <span class="tk-var">crate</span>.<span class="tk-var">pos</span> + <span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">3</span>, <span class="tk-num">0</span>)
+<span class="tk-fn">print</span>(<span class="tk-str">"crate is now at"</span>, <span class="tk-var">crate</span>.<span class="tk-var">pos</span>)
+
+<span class="tk-var">crate</span>.<span class="tk-var">pos</span> = <span class="tk-var">crate</span>.<span class="tk-var">pos</span> + <span class="tk-fn">vec</span>(-<span class="tk-num">2</span>, <span class="tk-num">0</span>, -<span class="tk-num">4</span>)
+<span class="tk-fn">print</span>(<span class="tk-str">"and now at"</span>, <span class="tk-var">crate</span>.<span class="tk-var">pos</span>)</pre>
+<div class="predict"><p class="q">Predict: The last pos line adds <code>vec(-2, 0, -4)</code>. Which of the three numbers change? And where does the crate end up: left or right of where it was, higher or lower, closer to you or farther away?</p><button class="rev" data-target="s1-c2" aria-controls="s1-c2" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s1-c2"><p class="outlabel">What it actually prints (run without a browser)</p><pre class="out">crate is at &lt;2, 0, 0&gt;
+crate is now at &lt;2, 3, 0&gt;
+and now at &lt;0, 3, -4&gt;</pre><p>x and z change. y stays 3.</p><p>Left or right: left, by 2. x goes from 2 to 0, so the crate is straight above the middle of the world.</p><p>Higher or lower: neither. The y number did not change, so the crate is still 3 up.</p><p>Closer or farther: farther away, by 4. z goes from 0 to -4, and negative z is away from you. The output box shows <code>&lt;0, 3, -4&gt;</code>. Turn the camera with a right-drag and you can see the crate sitting behind the arrows.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 3 of 8</p>
+<h2>pos is the middle, so things sink</h2>
+<p>A box has a <b>size</b>: three numbers for how long, how tall, and how deep it is. Each of the three starts at 1 when you do not say. <code>pos</code> is the middle of the box, not its bottom. A box 1 tall with its pos at y = 0 reaches from y = -0.5 up to y = 0.5.</p><p>The ground here is a wide, flat box. Its middle is at y = -0.1 and it is 0.2 tall, so its top face is at y = 0. Put a crate at y = 0 and half of the crate is under the ground.</p><p><code>crate.pos.y</code> is the y number on its own. You can read it, and you can assign to it.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">ground</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-num">0.1</span>, <span class="tk-num">0</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">10</span>, <span class="tk-num">0.2</span>, <span class="tk-num">10</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">green</span>)
+<span class="tk-var">crate</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">orange</span>)
+<span class="tk-fn">print</span>(<span class="tk-str">"crate middle is at y ="</span>, <span class="tk-var">crate</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span>)
+<span class="tk-fn">print</span>(<span class="tk-str">"crate bottom is at y ="</span>, <span class="tk-var">crate</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> - <span class="tk-var">crate</span>.<span class="tk-var">size</span>.<span class="tk-var">y</span> / <span class="tk-num">2</span>)
+
+<span class="tk-var">crate</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> = <span class="tk-num">0.5</span>
+<span class="tk-fn">print</span>(<span class="tk-str">"after the fix, crate bottom is at y ="</span>, <span class="tk-var">crate</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> - <span class="tk-var">crate</span>.<span class="tk-var">size</span>.<span class="tk-var">y</span> / <span class="tk-num">2</span>)</pre>
+<div class="predict"><p class="q">Predict: The ground's top face is at y = 0 and the crate's pos is at y = 0. How much of the crate is under the ground? And after the fix line, what number is in <code>crate.pos.y</code>, and where is the bottom of the crate?</p><button class="rev" data-target="s1-c3" aria-controls="s1-c3" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s1-c3"><p class="outlabel">What it actually prints (run without a browser)</p><pre class="out">crate middle is at y = 0.0
+crate bottom is at y = -0.5
+after the fix, crate bottom is at y = 0.0</pre><p>Half of the crate is under the ground. pos is the middle and the crate is 1 tall, so its bottom is at y = -0.5, which the second output line shows.</p><p>After the fix, <code>crate.pos.y</code> is 0.5. That lifts the middle by half the height, so the bottom is at y = 0.0, exactly on the ground. A taller crate needs a bigger lift: half of its height, every time.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 4 of 8</p>
+<h2>The loop at the bottom, and why rate(30) is in it</h2>
+<p>A program that has reached its last line is finished. VPython's own instructions say to end every program with a loop that never stops, so the program keeps running and can keep listening for keys and clicks. <code>while True:</code> is that loop. Its condition is always True, so the body runs pass after pass until you close the tab or press Ctrl+C in the terminal.</p><p><code>rate(30)</code> is the one line the loop must have. It makes the loop pause so that it runs 30 passes in a second and no more, which leaves the computer time to draw the picture between passes.</p><p>Everything else in the body happens once per pass. Move the ball by 0.1 on every pass and it travels 3 in one second.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">ball</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">yellow</span>)
+<span class="tk-var">passes</span> = <span class="tk-num">0</span>
+
+<span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
+    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+    <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> + <span class="tk-num">0.1</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">passes</span> == <span class="tk-num">30</span>:
+        <span class="tk-fn">print</span>(<span class="tk-str">"after"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"passes the ball is at"</span>, <span class="tk-var">ball</span>.<span class="tk-var">pos</span>)
+    <span class="tk-ctl">if</span> <span class="tk-var">passes</span> == <span class="tk-num">60</span>:
+        <span class="tk-fn">print</span>(<span class="tk-str">"after"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"passes the ball is at"</span>, <span class="tk-var">ball</span>.<span class="tk-var">pos</span>)</pre>
+<div class="predict"><p class="q">Predict: Thirty passes take one second. How far along x has the ball moved after one second, and how far after two? Say what you would see in the tab.</p><button class="rev" data-target="s1-c4" aria-controls="s1-c4" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s1-c4"><p class="outlabel">What it actually prints (run without a browser, quit after 60 passes of the loop)</p><pre class="out">after 30 passes the ball is at &lt;3, 0, 0&gt;
+after 60 passes the ball is at &lt;6, 0, 0&gt;</pre><p>After one second x is 3: thirty passes, and 0.1 added on each one. After two seconds x is 6. The output box shows <code>&lt;3, 0, 0&gt;</code> and then <code>&lt;6, 0, 0&gt;</code>.</p><p>In the tab, the ball slides to the right and keeps going until you stop the program. The number in <code>rate</code> is the passes per second, so <code>rate(60)</code> with the same 0.1 would move the ball twice as fast.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 5 of 8</p>
+<h2>A key press is an event, and a function answers it</h2>
+<p>Pressing a key is an <b>event</b>: something that happens while the program runs, at a moment the program does not choose. You do not call the function yourself. You <b>bind</b> it. <code>scene.bind("keydown", paint)</code> tells VPython to call <code>paint</code> every time a key goes down. Write the function's name without brackets, because you are naming it, not calling it.</p><p>VPython calls the function with one argument, the event. <code>evt.key</code> is the name of the key as a string: <code>"r"</code>, <code>"g"</code>, <code>"left"</code>, <code>"up"</code>, and so on. Three flat gates compare it with the three letters. A key that none of the gates name changes nothing.</p><p>The tab only hears keys when it has the focus. Click inside the 3D scene once before pressing anything. The caption line above the scene is there to remind you.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">scene</span>.<span class="tk-var">caption</span> = <span class="tk-str">"Click the 3D scene, then press r, g, or b."</span>
+<span class="tk-var">ball</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">white</span>)
+
+<span class="tk-kw">def</span> <span class="tk-fn">paint</span>(<span class="tk-var">evt</span>):
+    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"r"</span>:
+        <span class="tk-var">ball</span>.<span class="tk-var">color</span> = <span class="tk-var">color</span>.<span class="tk-var">red</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"g"</span>:
+        <span class="tk-var">ball</span>.<span class="tk-var">color</span> = <span class="tk-var">color</span>.<span class="tk-var">green</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"b"</span>:
+        <span class="tk-var">ball</span>.<span class="tk-var">color</span> = <span class="tk-var">color</span>.<span class="tk-var">blue</span>
+    <span class="tk-fn">print</span>(<span class="tk-str">"key pressed:"</span>, <span class="tk-var">evt</span>.<span class="tk-var">key</span>, <span class="tk-str">" ball colour is now"</span>, <span class="tk-var">ball</span>.<span class="tk-var">color</span>)
+
+<span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"keydown"</span>, <span class="tk-var">paint</span>)
+
+<span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
+    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
+<div class="predict"><p class="q">Predict: Three keys are pressed in turn: g, then b, then x. What colour is the ball after each one? Which of the three print lines shows a colour that did not change, and why did that line print at all?</p><button class="rev" data-target="s1-c5" aria-controls="s1-c5" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s1-c5"><p class="outlabel">What it actually prints (run without a browser, quit after 10 passes of the loop)</p><pre class="out">key pressed: g  ball colour is now &lt;0, 1, 0&gt;
+key pressed: b  ball colour is now &lt;0, 0, 1&gt;
+key pressed: x  ball colour is now &lt;0, 0, 1&gt;</pre><p class="note">Fed in by the build script: the g key pressed on pass 2, the b key pressed on pass 5, the x key pressed on pass 7.</p><p>After g the ball is green and the print shows <code>&lt;0, 1, 0&gt;</code>. A colour is a vector too: red, green, and blue, each from 0 to 1. After b the ball is blue, <code>&lt;0, 0, 1&gt;</code>. After x the ball is still blue.</p><p>The third print line shows the colour that did not change, the same <code>&lt;0, 0, 1&gt;</code> as the second. It printed because <code>paint</code> runs on every key press: VPython calls it for x the same way it calls it for g and b. The three gates decide whether a colour is assigned, and for x all three are False, so the print line is the only line in the body that runs.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 6 of 8</p>
+<h2>Holding a key down</h2>
+<p>A keydown event happens once per press. Hold the arrow down and nothing more happens. For a box that keeps moving while the key is held, ask a different question on every pass: <code>keysdown()</code> returns a list of the keys that are down right now. <code>"right" in keys</code> is True on every pass while the right arrow is held.</p><p>This program has no bound function. The four gates are inside the loop, so they run 30 times a second, and every pass with the key held adds <code>speed</code> once more.</p><p>The print line runs only on passes where the list is not empty, so the terminal shows one line per pass while a key is held and nothing in between.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">scene</span>.<span class="tk-var">caption</span> = <span class="tk-str">"Click the 3D scene, then hold an arrow key."</span>
+<span class="tk-var">floor</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-num">0.1</span>, <span class="tk-num">0</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">12</span>, <span class="tk-num">0.2</span>, <span class="tk-num">12</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">green</span>)
+<span class="tk-var">player</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">orange</span>)
+<span class="tk-var">speed</span> = <span class="tk-num">0.2</span>
+
+<span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
+    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+    <span class="tk-var">keys</span> = <span class="tk-fn">keysdown</span>()
+    <span class="tk-ctl">if</span> <span class="tk-str">"right"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
+        <span class="tk-var">player</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">player</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> + <span class="tk-var">speed</span>
+    <span class="tk-ctl">if</span> <span class="tk-str">"left"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
+        <span class="tk-var">player</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">player</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> - <span class="tk-var">speed</span>
+    <span class="tk-ctl">if</span> <span class="tk-str">"up"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
+        <span class="tk-var">player</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span> = <span class="tk-var">player</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span> - <span class="tk-var">speed</span>
+    <span class="tk-ctl">if</span> <span class="tk-str">"down"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
+        <span class="tk-var">player</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span> = <span class="tk-var">player</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span> + <span class="tk-var">speed</span>
+    <span class="tk-ctl">if</span> <span class="tk-fn">len</span>(<span class="tk-var">keys</span>) &gt; <span class="tk-num">0</span>:
+        <span class="tk-fn">print</span>(<span class="tk-var">keys</span>, <span class="tk-str">"player is at"</span>, <span class="tk-var">player</span>.<span class="tk-var">pos</span>)</pre>
+<div class="predict"><p class="q">Predict: The right arrow is held down for three passes, then let go, then the up arrow is held for one pass. Which of the three pos numbers changes while right is held, and by how much in total? When up is held, does the z number go up or down, and does the box rise?</p><button class="rev" data-target="s1-c6" aria-controls="s1-c6" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s1-c6"><p class="outlabel">What it actually prints (run without a browser, quit after 10 passes of the loop)</p><pre class="out">[&#x27;right&#x27;] player is at &lt;0.2, 0.5, 0&gt;
+[&#x27;right&#x27;] player is at &lt;0.4, 0.5, 0&gt;
+[&#x27;right&#x27;] player is at &lt;0.6, 0.5, 0&gt;
+[&#x27;up&#x27;] player is at &lt;0.6, 0.5, -0.2&gt;</pre><p class="note">Fed in by the build script: the right arrow key held on passes 3 to 5, the up arrow key held on pass 8.</p><p>While right is held, the first number, x, changes: by 0.6 in total, 0.2 on each of the three passes. The output box shows x at 0.2, then 0.4, then 0.6.</p><p>When up is held, z goes down, from 0 to -0.2. The up arrow is wired to the gate that subtracts <code>speed</code> from <code>player.pos.z</code>, and negative z is away from you, so the box moves away across the floor. The box does not rise: y stays 0.5 on every line. To make the up arrow lift the box instead, change <code>player.pos.z</code> to <code>player.pos.y</code> in that gate and change the minus to a plus.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 7 of 8</p>
+<h2>Clicking on a thing</h2>
+<p>A click is an event too. Bind a function to <code>"click"</code>. Inside it, <code>scene.mouse.pick</code> is the object that was under the mouse at the moment of the click. The house word for this object is the <b>pick</b>.</p><p>When the mouse is over empty space there is no object, and the pick is <code>None</code>. None is Python's value for nothing. The gate <code>if thing is None:</code> catches that case. Without it, the colour line would try to colour nothing, and the program would stop with an error that starts <code>AttributeError: 'NoneType' object has no attribute 'color'</code>.</p><p>The seven boxes have no names of their own. The pick is whichever one was clicked, and <code>thing</code> is its name inside the function. A right-drag turns the camera and is not a click, so the function does not run for it.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">scene</span>.<span class="tk-var">caption</span> = <span class="tk-str">"Click a box. Then click the gap between two boxes."</span>
+<span class="tk-ctl">for</span> <span class="tk-var">x</span> <span class="tk-ctl">in</span> <span class="tk-fn">range</span>(-<span class="tk-num">3</span>, <span class="tk-num">4</span>):
+    <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span> * <span class="tk-num">1.5</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">cyan</span>)
+
+<span class="tk-kw">def</span> <span class="tk-fn">clicked</span>(<span class="tk-var">evt</span>):
+    <span class="tk-var">thing</span> = <span class="tk-var">scene</span>.<span class="tk-var">mouse</span>.<span class="tk-var">pick</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">thing</span> <span class="tk-kw">is</span> <span class="tk-kw">None</span>:
+        <span class="tk-fn">print</span>(<span class="tk-str">"clicked empty space"</span>)
+    <span class="tk-ctl">else</span>:
+        <span class="tk-var">thing</span>.<span class="tk-var">color</span> = <span class="tk-var">color</span>.<span class="tk-var">red</span>
+        <span class="tk-fn">print</span>(<span class="tk-str">"clicked the box at"</span>, <span class="tk-var">thing</span>.<span class="tk-var">pos</span>)
+
+<span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"click"</span>, <span class="tk-var">clicked</span>)
+
+<span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
+    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
+<div class="predict"><p class="q">Predict: The first click lands on the box whose pos is <code>&lt;1.5, 0, 0&gt;</code>. The second lands in the gap between that box and the middle one. What does the program print for each click, and does any box change colour on the second click?</p><button class="rev" data-target="s1-c7" aria-controls="s1-c7" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s1-c7"><p class="outlabel">What it actually prints (run without a browser, quit after 6 passes of the loop)</p><pre class="out">clicked the box at &lt;1.5, 0, 0&gt;
+clicked empty space</pre><p class="note">Fed in by the build script: a click at (1.5, 0, 0) on pass 2, a click at (0.75, 0.1, 0) on pass 4.</p><p>First click: it prints <code>clicked the box at &lt;1.5, 0, 0&gt;</code>, and that box turns red. The pick is the box, so the else branch runs.</p><p>Second click: it prints <code>clicked empty space</code>. The pick is None, the gate on None is True, and the else branch does not run, so no box changes colour.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 8 of 8</p>
+<h2>Buttons and sliders</h2>
+<p>A <b>widget</b> is a control that appears under the scene: a button, a slider, a checkbox, a menu. Each one is made with a function call, and each takes a <code>bind=</code> argument naming the function to run when the widget is used.</p><p>The bound function receives the widget itself. For a slider, <code>s.value</code> is the number it is set to. For a button there is nothing to read: the click is the message.</p><p><code>scene.append_to_caption</code> adds words under the scene, so the slider has a label beside it. The Reset button puts the ball's pos and radius back to their starting values, however many times the ball was nudged.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">ball</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">magenta</span>)
+
+<span class="tk-kw">def</span> <span class="tk-fn">reset</span>(<span class="tk-var">b</span>):
+    <span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>)
+    <span class="tk-var">ball</span>.<span class="tk-var">radius</span> = <span class="tk-num">1</span>
+    <span class="tk-fn">print</span>(<span class="tk-str">"Reset clicked: pos"</span>, <span class="tk-var">ball</span>.<span class="tk-var">pos</span>, <span class="tk-str">" radius"</span>, <span class="tk-var">ball</span>.<span class="tk-var">radius</span>)
+
+<span class="tk-kw">def</span> <span class="tk-fn">resize</span>(<span class="tk-var">s</span>):
+    <span class="tk-var">ball</span>.<span class="tk-var">radius</span> = <span class="tk-var">s</span>.<span class="tk-var">value</span>
+    <span class="tk-fn">print</span>(<span class="tk-str">"slider moved to"</span>, <span class="tk-var">s</span>.<span class="tk-var">value</span>)
+
+<span class="tk-kw">def</span> <span class="tk-fn">nudge</span>(<span class="tk-var">evt</span>):
+    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"right"</span>:
+        <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> + <span class="tk-num">1</span>
+        <span class="tk-fn">print</span>(<span class="tk-str">"nudged to"</span>, <span class="tk-var">ball</span>.<span class="tk-var">pos</span>)
+
+<span class="tk-fn">button</span>(<span class="tk-var">text</span>=<span class="tk-str">"Reset"</span>, <span class="tk-var">bind</span>=<span class="tk-var">reset</span>)
+<span class="tk-var">scene</span>.<span class="tk-fn">append_to_caption</span>(<span class="tk-str">"   Size: "</span>)
+<span class="tk-fn">slider</span>(<span class="tk-var">min</span>=<span class="tk-num">0.2</span>, <span class="tk-var">max</span>=<span class="tk-num">3</span>, <span class="tk-var">value</span>=<span class="tk-num">1</span>, <span class="tk-var">bind</span>=<span class="tk-var">resize</span>)
+<span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"keydown"</span>, <span class="tk-var">nudge</span>)
+
+<span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
+    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
+<div class="predict"><p class="q">Predict: The right arrow is pressed twice, the slider is dragged to 2.5, and then Reset is clicked. Where is the ball, and how big is it, after each of those four events?</p><button class="rev" data-target="s1-c8" aria-controls="s1-c8" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s1-c8"><p class="outlabel">What it actually prints (run without a browser, quit after 8 passes of the loop)</p><pre class="out">nudged to &lt;1, 0, 0&gt;
+nudged to &lt;2, 0, 0&gt;
+slider moved to 2.5
+Reset clicked: pos &lt;0, 0, 0&gt;  radius 1.0</pre><p class="note">Fed in by the build script: the right arrow key pressed on pass 2, the right arrow key pressed on pass 3, the widget bound to resize set to 2.5 on pass 5, the widget bound to reset clicked on pass 7.</p><p>After the first press the pos is <code>&lt;1, 0, 0&gt;</code>. After the second it is <code>&lt;2, 0, 0&gt;</code>. The radius is still 1 for both, because <code>nudge</code> touches only x.</p><p>The slider sets the radius to 2.5, and the ball grows but stays at x = 2, because <code>resize</code> touches only the radius.</p><p>Reset puts the pos back to <code>&lt;0, 0, 0&gt;</code> and the radius back to 1, and the last output line shows both. The slider's knob stays where you dragged it, because the program did not move it. Drag it again and the ball grows again.</p></div></div>
+</section>
+<section class="hinge"><p class="chunk-no">Hinge question &middot; from today's chunks</p><h2>Before you build</h2>
+<div class="predict"><p class="q">Question: Two students each built a box that moves with the arrow keys. One box jumps one step per tap and stays still when the key is held down. The other box glides while the key is held and stops when it is let go. Which pattern did each student use: a bound keydown function from chunk 5, or <code>keysdown()</code> inside the loop from chunk 6? Then say which pattern you would pick for a game where one tap moves the player exactly one tile.</p><button class="rev" data-target="s1-hinge" aria-controls="s1-hinge" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s1-hinge"><p>The box that jumps once per tap uses a bound keydown function. VPython calls the function once for each press, and holding the key down is not another press.</p><p>The box that glides uses <code>keysdown()</code> inside the loop. The gate runs again on every pass, and the key is in the list on every pass while it is held, so the box moves 30 times a second.</p><p>For one tile per tap, pick the bound keydown function, because one press should mean exactly one move.</p></div></div>
+</section>
+<section class="brief"><p class="chunk-no">Build &middot; 10 minutes</p><h2>Build: a block builder</h2>
+<p>You are making a small building game. There is a green floor, 16 wide and 16 deep, with its top face at y = 0. A left-click on the floor puts a block there, standing on the floor. A click on a block that is already standing puts a new block on top of it. A paint pot block in the corner holds the colour of the next block, and a menu under the scene changes it. A Reset button clears the floor. The camera still turns with a right-drag and zooms with the scroll wheel, so a builder can walk around the model.</p>
+<ol>
+<li>Start from the card below: the floor, the three camera lines, the <code>build</code> function bound to <code>"click"</code>, and the loop.</li>
+<li>Add a paint pot: <code>pot = box(pos=vec(-7, 0.5, 7), color=color.red)</code>, above the function. In <code>build</code>, give each new block <code>color=pot.color</code>. Then add <code>menu(choices=["Red", "Blue", "Yellow", "White"], bind=pick_colour)</code> under the scene. Its bound function gets the menu as <code>m</code>, and <code>m.selected</code> is the chosen word. Four flat gates, one per word, each assigning <code>pot.color</code>.</li>
+<li>Stacking: in <code>build</code>, add a second gate for a click on a block. When the pick is not None and is not the floor and is not the pot, place the new block at <code>hit.pos + vec(0, 1, 0)</code>.</li>
+<li>Reset: make an empty list <code>blocks = []</code> above the function, and append every block you place: <code>blocks.append(box(...))</code>. A Reset button's function loops over the list, sets <code>b.visible = False</code> on each block, then empties the list with <code>blocks.clear()</code>.</li>
+<li>Put a caption above the scene that says what a left-click does and what a right-drag does.</li>
+</ol>
+<h3>Where on the floor did the click land?</h3>
+<p>The pick says which object was clicked. It does not say where on that object. <code>scene.mouse.project</code> answers that: it finds the point where the click lands on a flat plane. <code>normal=vec(0, 1, 0)</code> says the plane faces up, and <code>point=vec(0, 0, 0)</code> says it passes through the middle of the world, which is where the floor's top face is. <code>round</code> moves each number to the nearest whole number, so the blocks line up on a grid.</p><p>The three camera lines matter. <code>scene.forward</code> tilts the camera so it looks down at the floor instead of straight along it. <code>scene.autoscale = False</code> and <code>scene.range = 8</code> stop the camera from zooming out on its own every time a block is added.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">scene</span>.<span class="tk-var">caption</span> = <span class="tk-str">"Click the floor to place a block."</span>
+<span class="tk-var">scene</span>.<span class="tk-var">autoscale</span> = <span class="tk-kw">False</span>
+<span class="tk-var">scene</span>.<span class="tk-var">range</span> = <span class="tk-num">8</span>
+<span class="tk-var">scene</span>.<span class="tk-var">forward</span> = <span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-num">0.6</span>, -<span class="tk-num">1</span>)
+<span class="tk-var">floor</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-num">0.1</span>, <span class="tk-num">0</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">16</span>, <span class="tk-num">0.2</span>, <span class="tk-num">16</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">green</span>)
+
+<span class="tk-kw">def</span> <span class="tk-fn">build</span>(<span class="tk-var">evt</span>):
+    <span class="tk-var">hit</span> = <span class="tk-var">scene</span>.<span class="tk-var">mouse</span>.<span class="tk-var">pick</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">hit</span> <span class="tk-kw">is</span> <span class="tk-var">floor</span>:
+        <span class="tk-var">spot</span> = <span class="tk-var">scene</span>.<span class="tk-var">mouse</span>.<span class="tk-fn">project</span>(<span class="tk-var">normal</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">point</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>))
+        <span class="tk-fn">print</span>(<span class="tk-str">"floor click at"</span>, <span class="tk-var">spot</span>)
+        <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-fn">round</span>(<span class="tk-var">spot</span>.<span class="tk-var">x</span>), <span class="tk-num">0.5</span>, <span class="tk-fn">round</span>(<span class="tk-var">spot</span>.<span class="tk-var">z</span>)), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">red</span>)
+        <span class="tk-fn">print</span>(<span class="tk-str">"block placed at"</span>, <span class="tk-fn">vec</span>(<span class="tk-fn">round</span>(<span class="tk-var">spot</span>.<span class="tk-var">x</span>), <span class="tk-num">0.5</span>, <span class="tk-fn">round</span>(<span class="tk-var">spot</span>.<span class="tk-var">z</span>)))
+
+<span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"click"</span>, <span class="tk-var">build</span>)
+
+<span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
+    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
+<div class="predict"><p class="q">Predict: Three clicks. The first lands on the floor at (3.2, 0, -1.8). The second lands on the block that the first click placed. The third lands on the floor at (-6.49, 0, 6.51). How many blocks are standing at the end, and where is the third click's block?</p><button class="rev" data-target="s1-card1" aria-controls="s1-card1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s1-card1"><p class="outlabel">What it actually prints (run without a browser, quit after 6 passes of the loop)</p><pre class="out">floor click at &lt;3.2, 0, -1.8&gt;
+block placed at &lt;3, 0.5, -2&gt;
+floor click at &lt;-6.49, 0, 6.51&gt;
+block placed at &lt;-6, 0.5, 7&gt;</pre><p class="note">Fed in by the build script: a click at (3.2, 0, -1.8) on pass 2, a click at (3.2, 0.5, -1.8) on pass 4, a click at (-6.49, 0, 6.51) on pass 5.</p><p>Two blocks are standing. The first click prints the floor point and places a block at <code>&lt;3, 0.5, -2&gt;</code>: 3.2 rounds to 3, -1.8 rounds to -2, and y is 0.5 so the bottom of the block sits on the floor.</p><p>The second click lands on that block, so the pick is the block, not the floor. The gate is False, and nothing is printed or placed. Stacking on top is step 3 of the brief.</p><p>The third click's block is at <code>&lt;-6, 0.5, 7&gt;</code>: -6.49 rounds to -6, and 6.51 rounds to 7.</p></div></div>
+<h3>Expected and got</h3><p>Fill in the left column before you run. Fill in the right column after.</p>
+<table><tr><th>Expected</th><th>Got</th></tr>
+<tr><td>A block placed on the floor stands on it, not half under it</td><td class="fill"></td></tr>
+<tr><td>Clicking a standing block puts the new block on top of it, not inside it</td><td class="fill"></td></tr>
+<tr><td>Picking Blue in the menu changes the next block and leaves the standing blocks alone</td><td class="fill"></td></tr>
+<tr><td>Reset hides every placed block and leaves the floor and the paint pot</td><td class="fill"></td></tr>
+<tr><td>A right-drag turns the camera and places nothing</td><td class="fill"></td></tr>
+</table></section>
+<section><h2>Where you can stop</h2><p>All three are real places to stop. Nobody is behind for finishing at the floor.</p><div class="exits">
+<div class="exit floor"><p class="tag">Floor</p><p>A floor, the three axis arrows, and three blocks placed by typing their pos, each standing on the floor and not sunk into it. One key that recolours one of the blocks.</p></div>
+<div class="exit middle"><p class="tag">Middle</p><p>The block builder: click the floor to place a block, click a block to stack one on top, the paint pot and the menu for colour.</p></div>
+<div class="exit stretch"><p class="tag">Stretch</p><p>A Delete mode checkbox under the scene. While it is ticked, a click on a block sets its <code>visible</code> to False instead of stacking. Then a <code>wtext</code> under the scene that shows how many blocks are standing, updated by every click and by Reset.</p></div>
+</div></section>
+<section><h2>Ledger card</h2><p>Stamp 1: <code>from vpython import *</code>, <code>vec(x, y, z)</code> with x right, y up, z toward you, <code>pos</code> is the middle, <code>while True:</code> with <code>rate(30)</code> in it, <code>scene.bind("keydown", f)</code> and <code>evt.key</code>, <code>keysdown()</code> inside the loop, <code>scene.mouse.pick</code> and the gate on None, <code>button</code> and <code>slider</code> with <code>bind=</code>.</p><p><a href="vpython_ledger_card.html?v=1">Open the course ledger card</a></p></section>
+<details class="teacher"><summary>Teacher panel</summary>
+<h3>Timing, 90 minutes</h3><ul>
+<li>0:00 retrieval opener, 10 min</li>
+<li>0:10 chunks 1 to 3, the world and vec, 18 min (chunk 3 is where the sinking crate gets fixed; do not skip it)</li>
+<li>0:28 chunk 4, the loop, 7 min</li>
+<li>0:35 chunks 5 and 6, keys, 18 min</li>
+<li>0:53 chunks 7 and 8, clicks and widgets, 17 min</li>
+<li>1:10 hinge question, 5 min</li>
+<li>1:15 build brief, 10 min (most rooms place blocks on the floor and stop; stacking is the middle exit)</li>
+<li>1:25 exits, ledger stamp, 5 min</li>
+</ul><p class="note">Pacing: most rooms will not reach the end of the build brief. The exits exist so that stopping there is a finish, not a failure.</p>
+<h3>What you will see, and what to do</h3><table><tr><th>In the room</th><th>Redirect</th></tr>
+<tr><td>Presses a key and nothing happens.</td><td>The tab does not have the focus. Click inside the 3D scene first. If that does not fix it, look at the terminal: if the prompt is back, the program has finished. It needs the loop at the bottom to keep running.</td></tr>
+<tr><td>Puts a block at y = 0, sees it half under the floor, and says the floor is broken.</td><td>pos is the middle. Ask where the bottom of a box 1 tall is when its middle is at 0, then have them print <code>crate.pos.y - crate.size.y / 2</code> as chunk 3 does.</td></tr>
+<tr><td>Expects the up arrow to lift the box.</td><td>In chunk 6 the up arrow changes z, which is toward you and away from you. Have them change that gate to <code>player.pos.y</code>, run it, and say which arrow now does which.</td></tr>
+<tr><td>Writes <code>scene.bind("keydown", paint())</code> with brackets.</td><td>The brackets call <code>paint</code> once, now, with no event, and Python stops with <code>TypeError: paint() missing 1 required positional argument: 'evt'</code>. bind wants the function's name without brackets, so that VPython can call it later.</td></tr>
+<tr><td>Makes a box inside the loop and the tab slows to a crawl.</td><td><code>box(...)</code> inside the loop makes 30 boxes a second. Make things above the loop, or inside a bound function, which runs once per click.</td></tr>
+<tr><td>Says Reset deleted the blocks because they vanished.</td><td><code>visible = False</code> hides a block. The list still holds it until the list is cleared, and a hidden block still counts. That is why step 4 clears the list.</td></tr>
+</table>
+<h3>Mapped to</h3>
+<table><tr><th>Code</th><th>Jurisdiction</th><th>Framework</th><th>Grade</th><th>Statement</th></tr><tr><td><code>NY-5.G.1</code></td><td>New York</td><td>NY Next Generation Mathematics Learning Standards</td><td>5</td><td>Use a pair of perpendicular number lines, called axes, to define a coordinate system, with the intersection of the lines (the origin) arranged to coincide with the 0 on each line and a given point in the plane located by using an ordered pair of numbers, called its coordinates. Understand that the first number indicates how far to travel from the origin in the direction of one axis, and the second number indicates how far to travel in the direction of the second axis, with the convention that the names of the two axes and the coordinates correspond.</td></tr><tr><td><code>NY-6.NS.6</code></td><td>New York</td><td>NY Next Generation Mathematics Learning Standards</td><td>6</td><td>Understand a rational number as a point on the number line. Use number lines and coordinate axes to represent points on a number line and in the coordinate plane with negative number coordinates.</td></tr><tr><td><code>MP6</code></td><td>Multi-State</td><td>Standards for Mathematical Practice</td><td>K-12</td><td>Attend to precision.</td></tr></table>
+<h3>If time runs out</h3><p>The build brief is the first thing to cut. Chunks 1 to 7 are the lesson, and the paint pot, the menu, and Reset can be a second session. If the room has not used <code>def</code> before, stop at chunk 4 and do chunk 5 on the projector, with students calling out which gate is True for each key.</p>
+<h3>Setup and how this page was checked</h3><p>VPython 7.6.5 installs with <code>pip install vpython</code> and runs on Python 3.8 to 3.12. On a newer Python the import fails before anything is drawn, with <code>ModuleNotFoundError: No module named 'pkg_resources'</code>; as of October 2026 the fix is on GitHub but not yet released, so keep the room on Python 3.12 and, if the error appears, run <code>pip install "setuptools&lt;81"</code> once. Key events do not reach a program that runs inside a Jupyter notebook, so run every file from the VS Code terminal. The output boxes on this page come from running each snippet against the installed library with no browser open and the keys and clicks fed in by the build script. The picture itself is not checked, so run the page's programs once on the projector machine before class.</p>
+</details>
+<section><h2>Running this in VS Code</h2><div class="grid2"><div class="card"><h3>Once, before the first run</h3><p>Open the terminal in VS Code and install the library: <code>pip install vpython</code>. Check it worked with <code>python -c "import vpython"</code>. It should print nothing at all and give you the prompt back. A traceback here is an install problem, not a problem with your program.</p></div><div class="card"><h3>Every run after that</h3><p>Save your file as <code>YourName_vpython01.py</code>: your first name, an underscore, then <code>vpython01</code>. Run it from the terminal. The 3D scene opens in a new browser tab, sometimes behind VS Code, so look for it before deciding that nothing happened. Click inside the scene before pressing any key. To end the program, close the tab or press Ctrl+C in the terminal. The program is written to run until you do. Run the file again and you get a fresh tab.</p></div></div><p class="note">VPython draws solid shapes that you can turn and zoom. Everything you print still goes to the terminal, and everything you draw goes to the browser tab. Words in the terminal, pictures in the tab.</p></section>
+</div></main>
+<nav class="pager"><span></span><a href="vpython_course_hub.html?v=1">Course home</a><a href="session02_shapes_and_a_model_from_a_function.html?v=1">Shapes, and a model built by a function &rarr;</a></nav>
+<footer><div class="wrap"><p>Python in 3D: ten sessions of VPython for ages 10 to 11, in the Lecture Light style, light ground for a projector, predict before reveal, three places to stop in every session.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-10-05. <a href="standards_map.html?v=1">Full standards map</a> &middot; <a href="vpython_ledger_card.html?v=1">Ledger card</a></p></div></footer>
+<script>
+document.addEventListener('click', function(e){
+  var b = e.target.closest('button.rev');
+  if(!b) return;
+  var t = document.getElementById(b.getAttribute('data-target'));
+  if(!t) return;
+  var open = t.classList.toggle('open');
+  b.setAttribute('aria-expanded', open ? 'true' : 'false');
+  b.textContent = open ? b.getAttribute('data-hide') : b.getAttribute('data-show');
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Turning things, and turning the camera</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* Lecture Light: built for a projector in a room with the lights on.
+   Light ground, near-black text, few accents, no hairlines. */
+:root{
+  --paper:#F4F0E6;
+  --card:#FFFDF7;
+  --ink:#17181B;
+  --ink-soft:#4A4D53;
+  --rule:#D3CBB8;
+  --teal:#0E4D52;
+  --teal-deep:#0A3A3E;
+  --clay:#9C2B22;
+  --ochre:#8A5A00;
+  --ochre-line:#D99B12;
+  --ochre-tint:#FBF2DC;
+  --green:#1D5B39;
+  --green-tint:#E8F1E9;
+  --green-ink:#122B1C;
+  --code-bg:#EDE7D9;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:'DM Sans',system-ui,sans-serif; font-size:18px; font-weight:500;
+  line-height:1.65;
+}
+header.top{
+  background:var(--teal); color:#FFFDF7;
+  border-bottom:6px solid var(--ochre-line); padding:30px 22px 26px;
+}
+.wrap{max-width:900px; margin:0 auto}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.14em;
+  text-transform:uppercase; color:#F2D89B; margin:0 0 10px; font-weight:700;
+}
+h1{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:800;
+  font-size:clamp(29px,4.8vw,44px); line-height:1.1; margin:0 0 10px;
+}
+h2{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:25px; line-height:1.2; margin:0 0 12px; color:var(--teal-deep);
+}
+h3{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:20px; margin:0 0 8px; color:var(--teal-deep);
+}
+header.top h1,header.top h2{color:#FFFDF7}
+.sub{color:#EAE3D2; margin:0 0 16px; font-size:19px; font-weight:400}
+.dates{
+  display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;
+  font-family:'JetBrains Mono',monospace; font-size:13.5px;
+}
+.pill{
+  border:2px solid rgba(255,253,247,.4); border-radius:999px; padding:5px 13px;
+  background:rgba(255,253,247,.08);
+}
+.pill b{color:#F2D89B; font-weight:700}
+main{padding:28px 22px 12px}
+section{
+  background:var(--card); border:2px solid var(--rule); border-radius:6px;
+  padding:22px 24px; margin:0 0 20px;
+}
+section.opener{border-left:8px solid var(--green)}
+section.chunk{border-left:8px solid var(--ochre-line)}
+section.hinge{border-left:8px solid var(--clay)}
+section.brief{border-left:8px solid var(--teal)}
+.chunk-no{
+  font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--ochre); margin:0 0 8px; font-weight:700;
+}
+p{margin:0 0 14px}
+ul,ol{margin:0 0 14px; padding-left:24px}
+li{margin:0 0 8px}
+code,pre{
+  /* JetBrains Mono ligatures turn != into a slashed equals and <= into a single
+     glyph; students then type a character that does not exist. Keep every
+     operator as the keys that produce it. */
+  font-variant-ligatures:none; font-feature-settings:"liga" 0,"calt" 0,"dlig" 0;
+}
+code{
+  font-family:'JetBrains Mono',monospace; font-size:.9em; font-weight:700;
+  background:var(--code-bg); color:#1E2A2B;
+  padding:2px 6px; border-radius:3px;
+}
+pre{
+  font-family:'JetBrains Mono',monospace; font-size:15.5px; line-height:1.6;
+  background:var(--code-bg); color:var(--ink); border:2px solid var(--rule);
+  border-left:6px solid #B9AF96; border-radius:4px;
+  padding:16px 18px; overflow-x:auto; margin:0 0 16px; font-weight:500;
+}
+/* Code colours by role, from VS Code's Light+ theme. Four are darkened within the same
+   hue so every one clears 4.5:1 on the code background. Colour only, never bold or
+   italic, so every character keeps its width. */
+.tk-ctl{color:#9A00C2}  /* control words: if elif else for while return import */
+.tk-kw{color:#0000FF}   /* def, class, and, or, not, True, False, None, f-string parts */
+.tk-str{color:#A31515}  /* strings */
+.tk-num{color:#06704A}  /* numbers */
+.tk-com{color:#3B6E2A}  /* comments */
+.tk-fn{color:#795E26}   /* functions */
+.tk-cls{color:#1D6A80}  /* classes, types, modules */
+.tk-var{color:#001080}  /* variables */
+pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
+pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
+pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
+pre.anatomy .nm{background:#E3EDEE; border-bottom:3px solid var(--teal); padding:1px 2px}
+pre.anatomy .arg{background:#F7E4E1; border-bottom:3px solid var(--clay); padding:1px 2px}
+pre.anatomy .lbl{color:var(--ink-soft); font-weight:700}
+pre.anatomy .lbl-n{color:var(--teal)}
+pre.anatomy .lbl-a{color:var(--clay)}
+.legend i.n{background:#E3EDEE; border-bottom:3px solid var(--teal)}
+.legend i.a{background:#F7E4E1; border-bottom:3px solid var(--clay)}
+pre.anatomy .lbl-c{color:var(--ochre)}
+pre.anatomy .lbl-b{color:var(--green)}
+.legend{display:flex; flex-wrap:wrap; gap:10px 22px; font-size:16px; margin:0 0 16px}
+.legend span{display:inline-flex; align-items:center; gap:8px; margin-right:18px}
+.legend i{display:inline-block; width:22px; height:16px; border-radius:2px; margin-right:8px}
+.legend i.c{background:#FBF2DC; border-bottom:3px solid var(--ochre-line)}
+.legend i.b{background:#E8F1E9; border-left:3px solid var(--green)}
+pre.out{
+  background:var(--green-tint); border-color:#A9C6B2;
+  border-left:6px solid var(--green); color:var(--green-ink);
+}
+.outlabel{
+  font-family:'JetBrains Mono',monospace; font-size:12.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--green); margin:0 0 7px; font-weight:700;
+}
+.predict{
+  border:2px dashed var(--ochre); border-radius:5px;
+  padding:16px 18px; margin:0 0 16px; background:var(--ochre-tint);
+}
+.predict p{margin:0 0 12px}
+.predict .q{font-weight:700}
+button.rev{
+  font-family:'DM Sans',sans-serif; font-size:16px; font-weight:700;
+  background:var(--teal); color:#FFFDF7; border:0; border-radius:4px;
+  padding:10px 18px; cursor:pointer;
+}
+button.rev:hover{background:var(--teal-deep)}
+button.rev.hint{background:var(--card); color:var(--ochre); border:2px solid var(--ochre-line); margin:0 10px 10px 0}
+button.rev.hint:hover{background:var(--ochre-tint)}
+.hints .ans{margin:0 0 12px; padding-top:10px; border-top:2px solid var(--ochre-line)}
+.ans{display:none; margin-top:16px; padding-top:16px; border-top:2px solid var(--rule)}
+.ans.open{display:block}
+table{border-collapse:collapse; width:100%; margin:0 0 16px; font-size:16.5px}
+th,td{border:2px solid var(--rule); padding:9px 11px; text-align:left; vertical-align:top}
+th{background:#EFE9DA; font-weight:700; font-size:15px; color:var(--teal-deep)}
+td.fill{background:#FBF9F3; min-width:100px}
+.exits{display:grid; gap:14px; grid-template-columns:1fr}
+@media(min-width:760px){.exits{grid-template-columns:repeat(3,1fr)}}
+.exit{border:2px solid var(--rule); border-radius:5px; padding:16px}
+.exit .tag{
+  font-family:'JetBrains Mono',monospace; font-size:12.5px; letter-spacing:.1em;
+  text-transform:uppercase; margin:0 0 8px; font-weight:700;
+}
+.exit.floor{border-top:6px solid var(--green)}
+.exit.floor .tag{color:var(--green)}
+.exit.middle{border-top:6px solid var(--ochre-line)}
+.exit.middle .tag{color:var(--ochre)}
+.exit.stretch{border-top:6px solid var(--clay)}
+.exit.stretch .tag{color:var(--clay)}
+details.teacher{
+  background:var(--card); border:2px solid var(--rule);
+  border-left:8px solid var(--clay); border-radius:6px;
+  padding:18px 22px; margin:0 0 20px;
+}
+details.teacher summary{
+  cursor:pointer; font-family:'Bricolage Grotesque','DM Sans',sans-serif;
+  font-weight:700; font-size:21px; color:var(--clay);
+}
+details.teacher[open] summary{margin-bottom:14px}
+.note{
+  font-size:16.5px; color:var(--ink-soft); border-left:4px solid var(--rule);
+  padding-left:14px; margin:0 0 14px;
+}
+.pager{
+  max-width:900px; margin:0 auto; padding:8px 22px 34px;
+  display:flex; justify-content:space-between; gap:12px;
+  font-family:'JetBrains Mono',monospace; font-size:14px;
+}
+.pager a{
+  color:var(--teal); text-decoration:none; font-weight:700;
+  border:2px solid var(--rule); background:var(--card);
+  border-radius:4px; padding:10px 14px;
+}
+.pager a:hover{background:#EFE9DA}
+footer{
+  background:#EAE4D5; border-top:4px solid var(--teal); padding:22px 22px 36px;
+  font-size:15px; color:var(--ink-soft);
+}
+footer a{color:var(--teal); font-weight:700}
+a{color:var(--teal)}
+.toolbar{display:flex; gap:12px; flex-wrap:wrap; margin:0 0 20px}
+a.btn{
+  display:inline-block; font-family:'DM Sans',sans-serif; font-size:17px; font-weight:700;
+  background:var(--teal); color:#FFFDF7; text-decoration:none; border-radius:4px;
+  padding:12px 20px; border:2px solid var(--teal);
+}
+a.btn:hover{background:var(--teal-deep)}
+a.btn.quiet{background:var(--card); color:var(--teal)}
+a.btn.quiet:hover{background:#EFE9DA}
+.grid2{display:grid; gap:16px; grid-template-columns:1fr}
+@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.card{border:2px solid var(--rule); border-radius:5px; padding:16px; background:#FFFDF7}
+.card h3{margin-bottom:8px}
+.sessionlist{list-style:none; padding:0; margin:0}
+.sessionlist li{
+  border:2px solid var(--rule); border-left:8px solid var(--teal);
+  border-radius:5px; margin:0 0 12px; padding:14px 16px;
+  display:flex; gap:16px; align-items:flex-start; background:#FFFDF7;
+}
+.sessionlist .n{
+  font-family:'JetBrains Mono',monospace; font-size:24px; font-weight:700;
+  color:var(--teal); min-width:38px;
+}
+.sessionlist a{font-weight:700; text-decoration:none; font-size:19px}
+.sessionlist .meta{
+  font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--ink-soft);
+  display:block; margin-top:4px;
+}
+.bonus{border-left-color:var(--clay)}
+.bonus .n{color:var(--clay)}
+.flag{
+  background:#F7E4E1; border:2px solid var(--clay); border-left:8px solid var(--clay);
+  border-radius:5px; padding:14px 16px; margin:0 0 18px; font-size:16.5px;
+  color:#3A1512;
+}
+.stamp{
+  border:3px dashed #BFB49A; border-radius:5px; padding:14px;
+  font-size:15px; min-height:100px; background:#FFFDF7;
+}
+.stampgrid{display:grid; gap:12px; grid-template-columns:1fr 1fr}
+@media(min-width:820px){.stampgrid{grid-template-columns:repeat(3,1fr)}}
+.stamp .no{
+  font-family:'JetBrains Mono',monospace; color:var(--ochre); font-size:12.5px;
+  letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:6px;
+  font-weight:700;
+}
+@media print{
+  body{background:#fff; font-size:11pt}
+  header.top{background:#fff; color:#111; border-bottom:3px solid #111}
+  header.top h1,header.top .sub,header.top .eyebrow,.pill b{color:#111}
+  .pill{border-color:#666}
+  footer,.pager,details.teacher{background:#fff}
+  section,.stamp,.card{background:#fff; break-inside:avoid}
+  .noprint,.toolbar{display:none}
+  a{color:#111}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+<p class="eyebrow">Python in 3D &middot; VPython &middot; Session 4 of 10</p>
+<h1>Turning things, and turning the camera</h1>
+<p class="sub">rotate by an angle, a blade that spins because it turns a little on every pass, a moon that goes around a planet, and a car that drives the way it is facing</p>
+<div class="dates">
+<span class="pill"><b>Length</b> 90 minutes</span>
+<span class="pill"><b>Ages</b> 10 to 11</span>
+<span class="pill"><b>New</b> 7 items</span>
+</div></div></header>
+<main><div class="wrap">
+<section><h2>What is new today</h2><p>rotate with angle and axis, degrees and radians, a counter that measures turning, rotate with origin, norm for a direction, scene.center, scene.range, scene.forward, scene.camera.follow.</p>
+<p><b>Deliberately re-used:</b> Session 1: a bound keydown function and keysdown. Session 2: axis, mag, a model in a list. Session 3: a counter inside the loop.</p>
+<p class="note">Radians will confuse the room if they are explained. Do not explain them. <code>radians(30)</code> is how you write 30 degrees to VPython, and the page says nothing more than that. The counter in chunk 2 is the way to check that a turn is the size you meant.</p></section>
+<section class="opener"><p class="chunk-no">Opener &middot; 10 minutes</p><h2>Retrieval: velocity, the floor gate, and axis</h2>
+<p>Paper first.</p>
+<pre><span class="tk-var">vel</span> = <span class="tk-var">vel</span> + <span class="tk-var">gravity</span> * <span class="tk-var">dt</span>
+<span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span> + <span class="tk-var">vel</span> * <span class="tk-var">dt</span></pre>
+<div class="predict"><p class="q">Question: Which line changes the velocity and which line changes the position? Say what goes wrong if gravity is added to the position instead.</p><button class="rev" data-target="s4-op0" aria-controls="s4-op0" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s4-op0"><p>The first line changes the velocity: gravity adds a little downward speed every pass. The second changes the position by the velocity. Added to the position instead, gravity moves the ball down by the same amount every pass, so it falls at one steady speed and never speeds up.</p></div></div>
+<div class="predict"><p class="q">Question: The bounce line is <code>vel.y = -vel.y</code>. What happens to a ball that was falling at 9 per second?</p><button class="rev" data-target="s4-op1" aria-controls="s4-op1" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s4-op1"><p>It goes up at 9 per second. The minus flips the sign and keeps the size, so the direction changes and the speed does not.</p></div></div>
+<div class="predict"><p class="q">Question: A cylinder has <code>pos=vec(0, 0, 0)</code> and <code>axis=vec(0, 3, 0)</code>. Where is its top, and how tall is it?</p><button class="rev" data-target="s4-op2" aria-controls="s4-op2" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s4-op2"><p>The top is at <code>&lt;0, 3, 0&gt;</code>, pos plus axis. It is 3 tall, which is <code>mag(axis)</code>.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 1 of 6</p>
+<h2>rotate turns a thing around a line through its pos</h2>
+<p><code>blade.rotate(angle=radians(60), axis=vec(0, 0, 1))</code> turns the blade by 60 degrees around a line that points along z and passes through the blade's pos. <code>radians(60)</code> is how you write 60 degrees to VPython. Always write the angle that way; a bare number means something else, and the hinge question is about what.</p><p>A box's <code>axis</code> is a vector along its length. Turning the box turns its axis with it. The length does not change, only the direction.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">blade</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">4</span>, <span class="tk-num">0.4</span>, <span class="tk-num">0.2</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">red</span>)
+<span class="tk-fn">print</span>(<span class="tk-str">"blade axis before:"</span>, <span class="tk-var">blade</span>.<span class="tk-var">axis</span>, <span class="tk-str">"  length"</span>, <span class="tk-fn">mag</span>(<span class="tk-var">blade</span>.<span class="tk-var">axis</span>))
+
+<span class="tk-var">blade</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(<span class="tk-num">60</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">1</span>))
+<span class="tk-fn">print</span>(<span class="tk-str">"blade axis after 60 degrees:"</span>, <span class="tk-var">blade</span>.<span class="tk-var">axis</span>, <span class="tk-str">"  length"</span>, <span class="tk-fn">mag</span>(<span class="tk-var">blade</span>.<span class="tk-var">axis</span>))</pre>
+<div class="predict"><p class="q">Predict: The blade is 4 long, so its axis is <code>&lt;4, 0, 0&gt;</code>. After turning 60 degrees, is the axis longer, shorter, or the same length? Does its x number get bigger or smaller?</p><button class="rev" data-target="s4-c1" aria-controls="s4-c1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s4-c1"><p class="outlabel">What it actually prints (run without a browser)</p><pre class="out">blade axis before: &lt;4, 0, 0&gt;   length 4.0
+blade axis after 60 degrees: &lt;2, 3.4641, 0&gt;   length 4.0</pre><p>The same length: 4.0 before and 4.0 after. Turning does not stretch anything.</p><p>The x number gets smaller, from 4 to 2, and the y number grows from 0 to 3.4641. The blade now points up and to the right instead of straight right, so less of its length is along x and some of it is along y. In the tab the blade is tilted like a clock hand at two o'clock.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 2 of 6</p>
+<h2>A little turn on every pass is a spin</h2>
+<p>Turn the blade by 3 degrees on every pass and it spins. A counter called <code>turned</code> adds up the degrees, and a gate on 360 says when one full turn is done. That is how you check that the turn is the size you meant.</p><p>Thirty passes a second at 3 degrees each is 90 degrees a second, so a full turn takes 4 seconds.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">hub</span> = <span class="tk-fn">cylinder</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, -<span class="tk-num">0.5</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">1</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.3</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-fn">gray</span>(<span class="tk-num">0.5</span>))
+<span class="tk-var">blade</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">4</span>, <span class="tk-num">0.4</span>, <span class="tk-num">0.2</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">red</span>)
+<span class="tk-var">step</span> = <span class="tk-num">3</span>
+<span class="tk-var">turned</span> = <span class="tk-num">0</span>
+<span class="tk-var">passes</span> = <span class="tk-num">0</span>
+
+<span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
+    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+
+    <span class="tk-var">blade</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(<span class="tk-var">step</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">1</span>))
+    <span class="tk-var">turned</span> = <span class="tk-var">turned</span> + <span class="tk-var">step</span>
+
+    <span class="tk-ctl">if</span> <span class="tk-var">turned</span> == <span class="tk-num">360</span>:
+        <span class="tk-fn">print</span>(<span class="tk-str">"one full turn after"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"passes, which is"</span>, <span class="tk-var">passes</span> / <span class="tk-num">30</span>, <span class="tk-str">"seconds"</span>)
+        <span class="tk-var">turned</span> = <span class="tk-num">0</span></pre>
+<div class="predict"><p class="q">Predict: 3 degrees per pass, 30 passes a second. On which pass is the first full turn finished, and how many seconds is that? What single number change makes the blade spin twice as fast?</p><button class="rev" data-target="s4-c2" aria-controls="s4-c2" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s4-c2"><p class="outlabel">What it actually prints (run without a browser, quit after 240 passes of the loop)</p><pre class="out">one full turn after 120 passes, which is 4.0 seconds
+one full turn after 240 passes, which is 8.0 seconds</pre><p>The first full turn finishes on pass 120, which is 4.0 seconds: 360 divided by 3 is 120 passes. The second finishes on pass 240.</p><p>Change <code>step</code> to 6. Then each pass turns twice as far, the counter reaches 360 on pass 60, and a full turn takes 2 seconds. Nothing else in the program needs to change, because every line uses <code>step</code>.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 3 of 6</p>
+<h2>rotate with an origin goes around another point</h2>
+<p>Add <code>origin=planet.pos</code> and the moon turns around the planet instead of around its own middle. Its pos changes on every pass, and its distance from the planet does not.</p><p>The prints use <code>round(x, 2)</code> from session 3, because a turned position has many decimal places and two are enough to read.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">planet</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">1</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">blue</span>)
+<span class="tk-var">moon</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">3</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.3</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">white</span>)
+<span class="tk-var">passes</span> = <span class="tk-num">0</span>
+
+<span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
+    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+    <span class="tk-var">moon</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(<span class="tk-num">10</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">origin</span>=<span class="tk-var">planet</span>.<span class="tk-var">pos</span>)
+
+    <span class="tk-ctl">if</span> <span class="tk-var">passes</span> <span class="tk-kw">in</span> [<span class="tk-num">3</span>, <span class="tk-num">6</span>, <span class="tk-num">9</span>]:
+        <span class="tk-fn">print</span>(<span class="tk-str">"pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  moon x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">moon</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>), <span class="tk-str">"  z ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">moon</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span>, <span class="tk-num">2</span>),
+              <span class="tk-str">"  distance from planet"</span>, <span class="tk-fn">round</span>(<span class="tk-fn">mag</span>(<span class="tk-var">moon</span>.<span class="tk-var">pos</span> - <span class="tk-var">planet</span>.<span class="tk-var">pos</span>), <span class="tk-num">2</span>))</pre>
+<div class="predict"><p class="q">Predict: The moon starts 3 to the right of the planet and turns 10 degrees per pass around the planet. After 9 passes it has turned 90 degrees. Where is it then, and how far is it from the planet?</p><button class="rev" data-target="s4-c3" aria-controls="s4-c3" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s4-c3"><p class="outlabel">What it actually prints (run without a browser, quit after 9 passes of the loop)</p><pre class="out">pass 3   moon x = 2.6   z = -1.5   distance from planet 3.0
+pass 6   moon x = 1.5   z = -2.6   distance from planet 3.0
+pass 9   moon x = 0.0   z = -3.0   distance from planet 3.0</pre><p>After 9 passes the moon is at x = 0.0 and z = -3.0: straight behind the planet, away from you, still 3.0 away. The distance is 3.0 on every line, because turning around a point keeps you the same distance from it.</p><p>Without <code>origin=</code>, the moon would turn around its own middle, which for a sphere changes nothing you can see.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 4 of 6</p>
+<h2>Turn the car with a key, then drive the way it faces</h2>
+<p>Left and right are single taps, so they go in a bound function: each tap turns the car 30 degrees around the up direction. Up is held, so it goes in the loop.</p><p>Driving forward means moving along the car's own axis, whichever way that points now. <code>norm(car.axis)</code> is the axis shrunk to length 1, the direction only. Multiply it by 0.2 and you have a move of 0.2 in the direction the car is facing.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">scene</span>.<span class="tk-var">caption</span> = <span class="tk-str">"Click the scene. Left and right turn the car. Up drives it."</span>
+<span class="tk-var">ground</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-num">0.1</span>, <span class="tk-num">0</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">20</span>, <span class="tk-num">0.2</span>, <span class="tk-num">20</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">green</span>)
+<span class="tk-var">car</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">2</span>, <span class="tk-num">1</span>, <span class="tk-num">1</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">red</span>)
+<span class="tk-var">start</span> = <span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span>)
+
+<span class="tk-kw">def</span> <span class="tk-fn">steer</span>(<span class="tk-var">evt</span>):
+    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"left"</span>:
+        <span class="tk-var">car</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(<span class="tk-num">30</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>))
+    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"right"</span>:
+        <span class="tk-var">car</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(-<span class="tk-num">30</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>))
+    <span class="tk-fn">print</span>(<span class="tk-str">"car now points along"</span>, <span class="tk-var">car</span>.<span class="tk-var">axis</span>)
+
+<span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"keydown"</span>, <span class="tk-var">steer</span>)
+
+<span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
+    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+    <span class="tk-var">keys</span> = <span class="tk-fn">keysdown</span>()
+    <span class="tk-ctl">if</span> <span class="tk-str">"up"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
+        <span class="tk-var">car</span>.<span class="tk-var">pos</span> = <span class="tk-var">car</span>.<span class="tk-var">pos</span> + <span class="tk-fn">norm</span>(<span class="tk-var">car</span>.<span class="tk-var">axis</span>) * <span class="tk-num">0.2</span>
+        <span class="tk-fn">print</span>(<span class="tk-str">"car at"</span>, <span class="tk-var">car</span>.<span class="tk-var">pos</span>, <span class="tk-str">"  distance from start"</span>, <span class="tk-fn">round</span>(<span class="tk-fn">mag</span>(<span class="tk-var">car</span>.<span class="tk-var">pos</span> - <span class="tk-var">start</span>), <span class="tk-num">2</span>))</pre>
+<div class="predict"><p class="q">Predict: Left is tapped once, then up is held for two passes. Is the car 0.4 from where it started? Did it move along x only, or along x and z?</p><button class="rev" data-target="s4-c4" aria-controls="s4-c4" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s4-c4"><p class="outlabel">What it actually prints (run without a browser, quit after 6 passes of the loop)</p><pre class="out">car now points along &lt;1.73205, 0, -1&gt;
+car at &lt;0.173205, 0.5, -0.1&gt;   distance from start 0.2
+car at &lt;0.34641, 0.5, -0.2&gt;   distance from start 0.4</pre><p class="note">Fed in by the build script: the left arrow key pressed on pass 2, the up arrow key held on passes 4 to 5.</p><p>It is 0.4 from the start: 0.2 per pass for two passes, whatever direction it faces. The line that moves it uses <code>norm</code>, so the move is always exactly 0.2 long.</p><p>It moved along x and z both. After the left tap the axis is <code>&lt;1.73205, 0, -1&gt;</code>: mostly along x, partly away from you. So each pass moves the car 0.17 along x and 0.1 along negative z, and the output box shows x growing and z going negative together.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 5 of 6</p>
+<h2>The camera: where it looks and how much it shows</h2>
+<p><code>scene.center</code> is the point the camera looks at, and <code>scene.range</code> is how many units it shows from the middle to the edge. By default the camera zooms out on its own to keep everything in view; <code>scene.autoscale = False</code> stops that, so a car can drive out of sight.</p><p><code>scene.forward</code> is the direction the camera looks. <code>vec(0, -0.5, -1)</code> looks away from you and a bit down, so the ground is seen from above.</p><p>Assigning the car's pos to <code>scene.center</code> moves the camera to look at the car. Doing that on every pass is what <code>scene.camera.follow(car)</code> does in one line.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">ground</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-num">0.1</span>, <span class="tk-num">0</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">40</span>, <span class="tk-num">0.2</span>, <span class="tk-num">40</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">green</span>)
+<span class="tk-var">car</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">2</span>, <span class="tk-num">1</span>, <span class="tk-num">1</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">red</span>)
+<span class="tk-var">scene</span>.<span class="tk-var">autoscale</span> = <span class="tk-kw">False</span>
+<span class="tk-var">scene</span>.<span class="tk-var">range</span> = <span class="tk-num">8</span>
+<span class="tk-var">scene</span>.<span class="tk-var">forward</span> = <span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-num">0.5</span>, -<span class="tk-num">1</span>)
+<span class="tk-fn">print</span>(<span class="tk-str">"the camera looks at"</span>, <span class="tk-var">scene</span>.<span class="tk-var">center</span>, <span class="tk-str">" and shows"</span>, <span class="tk-var">scene</span>.<span class="tk-var">range</span>, <span class="tk-str">"units each way"</span>)
+<span class="tk-var">passes</span> = <span class="tk-num">0</span>
+
+<span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
+    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+    <span class="tk-var">car</span>.<span class="tk-var">pos</span> = <span class="tk-var">car</span>.<span class="tk-var">pos</span> + <span class="tk-fn">vec</span>(<span class="tk-num">0.2</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>)
+
+    <span class="tk-ctl">if</span> <span class="tk-var">passes</span> == <span class="tk-num">60</span>:
+        <span class="tk-fn">print</span>(<span class="tk-str">"car is at"</span>, <span class="tk-var">car</span>.<span class="tk-var">pos</span>, <span class="tk-str">"  camera still looks at"</span>, <span class="tk-var">scene</span>.<span class="tk-var">center</span>)
+        <span class="tk-var">scene</span>.<span class="tk-var">center</span> = <span class="tk-var">car</span>.<span class="tk-var">pos</span>
+        <span class="tk-fn">print</span>(<span class="tk-str">"after scene.center = car.pos, the camera looks at"</span>, <span class="tk-var">scene</span>.<span class="tk-var">center</span>)</pre>
+<div class="predict"><p class="q">Predict: The view shows 8 units each way and the car drives right at 0.2 per pass. On about which pass does the car leave the view? And where is the camera looking on pass 60, before the center line runs?</p><button class="rev" data-target="s4-c5" aria-controls="s4-c5" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s4-c5"><p class="outlabel">What it actually prints (run without a browser, quit after 60 passes of the loop)</p><pre class="out">the camera looks at &lt;0, 0, 0&gt;  and shows 8 units each way
+car is at &lt;12, 0.5, 0&gt;   camera still looks at &lt;0, 0, 0&gt;
+after scene.center = car.pos, the camera looks at &lt;12, 0.5, 0&gt;</pre><p>About pass 40: 8 units at 0.2 per pass is 40 passes, and after that the car is past the right edge. The view does not move to follow it, because autoscale is off.</p><p>On pass 60 the camera still looks at <code>&lt;0, 0, 0&gt;</code> while the car is at x = 12. After <code>scene.center = car.pos</code> the camera looks at <code>&lt;12, 0.5, 0&gt;</code> and the car is back in the middle of the view. Put that line inside the loop, or write <code>scene.camera.follow(car)</code> once above it, and the view stays on the car.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 6 of 6</p>
+<h2>Turning a whole model</h2>
+<p>A model is a list of parts, from session 2. To turn the whole model, rotate every part around the same point: the body's pos. Parts that are not at that point move around it, the way the moon did, and parts at that point turn in place.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">body</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">2</span>, <span class="tk-num">1</span>, <span class="tk-num">1</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">red</span>)
+<span class="tk-var">parts</span> = [<span class="tk-var">body</span>]
+<span class="tk-var">parts</span>.<span class="tk-fn">append</span>(<span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">1</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.3</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">yellow</span>))
+<span class="tk-var">parts</span>.<span class="tk-fn">append</span>(<span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(-<span class="tk-num">1</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.3</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">yellow</span>))
+
+<span class="tk-ctl">for</span> <span class="tk-var">part</span> <span class="tk-ctl">in</span> <span class="tk-var">parts</span>:
+    <span class="tk-var">part</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(<span class="tk-num">60</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">origin</span>=<span class="tk-var">body</span>.<span class="tk-var">pos</span>)
+
+<span class="tk-ctl">for</span> <span class="tk-var">part</span> <span class="tk-ctl">in</span> <span class="tk-var">parts</span>:
+    <span class="tk-fn">print</span>(<span class="tk-str">"part at x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">part</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>), <span class="tk-str">" z ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">part</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span>, <span class="tk-num">2</span>))</pre>
+<div class="predict"><p class="q">Predict: The two lights sit 1 to the right and 1 to the left of the body. After the whole model turns 60 degrees, is the body's pos different? Are the lights still 1 away from the body?</p><button class="rev" data-target="s4-c6" aria-controls="s4-c6" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s4-c6"><p class="outlabel">What it actually prints (run without a browser)</p><pre class="out">part at x = 0.0  z = 0.0
+part at x = 0.5  z = -0.87
+part at x = -0.5  z = 0.87</pre><p>The body's pos is the same, x = 0.0 and z = 0.0, because it is at the origin of the turn and a point does not move when you turn around it.</p><p>The lights are still 1 away. The right light is at x = 0.5, z = -0.87 and the left light at x = -0.5, z = 0.87, and each of those is 1 from the middle. They have swung around the body the way the moon swung around the planet. If the loop rotated each part with no origin, every part would turn in place and the lights would stay where they were, beside a body that now points the other way.</p></div></div>
+</section>
+<section class="hinge"><p class="chunk-no">Hinge question &middot; from today's chunks</p><h2>Before you build</h2>
+<div class="predict"><p class="q">Question: A student writes <code>wheel.rotate(angle=5, axis=vec(0, 0, 1))</code> inside the loop and says the wheel spins far too fast and looks like it is jumping about. What is wrong with the angle, and what is the fix?</p><button class="rev" data-target="s4-hinge" aria-controls="s4-hinge" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s4-hinge"><p>The angle has no <code>radians</code> around it, so 5 means 5 radians, which is 286 degrees, rounded to the nearest degree. The wheel turns almost all the way round on every pass, which looks like jumping.</p><p>The fix is <code>angle=radians(5)</code>: 5 degrees per pass, 150 degrees a second. Every angle in a VPython program is written with <code>radians</code> around it.</p></div></div>
+</section>
+<section class="brief"><p class="chunk-no">Build &middot; 20 minutes</p><h2>Build: drive the car</h2>
+<p>A car on a big green ground. The car is a red body and two yellow lights kept in a list. Left and right turn the whole car. Up drives it the way it faces. The camera follows the car so it never leaves the view. Off to one side there is a windmill whose blade spins on its own.</p>
+<ol>
+<li>Start from the card below: the car as a list of parts, and the <code>turn</code> function that rotates every part around the body.</li>
+<li>Bind <code>turn</code> to <code>"keydown"</code>. Then put the loop from chunk 4 at the bottom with the up gate changed so that it adds <code>norm(body.axis) * 0.2</code> to every part, not just the body.</li>
+<li>Add <code>scene.camera.follow(body)</code> and <code>scene.range = 10</code> above the loop.</li>
+<li>Add a windmill at <code>vec(8, 0, -8)</code>: a post from chunk 1 of session 2, and a blade from chunk 2 of this session that turns 3 degrees on every pass.</li>
+<li>Write a caption that says what the three keys do.</li>
+</ol>
+<h3>The turn function for a model in a list</h3>
+<p>This is chunk 6's loop inside a bound function, with the angle chosen by the key. The function turns every part around the body's pos, so the lights swing with the body.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">ground</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-num">0.1</span>, <span class="tk-num">0</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">40</span>, <span class="tk-num">0.2</span>, <span class="tk-num">40</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">green</span>)
+<span class="tk-var">body</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">2</span>, <span class="tk-num">1</span>, <span class="tk-num">1</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">red</span>)
+<span class="tk-var">parts</span> = [<span class="tk-var">body</span>]
+<span class="tk-var">parts</span>.<span class="tk-fn">append</span>(<span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">1</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0.3</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.2</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">yellow</span>))
+<span class="tk-var">parts</span>.<span class="tk-fn">append</span>(<span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">1</span>, <span class="tk-num">0.5</span>, -<span class="tk-num">0.3</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.2</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">yellow</span>))
+
+<span class="tk-kw">def</span> <span class="tk-fn">turn</span>(<span class="tk-var">evt</span>):
+    <span class="tk-var">angle</span> = <span class="tk-num">0</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"left"</span>:
+        <span class="tk-var">angle</span> = <span class="tk-fn">radians</span>(<span class="tk-num">30</span>)
+    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"right"</span>:
+        <span class="tk-var">angle</span> = <span class="tk-fn">radians</span>(-<span class="tk-num">30</span>)
+    <span class="tk-ctl">for</span> <span class="tk-var">part</span> <span class="tk-ctl">in</span> <span class="tk-var">parts</span>:
+        <span class="tk-var">part</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-var">angle</span>, <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">origin</span>=<span class="tk-var">body</span>.<span class="tk-var">pos</span>)
+    <span class="tk-fn">print</span>(<span class="tk-var">evt</span>.<span class="tk-var">key</span>, <span class="tk-str">"  body points along x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">body</span>.<span class="tk-var">axis</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>), <span class="tk-str">" z ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">body</span>.<span class="tk-var">axis</span>.<span class="tk-var">z</span>, <span class="tk-num">2</span>),
+          <span class="tk-str">"  first light at x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">parts</span>[<span class="tk-num">1</span>].<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>), <span class="tk-str">" z ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">parts</span>[<span class="tk-num">1</span>].<span class="tk-var">pos</span>.<span class="tk-var">z</span>, <span class="tk-num">2</span>))
+
+<span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"keydown"</span>, <span class="tk-var">turn</span>)
+
+<span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
+    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
+<div class="predict"><p class="q">Predict: Left is tapped twice, then right once. After the three taps, how far round has the car turned in total? Do the lights stay at the front of the car?</p><button class="rev" data-target="s4-card1" aria-controls="s4-card1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s4-card1"><p class="outlabel">What it actually prints (run without a browser, quit after 6 passes of the loop)</p><pre class="out">left   body points along x = 1.73  z = -1.0   first light at x = 1.02  z = -0.24
+left   body points along x = 1.0  z = -1.73   first light at x = 0.76  z = -0.72
+right   body points along x = 1.73  z = -1.0   first light at x = 1.02  z = -0.24</pre><p class="note">Fed in by the build script: the left arrow key pressed on pass 2, the left arrow key pressed on pass 3, the right arrow key pressed on pass 5.</p><p>30 degrees to the left in total: two left taps make 60, and one right tap takes 30 back. The output box shows the body's axis going to 60 degrees and then back to 30.</p><p>The lights stay at the front. Each tap rotates every part around the body's pos, so a light that was 1 ahead of the body is still 1 ahead of it in the new direction. The last line shows the first light at x = 1.02, z = -0.24, which is in front of a body whose axis is x = 1.73, z = -1.0.</p><p>A tap of any other key sets no angle, so <code>angle</code> stays 0 and <code>rotate</code> does nothing. That is why the function can be bound to every key without a gate around the loop.</p></div></div>
+<h3>Expected and got</h3><p>Fill in the left column before you run. Fill in the right column after.</p>
+<table><tr><th>Expected</th><th>Got</th></tr>
+<tr><td>Left turns the lights with the body, so they stay at the front</td><td class="fill"></td></tr>
+<tr><td>Up moves the car the way it faces, not always along x</td><td class="fill"></td></tr>
+<tr><td>The car never leaves the view</td><td class="fill"></td></tr>
+<tr><td>The windmill blade makes one full turn every 4 seconds</td><td class="fill"></td></tr>
+<tr><td>Up without any turn drives the car straight along x</td><td class="fill"></td></tr>
+</table></section>
+<section><h2>Where you can stop</h2><p>All three are real places to stop. Nobody is behind for finishing at the floor.</p><div class="exits">
+<div class="exit floor"><p class="tag">Floor</p><p>A windmill: a post and a blade that spins 3 degrees per pass, with the counter that prints when each full turn is done.</p></div>
+<div class="exit middle"><p class="tag">Middle</p><p>The car: turned by left and right, driven by up, followed by the camera, next to the windmill.</p></div>
+<div class="exit stretch"><p class="tag">Stretch</p><p>Make the lights come on: the space key sets both lights' <code>emissive</code> to True and their colour to white. Then add a wheel sphere on each side that rotates around its own axis while up is held, by an angle that depends on how fast the car is going.</p></div>
+</div></section>
+<section><h2>Ledger card</h2><p>Stamp 4: <code>obj.rotate(angle=radians(d), axis=vec(0, 1, 0))</code> turns around a line through pos, add <code>origin=p</code> to go around another point, a counter of degrees checks a spin, <code>norm(v)</code> is a direction of length 1, drive with <code>pos + norm(axis) * speed</code>, <code>scene.center</code>, <code>scene.range</code>, <code>scene.forward</code>, <code>scene.autoscale = False</code>, <code>scene.camera.follow(obj)</code>.</p><p><a href="vpython_ledger_card.html?v=1">Open the course ledger card</a></p></section>
+<details class="teacher"><summary>Teacher panel</summary>
+<h3>Timing, 90 minutes</h3><ul>
+<li>0:00 retrieval opener, 10 min</li>
+<li>0:10 chunks 1 and 2, rotate and the spin counter, 15 min</li>
+<li>0:25 chunk 3, origin, 10 min</li>
+<li>0:35 chunk 4, turn and drive, 15 min (norm is the teaching point)</li>
+<li>0:50 chunk 5, the camera, 10 min</li>
+<li>1:00 chunk 6, turning a model, 8 min</li>
+<li>1:08 hinge question, 7 min</li>
+<li>1:15 build brief, 10 min</li>
+<li>1:25 exits, ledger stamp, 5 min</li>
+</ul><p class="note">Pacing: most rooms will not reach the end of the build brief. The exits exist so that stopping there is a finish, not a failure.</p>
+<h3>What you will see, and what to do</h3><table><tr><th>In the room</th><th>Redirect</th></tr>
+<tr><td>Writes <code>angle=30</code> and the thing spins wildly.</td><td>That is the hinge. 30 radians is nearly five full turns. Wrap it: <code>radians(30)</code>.</td></tr>
+<tr><td>Rotates the moon with no origin and sees nothing happen.</td><td>A sphere turning around its own middle looks the same. <code>origin=planet.pos</code> is what makes it go around the planet. Print the moon's pos with and without.</td></tr>
+<tr><td>Drives the car with <code>car.pos.x + 0.2</code> after turning it, so it slides sideways.</td><td>The car's facing is its axis. <code>norm(car.axis) * 0.2</code> is a move in that direction. Print <code>car.axis</code> after a turn and ask which way that vector points.</td></tr>
+<tr><td>Turns only the body in the car build, and the lights are left behind.</td><td>Every part has to rotate around the same origin. The card's loop does that; a rotate on the body alone turns one part.</td></tr>
+<tr><td>Sets <code>scene.range</code> and expects the camera to move.</td><td>range is how much is shown, center is where it looks. Two different numbers. Print both.</td></tr>
+</table>
+<h3>Mapped to</h3>
+<table><tr><th>Code</th><th>Jurisdiction</th><th>Framework</th><th>Grade</th><th>Statement</th></tr><tr><td><code>NY-4.MD.5</code></td><td>New York</td><td>NY Next Generation Mathematics Learning Standards</td><td>4</td><td>Recognize angles as geometric shapes that are formed wherever two rays share a common endpoint, and understand concepts of angle measurement.</td></tr><tr><td><code>NY-6.NS.6</code></td><td>New York</td><td>NY Next Generation Mathematics Learning Standards</td><td>6</td><td>Understand a rational number as a point on the number line. Use number lines and coordinate axes to represent points on a number line and in the coordinate plane with negative number coordinates.</td></tr><tr><td><code>MP6</code></td><td>Multi-State</td><td>Standards for Mathematical Practice</td><td>K-12</td><td>Attend to precision.</td></tr></table>
+<h3>If time runs out</h3><p>Chunk 6 can be cut, since the card in the build brief teaches the same loop in use. Chunk 5 can be cut to the two lines <code>scene.autoscale = False</code> and <code>scene.camera.follow(car)</code> shown on the projector. The hinge is not cuttable; the radians mistake will appear in the build either way.</p>
+</details>
+<section><h2>Running this in VS Code</h2><div class="grid2"><div class="card"><h3>Once, before the first run</h3><p>Open the terminal in VS Code and install the library: <code>pip install vpython</code>. Check it worked with <code>python -c "import vpython"</code>. It should print nothing at all and give you the prompt back. A traceback here is an install problem, not a problem with your program.</p></div><div class="card"><h3>Every run after that</h3><p>Save your file as <code>YourName_vpython04.py</code>: your first name, an underscore, then <code>vpython04</code>. Run it from the terminal. The 3D scene opens in a new browser tab, sometimes behind VS Code, so look for it before deciding that nothing happened. Click inside the scene before pressing any key. To end the program, close the tab or press Ctrl+C in the terminal. The program is written to run until you do. Run the file again and you get a fresh tab.</p></div></div><p class="note">VPython draws solid shapes that you can turn and zoom. Everything you print still goes to the terminal, and everything you draw goes to the browser tab. Words in the terminal, pictures in the tab.</p></section>
+</div></main>
+<nav class="pager"><a href="session03_velocity_gravity_and_bouncing.html?v=1">&larr; Motion: velocity, gravity, and bouncing</a><a href="vpython_course_hub.html?v=1">Course home</a><a href="session05_a_solar_system_objects_carry_their_numbers.html?v=1">A solar system: objects that carry their own numbers &rarr;</a></nav>
+<footer><div class="wrap"><p>Python in 3D: ten sessions of VPython for ages 10 to 11, in the Lecture Light style, light ground for a projector, predict before reveal, three places to stop in every session.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-10-05. <a href="standards_map.html?v=1">Full standards map</a> &middot; <a href="vpython_ledger_card.html?v=1">Ledger card</a></p></div></footer>
+<script>
+document.addEventListener('click', function(e){
+  var b = e.target.closest('button.rev');
+  if(!b) return;
+  var t = document.getElementById(b.getAttribute('data-target'));
+  if(!t) return;
+  var open = t.classList.toggle('open');
+  b.setAttribute('aria-expanded', open ? 'true' : 'false');
+  b.textContent = open ? b.getAttribute('data-hide') : b.getAttribute('data-show');
+});
+</script>
+</body>
+</html>

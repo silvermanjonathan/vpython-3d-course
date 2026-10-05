@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A grid world: a level from a list of strings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* Lecture Light: built for a projector in a room with the lights on.
+   Light ground, near-black text, few accents, no hairlines. */
+:root{
+  --paper:#F4F0E6;
+  --card:#FFFDF7;
+  --ink:#17181B;
+  --ink-soft:#4A4D53;
+  --rule:#D3CBB8;
+  --teal:#0E4D52;
+  --teal-deep:#0A3A3E;
+  --clay:#9C2B22;
+  --ochre:#8A5A00;
+  --ochre-line:#D99B12;
+  --ochre-tint:#FBF2DC;
+  --green:#1D5B39;
+  --green-tint:#E8F1E9;
+  --green-ink:#122B1C;
+  --code-bg:#EDE7D9;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:'DM Sans',system-ui,sans-serif; font-size:18px; font-weight:500;
+  line-height:1.65;
+}
+header.top{
+  background:var(--teal); color:#FFFDF7;
+  border-bottom:6px solid var(--ochre-line); padding:30px 22px 26px;
+}
+.wrap{max-width:900px; margin:0 auto}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.14em;
+  text-transform:uppercase; color:#F2D89B; margin:0 0 10px; font-weight:700;
+}
+h1{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:800;
+  font-size:clamp(29px,4.8vw,44px); line-height:1.1; margin:0 0 10px;
+}
+h2{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:25px; line-height:1.2; margin:0 0 12px; color:var(--teal-deep);
+}
+h3{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:20px; margin:0 0 8px; color:var(--teal-deep);
+}
+header.top h1,header.top h2{color:#FFFDF7}
+.sub{color:#EAE3D2; margin:0 0 16px; font-size:19px; font-weight:400}
+.dates{
+  display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;
+  font-family:'JetBrains Mono',monospace; font-size:13.5px;
+}
+.pill{
+  border:2px solid rgba(255,253,247,.4); border-radius:999px; padding:5px 13px;
+  background:rgba(255,253,247,.08);
+}
+.pill b{color:#F2D89B; font-weight:700}
+main{padding:28px 22px 12px}
+section{
+  background:var(--card); border:2px solid var(--rule); border-radius:6px;
+  padding:22px 24px; margin:0 0 20px;
+}
+section.opener{border-left:8px solid var(--green)}
+section.chunk{border-left:8px solid var(--ochre-line)}
+section.hinge{border-left:8px solid var(--clay)}
+section.brief{border-left:8px solid var(--teal)}
+.chunk-no{
+  font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--ochre); margin:0 0 8px; font-weight:700;
+}
+p{margin:0 0 14px}
+ul,ol{margin:0 0 14px; padding-left:24px}
+li{margin:0 0 8px}
+code,pre{
+  /* JetBrains Mono ligatures turn != into a slashed equals and <= into a single
+     glyph; students then type a character that does not exist. Keep every
+     operator as the keys that produce it. */
+  font-variant-ligatures:none; font-feature-settings:"liga" 0,"calt" 0,"dlig" 0;
+}
+code{
+  font-family:'JetBrains Mono',monospace; font-size:.9em; font-weight:700;
+  background:var(--code-bg); color:#1E2A2B;
+  padding:2px 6px; border-radius:3px;
+}
+pre{
+  font-family:'JetBrains Mono',monospace; font-size:15.5px; line-height:1.6;
+  background:var(--code-bg); color:var(--ink); border:2px solid var(--rule);
+  border-left:6px solid #B9AF96; border-radius:4px;
+  padding:16px 18px; overflow-x:auto; margin:0 0 16px; font-weight:500;
+}
+/* Code colours by role, from VS Code's Light+ theme. Four are darkened within the same
+   hue so every one clears 4.5:1 on the code background. Colour only, never bold or
+   italic, so every character keeps its width. */
+.tk-ctl{color:#9A00C2}  /* control words: if elif else for while return import */
+.tk-kw{color:#0000FF}   /* def, class, and, or, not, True, False, None, f-string parts */
+.tk-str{color:#A31515}  /* strings */
+.tk-num{color:#06704A}  /* numbers */
+.tk-com{color:#3B6E2A}  /* comments */
+.tk-fn{color:#795E26}   /* functions */
+.tk-cls{color:#1D6A80}  /* classes, types, modules */
+.tk-var{color:#001080}  /* variables */
+pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
+pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
+pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
+pre.anatomy .nm{background:#E3EDEE; border-bottom:3px solid var(--teal); padding:1px 2px}
+pre.anatomy .arg{background:#F7E4E1; border-bottom:3px solid var(--clay); padding:1px 2px}
+pre.anatomy .lbl{color:var(--ink-soft); font-weight:700}
+pre.anatomy .lbl-n{color:var(--teal)}
+pre.anatomy .lbl-a{color:var(--clay)}
+.legend i.n{background:#E3EDEE; border-bottom:3px solid var(--teal)}
+.legend i.a{background:#F7E4E1; border-bottom:3px solid var(--clay)}
+pre.anatomy .lbl-c{color:var(--ochre)}
+pre.anatomy .lbl-b{color:var(--green)}
+.legend{display:flex; flex-wrap:wrap; gap:10px 22px; font-size:16px; margin:0 0 16px}
+.legend span{display:inline-flex; align-items:center; gap:8px; margin-right:18px}
+.legend i{display:inline-block; width:22px; height:16px; border-radius:2px; margin-right:8px}
+.legend i.c{background:#FBF2DC; border-bottom:3px solid var(--ochre-line)}
+.legend i.b{background:#E8F1E9; border-left:3px solid var(--green)}
+pre.out{
+  background:var(--green-tint); border-color:#A9C6B2;
+  border-left:6px solid var(--green); color:var(--green-ink);
+}
+.outlabel{
+  font-family:'JetBrains Mono',monospace; font-size:12.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--green); margin:0 0 7px; font-weight:700;
+}
+.predict{
+  border:2px dashed var(--ochre); border-radius:5px;
+  padding:16px 18px; margin:0 0 16px; background:var(--ochre-tint);
+}
+.predict p{margin:0 0 12px}
+.predict .q{font-weight:700}
+button.rev{
+  font-family:'DM Sans',sans-serif; font-size:16px; font-weight:700;
+  background:var(--teal); color:#FFFDF7; border:0; border-radius:4px;
+  padding:10px 18px; cursor:pointer;
+}
+button.rev:hover{background:var(--teal-deep)}
+button.rev.hint{background:var(--card); color:var(--ochre); border:2px solid var(--ochre-line); margin:0 10px 10px 0}
+button.rev.hint:hover{background:var(--ochre-tint)}
+.hints .ans{margin:0 0 12px; padding-top:10px; border-top:2px solid var(--ochre-line)}
+.ans{display:none; margin-top:16px; padding-top:16px; border-top:2px solid var(--rule)}
+.ans.open{display:block}
+table{border-collapse:collapse; width:100%; margin:0 0 16px; font-size:16.5px}
+th,td{border:2px solid var(--rule); padding:9px 11px; text-align:left; vertical-align:top}
+th{background:#EFE9DA; font-weight:700; font-size:15px; color:var(--teal-deep)}
+td.fill{background:#FBF9F3; min-width:100px}
+.exits{display:grid; gap:14px; grid-template-columns:1fr}
+@media(min-width:760px){.exits{grid-template-columns:repeat(3,1fr)}}
+.exit{border:2px solid var(--rule); border-radius:5px; padding:16px}
+.exit .tag{
+  font-family:'JetBrains Mono',monospace; font-size:12.5px; letter-spacing:.1em;
+  text-transform:uppercase; margin:0 0 8px; font-weight:700;
+}
+.exit.floor{border-top:6px solid var(--green)}
+.exit.floor .tag{color:var(--green)}
+.exit.middle{border-top:6px solid var(--ochre-line)}
+.exit.middle .tag{color:var(--ochre)}
+.exit.stretch{border-top:6px solid var(--clay)}
+.exit.stretch .tag{color:var(--clay)}
+details.teacher{
+  background:var(--card); border:2px solid var(--rule);
+  border-left:8px solid var(--clay); border-radius:6px;
+  padding:18px 22px; margin:0 0 20px;
+}
+details.teacher summary{
+  cursor:pointer; font-family:'Bricolage Grotesque','DM Sans',sans-serif;
+  font-weight:700; font-size:21px; color:var(--clay);
+}
+details.teacher[open] summary{margin-bottom:14px}
+.note{
+  font-size:16.5px; color:var(--ink-soft); border-left:4px solid var(--rule);
+  padding-left:14px; margin:0 0 14px;
+}
+.pager{
+  max-width:900px; margin:0 auto; padding:8px 22px 34px;
+  display:flex; justify-content:space-between; gap:12px;
+  font-family:'JetBrains Mono',monospace; font-size:14px;
+}
+.pager a{
+  color:var(--teal); text-decoration:none; font-weight:700;
+  border:2px solid var(--rule); background:var(--card);
+  border-radius:4px; padding:10px 14px;
+}
+.pager a:hover{background:#EFE9DA}
+footer{
+  background:#EAE4D5; border-top:4px solid var(--teal); padding:22px 22px 36px;
+  font-size:15px; color:var(--ink-soft);
+}
+footer a{color:var(--teal); font-weight:700}
+a{color:var(--teal)}
+.toolbar{display:flex; gap:12px; flex-wrap:wrap; margin:0 0 20px}
+a.btn{
+  display:inline-block; font-family:'DM Sans',sans-serif; font-size:17px; font-weight:700;
+  background:var(--teal); color:#FFFDF7; text-decoration:none; border-radius:4px;
+  padding:12px 20px; border:2px solid var(--teal);
+}
+a.btn:hover{background:var(--teal-deep)}
+a.btn.quiet{background:var(--card); color:var(--teal)}
+a.btn.quiet:hover{background:#EFE9DA}
+.grid2{display:grid; gap:16px; grid-template-columns:1fr}
+@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.card{border:2px solid var(--rule); border-radius:5px; padding:16px; background:#FFFDF7}
+.card h3{margin-bottom:8px}
+.sessionlist{list-style:none; padding:0; margin:0}
+.sessionlist li{
+  border:2px solid var(--rule); border-left:8px solid var(--teal);
+  border-radius:5px; margin:0 0 12px; padding:14px 16px;
+  display:flex; gap:16px; align-items:flex-start; background:#FFFDF7;
+}
+.sessionlist .n{
+  font-family:'JetBrains Mono',monospace; font-size:24px; font-weight:700;
+  color:var(--teal); min-width:38px;
+}
+.sessionlist a{font-weight:700; text-decoration:none; font-size:19px}
+.sessionlist .meta{
+  font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--ink-soft);
+  display:block; margin-top:4px;
+}
+.bonus{border-left-color:var(--clay)}
+.bonus .n{color:var(--clay)}
+.flag{
+  background:#F7E4E1; border:2px solid var(--clay); border-left:8px solid var(--clay);
+  border-radius:5px; padding:14px 16px; margin:0 0 18px; font-size:16.5px;
+  color:#3A1512;
+}
+.stamp{
+  border:3px dashed #BFB49A; border-radius:5px; padding:14px;
+  font-size:15px; min-height:100px; background:#FFFDF7;
+}
+.stampgrid{display:grid; gap:12px; grid-template-columns:1fr 1fr}
+@media(min-width:820px){.stampgrid{grid-template-columns:repeat(3,1fr)}}
+.stamp .no{
+  font-family:'JetBrains Mono',monospace; color:var(--ochre); font-size:12.5px;
+  letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:6px;
+  font-weight:700;
+}
+@media print{
+  body{background:#fff; font-size:11pt}
+  header.top{background:#fff; color:#111; border-bottom:3px solid #111}
+  header.top h1,header.top .sub,header.top .eyebrow,.pill b{color:#111}
+  .pill{border-color:#666}
+  footer,.pager,details.teacher{background:#fff}
+  section,.stamp,.card{background:#fff; break-inside:avoid}
+  .noprint,.toolbar{display:none}
+  a{color:#111}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+<p class="eyebrow">Python in 3D &middot; VPython &middot; Session 7 of 10</p>
+<h1>A grid world: a level from a list of strings</h1>
+<p class="sub">A maze drawn from text, row and column numbers that become places, a player that moves one tile per tap and cannot walk through walls, a goal, and coins</p>
+<div class="dates">
+<span class="pill"><b>Length</b> 90 minutes</span>
+<span class="pill"><b>Ages</b> 10 to 11</span>
+<span class="pill"><b>New</b> 9 items</span>
+</div></div></header>
+<main><div class="wrap">
+<section><h2>What is new today</h2><p>a level as a list of strings, indexing a string, row then column, nested loops, row and col as attributes, a place function, is_open and !=, a goal tile, coins in a list.</p>
+<p><b>Deliberately re-used:</b> Session 1: a bound keydown function. Session 5: attributes on an object, a list of objects.</p>
+<p class="note">Row first, then column, and row is z. Both will be swapped by someone in the first ten minutes. Chunk 1 has the room print <code>level[2][2]</code> and <code>level[3][5]</code> and find them with a finger on the projected level before anything is drawn.</p></section>
+<section class="opener"><p class="chunk-no">Opener &middot; 10 minutes</p><h2>Retrieval: gates that fire once, and attributes</h2>
+<p>Paper first.</p>
+<div class="predict"><p class="q">Question: A catch gate adds 1 to the score and does nothing else. Why does the score climb 30 times a second, and what has to be in the gate's body?</p><button class="rev" data-target="s7-op0" aria-controls="s7-op0" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s7-op0"><p>The gate is True on every pass while the ball is over the paddle, so the body runs every pass. The body has to change what the gate checks, by sending the ball back to the top, so the gate closes.</p></div></div>
+<div class="predict"><p class="q">Question: What does <code>abs(3 - 5)</code> give, and what is abs for in a game?</p><button class="rev" data-target="s7-op1" aria-controls="s7-op1" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s7-op1"><p>2. abs throws away the minus sign, so a gap is the same number whichever side the ball is on.</p></div></div>
+<div class="predict"><p class="q">Question: <code>player.score = 0</code> is written above the loop. Can a bound function add to it? Could it add to a plain variable called <code>score</code>?</p><button class="rev" data-target="s7-op2" aria-controls="s7-op2" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s7-op2"><p>Yes to the first: the attribute lives on the player, and any function that can see the player can change it. No to the second: a function cannot assign to a plain variable that lives outside it. That is why the course puts shared numbers on objects.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 1 of 6</p>
+<h2>A level is a list of strings</h2>
+<p>Each string is one row of the level, read from the far edge to the near edge. <code>#</code> is a wall, <code>.</code> is floor, and <code>G</code> is the goal. A string can be indexed like a list: <code>level[2]</code> is the third row, and <code>level[2][2]</code> is the third character of it. Row first, then column, and both start at 0.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">level</span> = [
+    <span class="tk-str">"#######"</span>,
+    <span class="tk-str">"#.....#"</span>,
+    <span class="tk-str">"#.##..#"</span>,
+    <span class="tk-str">"#....G#"</span>,
+    <span class="tk-str">"#######"</span>,
+]
+<span class="tk-fn">print</span>(<span class="tk-fn">len</span>(<span class="tk-var">level</span>), <span class="tk-str">"rows"</span>)
+<span class="tk-fn">print</span>(<span class="tk-fn">len</span>(<span class="tk-var">level</span>[<span class="tk-num">0</span>]), <span class="tk-str">"columns"</span>)
+<span class="tk-fn">print</span>(<span class="tk-str">"row 2 is"</span>, <span class="tk-var">level</span>[<span class="tk-num">2</span>])
+<span class="tk-fn">print</span>(<span class="tk-str">"row 2, column 2 is"</span>, <span class="tk-var">level</span>[<span class="tk-num">2</span>][<span class="tk-num">2</span>])
+<span class="tk-fn">print</span>(<span class="tk-str">"row 3, column 5 is"</span>, <span class="tk-var">level</span>[<span class="tk-num">3</span>][<span class="tk-num">5</span>])</pre>
+<div class="predict"><p class="q">Predict: Which pair of indexes finds the G? Say the row and the column, in that order. What is at row 2, column 2?</p><button class="rev" data-target="s7-c1" aria-controls="s7-c1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s7-c1"><p class="outlabel">What it actually prints (run without a browser)</p><pre class="out">5 rows
+7 columns
+row 2 is #.##..#
+row 2, column 2 is #
+row 3, column 5 is G</pre><p>The G is at row 3, column 5: <code>level[3][5]</code>. Count rows from the top starting at 0, then characters from the left starting at 0.</p><p>Row 2, column 2 is <code>#</code>, the first of the two walls in the middle of the third row. Reading it as column 2, row 2 happens to give the same character on this level, because the level is nearly square; on a level that is 5 by 7 the swap gives a different answer, and the build brief's level is 9 by 9 so that the mistake shows.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 2 of 6</p>
+<h2>Two loops draw the walls</h2>
+<p>A loop over the rows, and inside it a loop over the characters in that row. Every <code>#</code> becomes a box. The column number becomes x and the row number becomes z, each with 3 or 2 subtracted so the level is centred on the middle of the world.</p><p>Row 0 is the far edge, at negative z, the way the top line of a map is the far side when the map lies flat on a table.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">level</span> = [
+    <span class="tk-str">"#######"</span>,
+    <span class="tk-str">"#.....#"</span>,
+    <span class="tk-str">"#.##..#"</span>,
+    <span class="tk-str">"#....G#"</span>,
+    <span class="tk-str">"#######"</span>,
+]
+<span class="tk-var">walls</span> = <span class="tk-num">0</span>
+
+<span class="tk-ctl">for</span> <span class="tk-var">row</span> <span class="tk-ctl">in</span> <span class="tk-fn">range</span>(<span class="tk-fn">len</span>(<span class="tk-var">level</span>)):
+    <span class="tk-ctl">for</span> <span class="tk-var">col</span> <span class="tk-ctl">in</span> <span class="tk-fn">range</span>(<span class="tk-fn">len</span>(<span class="tk-var">level</span>[<span class="tk-var">row</span>])):
+        <span class="tk-ctl">if</span> <span class="tk-var">level</span>[<span class="tk-var">row</span>][<span class="tk-var">col</span>] == <span class="tk-str">"#"</span>:
+            <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">col</span> - <span class="tk-num">3</span>, <span class="tk-num">0.5</span>, <span class="tk-var">row</span> - <span class="tk-num">2</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-fn">gray</span>(<span class="tk-num">0.6</span>))
+            <span class="tk-var">walls</span> = <span class="tk-var">walls</span> + <span class="tk-num">1</span>
+
+<span class="tk-fn">print</span>(<span class="tk-var">walls</span>, <span class="tk-str">"wall blocks"</span>)
+<span class="tk-fn">print</span>(<span class="tk-str">"the top-left wall, row 0 col 0, is at"</span>, <span class="tk-fn">vec</span>(<span class="tk-num">0</span> - <span class="tk-num">3</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span> - <span class="tk-num">2</span>))
+<span class="tk-fn">print</span>(<span class="tk-str">"the bottom-right wall, row 4 col 6, is at"</span>, <span class="tk-fn">vec</span>(<span class="tk-num">6</span> - <span class="tk-num">3</span>, <span class="tk-num">0.5</span>, <span class="tk-num">4</span> - <span class="tk-num">2</span>))</pre>
+<div class="predict"><p class="q">Predict: How many wall blocks are drawn? The top-left wall is row 0, column 0. Is it near you or far away, on the left or the right?</p><button class="rev" data-target="s7-c2" aria-controls="s7-c2" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s7-c2"><p class="outlabel">What it actually prints (run without a browser)</p><pre class="out">22 wall blocks
+the top-left wall, row 0 col 0, is at &lt;-3, 0.5, -2&gt;
+the bottom-right wall, row 4 col 6, is at &lt;3, 0.5, 2&gt;</pre><p>22: seven on the top row, seven on the bottom, two on the second and fourth rows, and four on the middle row.</p><p>The top-left wall is at <code>&lt;-3, 0.5, -2&gt;</code>: on the left, because column 0 gives the smallest x, and far away, because row 0 gives the smallest z and negative z is away from you. The bottom-right wall is at <code>&lt;3, 0.5, 2&gt;</code>, on the right and near you.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 3 of 6</p>
+<h2>The player has a row and a column</h2>
+<p>The player's place in the level is a row and a column, kept on the player as two attributes. A function called <code>place</code> turns them into a pos with the same arithmetic the walls used. Change the row or column, call <code>place</code>, and the player appears on the new tile.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">player</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">radius</span>=<span class="tk-num">0.4</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">yellow</span>)
+<span class="tk-var">player</span>.<span class="tk-var">row</span> = <span class="tk-num">1</span>
+<span class="tk-var">player</span>.<span class="tk-var">col</span> = <span class="tk-num">1</span>
+
+<span class="tk-kw">def</span> <span class="tk-fn">place</span>(<span class="tk-var">thing</span>):
+    <span class="tk-var">thing</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-var">thing</span>.<span class="tk-var">col</span> - <span class="tk-num">3</span>, <span class="tk-num">0.5</span>, <span class="tk-var">thing</span>.<span class="tk-var">row</span> - <span class="tk-num">2</span>)
+
+<span class="tk-fn">place</span>(<span class="tk-var">player</span>)
+<span class="tk-fn">print</span>(<span class="tk-str">"player at row"</span>, <span class="tk-var">player</span>.<span class="tk-var">row</span>, <span class="tk-str">"col"</span>, <span class="tk-var">player</span>.<span class="tk-var">col</span>, <span class="tk-str">"  pos"</span>, <span class="tk-var">player</span>.<span class="tk-var">pos</span>)
+
+<span class="tk-var">player</span>.<span class="tk-var">col</span> = <span class="tk-num">4</span>
+<span class="tk-fn">place</span>(<span class="tk-var">player</span>)
+<span class="tk-fn">print</span>(<span class="tk-str">"after moving to col 4,  pos"</span>, <span class="tk-var">player</span>.<span class="tk-var">pos</span>)</pre>
+<div class="predict"><p class="q">Predict: After <code>player.col = 4</code> and <code>place(player)</code>, which of the three pos numbers changes, and to what?</p><button class="rev" data-target="s7-c3" aria-controls="s7-c3" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s7-c3"><p class="outlabel">What it actually prints (run without a browser)</p><pre class="out">player at row 1 col 1   pos &lt;-2, 0.5, -1&gt;
+after moving to col 4,  pos &lt;1, 0.5, -1&gt;</pre><p>Only x changes, from -2 to 1: column 4 minus 3. The row is still 1, so z is still -1, and y is always 0.5.</p><p><code>place</code> works on any object that has a row and a col, which is why its parameter is called <code>thing</code>. The coins in chunk 6 use the same function.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 4 of 6</p>
+<h2>One step per tap, and a wall says no</h2>
+<p>Each arrow tap works out the row and column the player wants to go to, and a function called <code>is_open</code> says whether that tile is floor. <code>!=</code> means is not equal to, so <code>is_open</code> returns True for any character except a wall. If the tile is open, the player's row and column change and <code>place</code> moves it. If not, nothing changes.</p><p>The ring of <code>#</code> around the edge of the level is what keeps the row and column inside the list. Without it a step off the edge would ask for a row that does not exist.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">scene</span>.<span class="tk-var">caption</span> = <span class="tk-str">"Click the scene, then tap the arrow keys."</span>
+<span class="tk-var">level</span> = [
+    <span class="tk-str">"#######"</span>,
+    <span class="tk-str">"#.....#"</span>,
+    <span class="tk-str">"#.##..#"</span>,
+    <span class="tk-str">"#....G#"</span>,
+    <span class="tk-str">"#######"</span>,
+]
+<span class="tk-ctl">for</span> <span class="tk-var">row</span> <span class="tk-ctl">in</span> <span class="tk-fn">range</span>(<span class="tk-fn">len</span>(<span class="tk-var">level</span>)):
+    <span class="tk-ctl">for</span> <span class="tk-var">col</span> <span class="tk-ctl">in</span> <span class="tk-fn">range</span>(<span class="tk-fn">len</span>(<span class="tk-var">level</span>[<span class="tk-var">row</span>])):
+        <span class="tk-ctl">if</span> <span class="tk-var">level</span>[<span class="tk-var">row</span>][<span class="tk-var">col</span>] == <span class="tk-str">"#"</span>:
+            <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">col</span> - <span class="tk-num">3</span>, <span class="tk-num">0.5</span>, <span class="tk-var">row</span> - <span class="tk-num">2</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-fn">gray</span>(<span class="tk-num">0.6</span>))
+
+<span class="tk-var">player</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">radius</span>=<span class="tk-num">0.4</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">yellow</span>)
+<span class="tk-var">player</span>.<span class="tk-var">row</span> = <span class="tk-num">1</span>
+<span class="tk-var">player</span>.<span class="tk-var">col</span> = <span class="tk-num">1</span>
+
+<span class="tk-kw">def</span> <span class="tk-fn">place</span>(<span class="tk-var">thing</span>):
+    <span class="tk-var">thing</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-var">thing</span>.<span class="tk-var">col</span> - <span class="tk-num">3</span>, <span class="tk-num">0.5</span>, <span class="tk-var">thing</span>.<span class="tk-var">row</span> - <span class="tk-num">2</span>)
+
+<span class="tk-kw">def</span> <span class="tk-fn">is_open</span>(<span class="tk-var">row</span>, <span class="tk-var">col</span>):
+    <span class="tk-ctl">return</span> <span class="tk-var">level</span>[<span class="tk-var">row</span>][<span class="tk-var">col</span>] != <span class="tk-str">"#"</span>
+
+<span class="tk-kw">def</span> <span class="tk-fn">step</span>(<span class="tk-var">evt</span>):
+    <span class="tk-var">new_row</span> = <span class="tk-var">player</span>.<span class="tk-var">row</span>
+    <span class="tk-var">new_col</span> = <span class="tk-var">player</span>.<span class="tk-var">col</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"up"</span>:
+        <span class="tk-var">new_row</span> = <span class="tk-var">player</span>.<span class="tk-var">row</span> - <span class="tk-num">1</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"down"</span>:
+        <span class="tk-var">new_row</span> = <span class="tk-var">player</span>.<span class="tk-var">row</span> + <span class="tk-num">1</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"left"</span>:
+        <span class="tk-var">new_col</span> = <span class="tk-var">player</span>.<span class="tk-var">col</span> - <span class="tk-num">1</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"right"</span>:
+        <span class="tk-var">new_col</span> = <span class="tk-var">player</span>.<span class="tk-var">col</span> + <span class="tk-num">1</span>
+
+    <span class="tk-ctl">if</span> <span class="tk-fn">is_open</span>(<span class="tk-var">new_row</span>, <span class="tk-var">new_col</span>):
+        <span class="tk-var">player</span>.<span class="tk-var">row</span> = <span class="tk-var">new_row</span>
+        <span class="tk-var">player</span>.<span class="tk-var">col</span> = <span class="tk-var">new_col</span>
+        <span class="tk-fn">place</span>(<span class="tk-var">player</span>)
+        <span class="tk-fn">print</span>(<span class="tk-var">evt</span>.<span class="tk-var">key</span>, <span class="tk-str">"-&gt; row"</span>, <span class="tk-var">player</span>.<span class="tk-var">row</span>, <span class="tk-str">"col"</span>, <span class="tk-var">player</span>.<span class="tk-var">col</span>)
+    <span class="tk-ctl">else</span>:
+        <span class="tk-fn">print</span>(<span class="tk-var">evt</span>.<span class="tk-var">key</span>, <span class="tk-str">"-&gt; blocked by a wall"</span>)
+
+<span class="tk-fn">place</span>(<span class="tk-var">player</span>)
+<span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"keydown"</span>, <span class="tk-var">step</span>)
+
+<span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
+    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
+<div class="predict"><p class="q">Predict: The player starts at row 1, column 1. The taps are right, right, down, right, down, down. Which tap is blocked, and where is the player at the end?</p><button class="rev" data-target="s7-c4" aria-controls="s7-c4" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s7-c4"><p class="outlabel">What it actually prints (run without a browser, quit after 10 passes of the loop)</p><pre class="out">right -&gt; row 1 col 2
+right -&gt; row 1 col 3
+down -&gt; blocked by a wall
+right -&gt; row 1 col 4
+down -&gt; row 2 col 4
+down -&gt; row 3 col 4</pre><p class="note">Fed in by the build script: the right arrow key pressed on pass 1, the right arrow key pressed on pass 2, the down arrow key pressed on pass 3, the right arrow key pressed on pass 4, the down arrow key pressed on pass 5, the down arrow key pressed on pass 6.</p><p>The first down is blocked. After two rights the player is at row 1, column 3, and row 2, column 3 is a <code>#</code>, so <code>is_open</code> returns False and the player stays. The output box shows that line as blocked.</p><p>At the end the player is at row 3, column 4: the third right takes it to column 4, and the two downs take it to row 3, because rows 2 and 3 are open at column 4. The up arrow makes the row smaller, because row 0 is the far edge.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 5 of 6</p>
+<h2>A goal tile, and counting the steps</h2>
+<p>After each move, look at the character under the player. If it is <code>G</code>, the player has won. A counter on the player, <code>player.steps</code>, goes up by one for each move that happened, and a label says how many it took. A blocked tap is not a step.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">level</span> = [
+    <span class="tk-str">"#######"</span>,
+    <span class="tk-str">"#.....#"</span>,
+    <span class="tk-str">"#.##..#"</span>,
+    <span class="tk-str">"#....G#"</span>,
+    <span class="tk-str">"#######"</span>,
+]
+<span class="tk-ctl">for</span> <span class="tk-var">row</span> <span class="tk-ctl">in</span> <span class="tk-fn">range</span>(<span class="tk-fn">len</span>(<span class="tk-var">level</span>)):
+    <span class="tk-ctl">for</span> <span class="tk-var">col</span> <span class="tk-ctl">in</span> <span class="tk-fn">range</span>(<span class="tk-fn">len</span>(<span class="tk-var">level</span>[<span class="tk-var">row</span>])):
+        <span class="tk-ctl">if</span> <span class="tk-var">level</span>[<span class="tk-var">row</span>][<span class="tk-var">col</span>] == <span class="tk-str">"#"</span>:
+            <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">col</span> - <span class="tk-num">3</span>, <span class="tk-num">0.5</span>, <span class="tk-var">row</span> - <span class="tk-num">2</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-fn">gray</span>(<span class="tk-num">0.6</span>))
+
+<span class="tk-var">player</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">radius</span>=<span class="tk-num">0.4</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">yellow</span>)
+<span class="tk-var">player</span>.<span class="tk-var">row</span> = <span class="tk-num">1</span>
+<span class="tk-var">player</span>.<span class="tk-var">col</span> = <span class="tk-num">1</span>
+<span class="tk-var">player</span>.<span class="tk-var">steps</span> = <span class="tk-num">0</span>
+<span class="tk-var">sign</span> = <span class="tk-fn">label</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">2</span>, <span class="tk-num">0</span>), <span class="tk-var">text</span>=<span class="tk-str">""</span>, <span class="tk-var">height</span>=<span class="tk-num">20</span>, <span class="tk-var">box</span>=<span class="tk-kw">False</span>)
+
+<span class="tk-kw">def</span> <span class="tk-fn">place</span>(<span class="tk-var">thing</span>):
+    <span class="tk-var">thing</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-var">thing</span>.<span class="tk-var">col</span> - <span class="tk-num">3</span>, <span class="tk-num">0.5</span>, <span class="tk-var">thing</span>.<span class="tk-var">row</span> - <span class="tk-num">2</span>)
+
+<span class="tk-kw">def</span> <span class="tk-fn">is_open</span>(<span class="tk-var">row</span>, <span class="tk-var">col</span>):
+    <span class="tk-ctl">return</span> <span class="tk-var">level</span>[<span class="tk-var">row</span>][<span class="tk-var">col</span>] != <span class="tk-str">"#"</span>
+
+<span class="tk-kw">def</span> <span class="tk-fn">step</span>(<span class="tk-var">evt</span>):
+    <span class="tk-var">new_row</span> = <span class="tk-var">player</span>.<span class="tk-var">row</span>
+    <span class="tk-var">new_col</span> = <span class="tk-var">player</span>.<span class="tk-var">col</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"up"</span>:
+        <span class="tk-var">new_row</span> = <span class="tk-var">player</span>.<span class="tk-var">row</span> - <span class="tk-num">1</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"down"</span>:
+        <span class="tk-var">new_row</span> = <span class="tk-var">player</span>.<span class="tk-var">row</span> + <span class="tk-num">1</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"left"</span>:
+        <span class="tk-var">new_col</span> = <span class="tk-var">player</span>.<span class="tk-var">col</span> - <span class="tk-num">1</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"right"</span>:
+        <span class="tk-var">new_col</span> = <span class="tk-var">player</span>.<span class="tk-var">col</span> + <span class="tk-num">1</span>
+
+    <span class="tk-ctl">if</span> <span class="tk-fn">is_open</span>(<span class="tk-var">new_row</span>, <span class="tk-var">new_col</span>):
+        <span class="tk-var">player</span>.<span class="tk-var">row</span> = <span class="tk-var">new_row</span>
+        <span class="tk-var">player</span>.<span class="tk-var">col</span> = <span class="tk-var">new_col</span>
+        <span class="tk-var">player</span>.<span class="tk-var">steps</span> = <span class="tk-var">player</span>.<span class="tk-var">steps</span> + <span class="tk-num">1</span>
+        <span class="tk-fn">place</span>(<span class="tk-var">player</span>)
+
+    <span class="tk-ctl">if</span> <span class="tk-var">level</span>[<span class="tk-var">player</span>.<span class="tk-var">row</span>][<span class="tk-var">player</span>.<span class="tk-var">col</span>] == <span class="tk-str">"G"</span>:
+        <span class="tk-var">sign</span>.<span class="tk-var">text</span> = <span class="tk-str">"You reached the goal in "</span> + <span class="tk-cls">str</span>(<span class="tk-var">player</span>.<span class="tk-var">steps</span>) + <span class="tk-str">" steps"</span>
+        <span class="tk-fn">print</span>(<span class="tk-var">sign</span>.<span class="tk-var">text</span>)
+
+<span class="tk-fn">place</span>(<span class="tk-var">player</span>)
+<span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"keydown"</span>, <span class="tk-var">step</span>)
+
+<span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
+    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
+<div class="predict"><p class="q">Predict: The same taps as chunk 4, then one more right. Does the player reach the G? How many steps does the label say, and why is it not 7?</p><button class="rev" data-target="s7-c5" aria-controls="s7-c5" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s7-c5"><p class="outlabel">What it actually prints (run without a browser, quit after 10 passes of the loop)</p><pre class="out">You reached the goal in 6 steps</pre><p class="note">Fed in by the build script: the right arrow key pressed on pass 1, the right arrow key pressed on pass 2, the down arrow key pressed on pass 3, the right arrow key pressed on pass 4, the down arrow key pressed on pass 5, the down arrow key pressed on pass 6, the right arrow key pressed on pass 7.</p><p>Yes. The last right takes the player from row 3, column 4 to row 3, column 5, which is the G. The label says 6 steps.</p><p>Seven taps were made, but one of them, the first down, was blocked, and <code>player.steps</code> only goes up inside the gate that moves the player. A tap that moved nothing is not counted.</p></div></div>
+</section>
+<section class="chunk"><p class="chunk-no">Chunk 6 of 6</p>
+<h2>Coins are objects in a list, each with a row and a column</h2>
+<p>A coin is a small sphere with its own row and col, placed by the same <code>place</code> function. The drawing loop makes one for every <code>o</code> in the level and appends it to a list. After each move, a loop over the coins asks whether any visible coin is on the player's tile. If one is, it is hidden and the score goes up.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">level</span> = [
+    <span class="tk-str">"#######"</span>,
+    <span class="tk-str">"#.o...#"</span>,
+    <span class="tk-str">"#.##o.#"</span>,
+    <span class="tk-str">"#..o.G#"</span>,
+    <span class="tk-str">"#######"</span>,
+]
+<span class="tk-var">coins</span> = []
+<span class="tk-ctl">for</span> <span class="tk-var">row</span> <span class="tk-ctl">in</span> <span class="tk-fn">range</span>(<span class="tk-fn">len</span>(<span class="tk-var">level</span>)):
+    <span class="tk-ctl">for</span> <span class="tk-var">col</span> <span class="tk-ctl">in</span> <span class="tk-fn">range</span>(<span class="tk-fn">len</span>(<span class="tk-var">level</span>[<span class="tk-var">row</span>])):
+        <span class="tk-ctl">if</span> <span class="tk-var">level</span>[<span class="tk-var">row</span>][<span class="tk-var">col</span>] == <span class="tk-str">"#"</span>:
+            <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">col</span> - <span class="tk-num">3</span>, <span class="tk-num">0.5</span>, <span class="tk-var">row</span> - <span class="tk-num">2</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-fn">gray</span>(<span class="tk-num">0.6</span>))
+        <span class="tk-ctl">if</span> <span class="tk-var">level</span>[<span class="tk-var">row</span>][<span class="tk-var">col</span>] == <span class="tk-str">"o"</span>:
+            <span class="tk-var">c</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">radius</span>=<span class="tk-num">0.15</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">yellow</span>)
+            <span class="tk-var">c</span>.<span class="tk-var">row</span> = <span class="tk-var">row</span>
+            <span class="tk-var">c</span>.<span class="tk-var">col</span> = <span class="tk-var">col</span>
+            <span class="tk-var">coins</span>.<span class="tk-fn">append</span>(<span class="tk-var">c</span>)
+
+<span class="tk-var">player</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">radius</span>=<span class="tk-num">0.4</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">cyan</span>)
+<span class="tk-var">player</span>.<span class="tk-var">row</span> = <span class="tk-num">1</span>
+<span class="tk-var">player</span>.<span class="tk-var">col</span> = <span class="tk-num">1</span>
+<span class="tk-var">player</span>.<span class="tk-var">score</span> = <span class="tk-num">0</span>
+
+<span class="tk-kw">def</span> <span class="tk-fn">place</span>(<span class="tk-var">thing</span>):
+    <span class="tk-var">thing</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-var">thing</span>.<span class="tk-var">col</span> - <span class="tk-num">3</span>, <span class="tk-num">0.5</span>, <span class="tk-var">thing</span>.<span class="tk-var">row</span> - <span class="tk-num">2</span>)
+
+<span class="tk-kw">def</span> <span class="tk-fn">is_open</span>(<span class="tk-var">row</span>, <span class="tk-var">col</span>):
+    <span class="tk-ctl">return</span> <span class="tk-var">level</span>[<span class="tk-var">row</span>][<span class="tk-var">col</span>] != <span class="tk-str">"#"</span>
+
+<span class="tk-kw">def</span> <span class="tk-fn">step</span>(<span class="tk-var">evt</span>):
+    <span class="tk-var">new_row</span> = <span class="tk-var">player</span>.<span class="tk-var">row</span>
+    <span class="tk-var">new_col</span> = <span class="tk-var">player</span>.<span class="tk-var">col</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"up"</span>:
+        <span class="tk-var">new_row</span> = <span class="tk-var">player</span>.<span class="tk-var">row</span> - <span class="tk-num">1</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"down"</span>:
+        <span class="tk-var">new_row</span> = <span class="tk-var">player</span>.<span class="tk-var">row</span> + <span class="tk-num">1</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"left"</span>:
+        <span class="tk-var">new_col</span> = <span class="tk-var">player</span>.<span class="tk-var">col</span> - <span class="tk-num">1</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"right"</span>:
+        <span class="tk-var">new_col</span> = <span class="tk-var">player</span>.<span class="tk-var">col</span> + <span class="tk-num">1</span>
+
+    <span class="tk-ctl">if</span> <span class="tk-fn">is_open</span>(<span class="tk-var">new_row</span>, <span class="tk-var">new_col</span>):
+        <span class="tk-var">player</span>.<span class="tk-var">row</span> = <span class="tk-var">new_row</span>
+        <span class="tk-var">player</span>.<span class="tk-var">col</span> = <span class="tk-var">new_col</span>
+        <span class="tk-fn">place</span>(<span class="tk-var">player</span>)
+
+    <span class="tk-ctl">for</span> <span class="tk-var">c</span> <span class="tk-ctl">in</span> <span class="tk-var">coins</span>:
+        <span class="tk-ctl">if</span> <span class="tk-var">c</span>.<span class="tk-var">visible</span> <span class="tk-kw">and</span> <span class="tk-var">c</span>.<span class="tk-var">row</span> == <span class="tk-var">player</span>.<span class="tk-var">row</span> <span class="tk-kw">and</span> <span class="tk-var">c</span>.<span class="tk-var">col</span> == <span class="tk-var">player</span>.<span class="tk-var">col</span>:
+            <span class="tk-var">c</span>.<span class="tk-var">visible</span> = <span class="tk-kw">False</span>
+            <span class="tk-var">player</span>.<span class="tk-var">score</span> = <span class="tk-var">player</span>.<span class="tk-var">score</span> + <span class="tk-num">1</span>
+            <span class="tk-fn">print</span>(<span class="tk-str">"coin at row"</span>, <span class="tk-var">c</span>.<span class="tk-var">row</span>, <span class="tk-str">"col"</span>, <span class="tk-var">c</span>.<span class="tk-var">col</span>, <span class="tk-str">"  score"</span>, <span class="tk-var">player</span>.<span class="tk-var">score</span>)
+
+<span class="tk-ctl">for</span> <span class="tk-var">c</span> <span class="tk-ctl">in</span> <span class="tk-var">coins</span>:
+    <span class="tk-fn">place</span>(<span class="tk-var">c</span>)
+<span class="tk-fn">place</span>(<span class="tk-var">player</span>)
+<span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"keydown"</span>, <span class="tk-var">step</span>)
+<span class="tk-fn">print</span>(<span class="tk-fn">len</span>(<span class="tk-var">coins</span>), <span class="tk-str">"coins on the level"</span>)
+
+<span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
+    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
+<div class="predict"><p class="q">Predict: There are three coins. The taps are right, right, right, down, down, right, left. How many coins are collected, and why does the last left, which moves the player back onto a coin's tile, not score again?</p><button class="rev" data-target="s7-c6" aria-controls="s7-c6" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s7-c6"><p class="outlabel">What it actually prints (run without a browser, quit after 10 passes of the loop)</p><pre class="out">3 coins on the level
+coin at row 1 col 2   score 1
+coin at row 2 col 4   score 2</pre><p class="note">Fed in by the build script: the right arrow key pressed on pass 1, the right arrow key pressed on pass 2, the right arrow key pressed on pass 3, the down arrow key pressed on pass 4, the down arrow key pressed on pass 5, the right arrow key pressed on pass 6, the left arrow key pressed on pass 7.</p><p>Two coins: the one at row 1, column 2 on the first right, and the one at row 2, column 4 on the first down. The coin at row 3, column 3 is never stepped on.</p><p>The last left moves the player back to row 3, column 4, which never had a coin, so nothing scores. Even on a tile that did have one, the gate checks <code>c.visible</code> first, and a collected coin is hidden, so it cannot be collected twice. Hiding the coin is the change that closes the gate, the same idea as the catch gate sending the ball back to the top.</p></div></div>
+</section>
+<section class="hinge"><p class="chunk-no">Hinge question &middot; from today's chunks</p><h2>Before you build</h2>
+<div class="predict"><p class="q">Question: A level is 5 strings long and each string has 7 characters. Give <code>len(level)</code> and <code>len(level[0])</code>. Give the row and column of the bottom-right corner. Then say which of row and column becomes x in the drawing, and which becomes z.</p><button class="rev" data-target="s7-hinge" aria-controls="s7-hinge" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s7-hinge"><p><code>len(level)</code> is 5, the number of rows. <code>len(level[0])</code> is 7, the number of characters in a row.</p><p>The bottom-right corner is row 4, column 6: one less than each length, because both start at 0.</p><p>Column becomes x, because columns run across. Row becomes z, because rows run from far to near. Swapping them draws the level turned on its side.</p></div></div>
+</section>
+<section class="brief"><p class="chunk-no">Build &middot; 20 minutes</p><h2>Build: the coin maze</h2>
+<p>A maze 9 by 9 drawn from a list of strings, with walls, a start, coins, and a goal. The player moves one tile per arrow tap and cannot walk through walls. A line of text under the scene shows the score and the step count. Reaching the goal shows a label. Pressing r puts the player back at the start, the coins back, and the counts back to 0. The camera looks down at the maze from above.</p>
+<ol>
+<li>Start from the card below: the 9 by 9 level, the drawing loop with the middle column and middle row as two named numbers, and <code>place</code> written from them.</li>
+<li>Add the player at row 1, column 1 with <code>row</code>, <code>col</code>, <code>steps</code> and <code>score</code> attributes, and the <code>step</code> function from chunk 6 with the step counter from chunk 5.</li>
+<li>Add a <code>wtext</code> under the scene and set its text after every move: <code>"Coins: " + str(player.score) + "   Steps: " + str(player.steps)</code>.</li>
+<li>Add the goal label from chunk 5.</li>
+<li>Add a restart: a key <code>r</code> inside the <code>step</code> function that puts the player's row and col back to 1, both counters back to 0, every coin's <code>visible</code> back to True, and the label's text back to empty.</li>
+<li>Put <code>scene.forward = vec(0, -1, -0.3)</code> and <code>scene.range = 6</code> above the loop so the whole maze is in view from above.</li>
+</ol>
+<h3>A bigger level, with the middle written once</h3>
+<p>Nine columns and nine rows, so the middle is column 4 and row 4. Those two numbers are written once at the top, and both the drawing loop and <code>place</code> use them. Change the level's size and only those two numbers change.</p>
+<pre><span class="tk-ctl">from</span> <span class="tk-cls">vpython</span> <span class="tk-ctl">import</span> *
+
+<span class="tk-var">level</span> = [
+    <span class="tk-str">"#########"</span>,
+    <span class="tk-str">"#..o#...#"</span>,
+    <span class="tk-str">"#.#.#.#.#"</span>,
+    <span class="tk-str">"#.#...#o#"</span>,
+    <span class="tk-str">"#.#####.#"</span>,
+    <span class="tk-str">"#o..#...#"</span>,
+    <span class="tk-str">"#.#.#.#.#"</span>,
+    <span class="tk-str">"#...#..G#"</span>,
+    <span class="tk-str">"#########"</span>,
+]
+<span class="tk-var">mid_col</span> = <span class="tk-num">4</span>
+<span class="tk-var">mid_row</span> = <span class="tk-num">4</span>
+<span class="tk-var">coins</span> = []
+<span class="tk-var">walls</span> = <span class="tk-num">0</span>
+
+<span class="tk-ctl">for</span> <span class="tk-var">row</span> <span class="tk-ctl">in</span> <span class="tk-fn">range</span>(<span class="tk-fn">len</span>(<span class="tk-var">level</span>)):
+    <span class="tk-ctl">for</span> <span class="tk-var">col</span> <span class="tk-ctl">in</span> <span class="tk-fn">range</span>(<span class="tk-fn">len</span>(<span class="tk-var">level</span>[<span class="tk-var">row</span>])):
+        <span class="tk-ctl">if</span> <span class="tk-var">level</span>[<span class="tk-var">row</span>][<span class="tk-var">col</span>] == <span class="tk-str">"#"</span>:
+            <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">col</span> - <span class="tk-var">mid_col</span>, <span class="tk-num">0.5</span>, <span class="tk-var">row</span> - <span class="tk-var">mid_row</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-fn">gray</span>(<span class="tk-num">0.6</span>))
+            <span class="tk-var">walls</span> = <span class="tk-var">walls</span> + <span class="tk-num">1</span>
+        <span class="tk-ctl">if</span> <span class="tk-var">level</span>[<span class="tk-var">row</span>][<span class="tk-var">col</span>] == <span class="tk-str">"o"</span>:
+            <span class="tk-var">c</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">radius</span>=<span class="tk-num">0.15</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">yellow</span>)
+            <span class="tk-var">c</span>.<span class="tk-var">row</span> = <span class="tk-var">row</span>
+            <span class="tk-var">c</span>.<span class="tk-var">col</span> = <span class="tk-var">col</span>
+            <span class="tk-var">coins</span>.<span class="tk-fn">append</span>(<span class="tk-var">c</span>)
+
+<span class="tk-kw">def</span> <span class="tk-fn">place</span>(<span class="tk-var">thing</span>):
+    <span class="tk-var">thing</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-var">thing</span>.<span class="tk-var">col</span> - <span class="tk-var">mid_col</span>, <span class="tk-num">0.5</span>, <span class="tk-var">thing</span>.<span class="tk-var">row</span> - <span class="tk-var">mid_row</span>)
+
+<span class="tk-ctl">for</span> <span class="tk-var">c</span> <span class="tk-ctl">in</span> <span class="tk-var">coins</span>:
+    <span class="tk-fn">place</span>(<span class="tk-var">c</span>)
+
+<span class="tk-fn">print</span>(<span class="tk-var">walls</span>, <span class="tk-str">"walls and"</span>, <span class="tk-fn">len</span>(<span class="tk-var">coins</span>), <span class="tk-str">"coins"</span>)
+<span class="tk-fn">print</span>(<span class="tk-str">"the middle tile, row 4 col 4, is at"</span>, <span class="tk-fn">vec</span>(<span class="tk-num">4</span> - <span class="tk-var">mid_col</span>, <span class="tk-num">0.5</span>, <span class="tk-num">4</span> - <span class="tk-var">mid_row</span>))
+<span class="tk-fn">print</span>(<span class="tk-str">"the goal, row 7 col 7, is at"</span>, <span class="tk-fn">vec</span>(<span class="tk-num">7</span> - <span class="tk-var">mid_col</span>, <span class="tk-num">0.5</span>, <span class="tk-num">7</span> - <span class="tk-var">mid_row</span>))</pre>
+<div class="predict"><p class="q">Predict: Where does the middle tile of the level land in the world? The goal is at row 7, column 7: is it near you or far away, left or right?</p><button class="rev" data-target="s7-card1" aria-controls="s7-card1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s7-card1"><p class="outlabel">What it actually prints (run without a browser)</p><pre class="out">48 walls and 3 coins
+the middle tile, row 4 col 4, is at &lt;0, 0.5, 0&gt;
+the goal, row 7 col 7, is at &lt;3, 0.5, 3&gt;</pre><p>The middle tile lands at <code>&lt;0, 0.5, 0&gt;</code>, the middle of the world, because 4 minus 4 is 0 for both the column and the row. That is what the two <code>mid</code> numbers are for.</p><p>The goal is at <code>&lt;3, 0.5, 3&gt;</code>: on the right, because column 7 is past the middle, and near you, because row 7 is one of the last rows and the last rows are the near edge. The output box also counts 48 walls and 3 coins.</p></div></div>
+<h3>Expected and got</h3><p>Fill in the left column before you run. Fill in the right column after.</p>
+<table><tr><th>Expected</th><th>Got</th></tr>
+<tr><td>A tap toward a wall leaves the player where it is and adds no step</td><td class="fill"></td></tr>
+<tr><td>Each coin can be collected once</td><td class="fill"></td></tr>
+<tr><td>The text under the scene changes on every move</td><td class="fill"></td></tr>
+<tr><td>Reaching the G shows the label with the real step count</td><td class="fill"></td></tr>
+<tr><td>r puts the player, the coins, and both counts back</td><td class="fill"></td></tr>
+</table></section>
+<section><h2>Where you can stop</h2><p>All three are real places to stop. Nobody is behind for finishing at the floor.</p><div class="exits">
+<div class="exit floor"><p class="tag">Floor</p><p>The 9 by 9 level drawn from the card, with the player on the start tile and the arrow keys moving it one tile per tap, walls or no walls.</p></div>
+<div class="exit middle"><p class="tag">Middle</p><p>The coin maze: walls that block, coins that score once, the text under the scene, the goal label, r to restart.</p></div>
+<div class="exit stretch"><p class="tag">Stretch</p><p>A second level as another list of strings. Reaching the G hides every wall of the first level, draws the second, and puts the player at its start. Then a timer: a counter in the loop that counts passes, shown as seconds under the scene.</p></div>
+</div></section>
+<section><h2>Ledger card</h2><p>Stamp 7: a level is a list of strings, <code>level[row][col]</code> with row first, a string is indexed like a list, column becomes x and row becomes z, two loops with <code>range(len(...))</code>, <code>!=</code>, <code>is_open(row, col)</code> checked before the move, <code>place(thing)</code> from row and col attributes, a wall ring keeps the indexes inside the list, coins in a list hidden once.</p><p><a href="vpython_ledger_card.html?v=1">Open the course ledger card</a></p></section>
+<details class="teacher"><summary>Teacher panel</summary>
+<h3>Timing, 90 minutes</h3><ul>
+<li>0:00 retrieval opener, 10 min</li>
+<li>0:10 chunks 1 and 2, the level and the drawing loops, 18 min (fingers on the projected level)</li>
+<li>0:28 chunk 3, row and col as attributes, 7 min</li>
+<li>0:35 chunk 4, the step function, 15 min (the core of the session)</li>
+<li>0:50 chunks 5 and 6, the goal and the coins, 15 min</li>
+<li>1:05 hinge question, 5 min</li>
+<li>1:10 build brief, 15 min</li>
+<li>1:25 exits, ledger stamp, 5 min</li>
+</ul><p class="note">Pacing: most rooms will not reach the end of the build brief. The exits exist so that stopping there is a finish, not a failure.</p>
+<h3>What you will see, and what to do</h3><table><tr><th>In the room</th><th>Redirect</th></tr>
+<tr><td>Writes <code>level[col][row]</code> and the maze is drawn turned on its side.</td><td>Row first. Have them print <code>level[1][2]</code> and <code>level[2][1]</code> on the 9 by 9 level, where the two are different characters.</td></tr>
+<tr><td>Expects the up arrow to make the row bigger.</td><td>Row 0 is the far edge, so up is toward the far edge, which is a smaller row. Walk it on the projected level.</td></tr>
+<tr><td>Leaves a gap in the wall ring and gets <code>IndexError: string index out of range</code> when the player walks off the edge.</td><td>A row or column past the edge asks the list or the string for something it does not have. The ring of walls is the gate that keeps the numbers inside. Close the ring.</td></tr>
+<tr><td>Moves the player by changing <code>player.pos</code> directly and the wall check stops working.</td><td>The row and col are what the level knows about. Change those and call <code>place</code>, never pos on its own.</td></tr>
+<tr><td>Collects the same coin again after walking back over it.</td><td>The coin has to be hidden, and the gate has to check <code>c.visible</code> first. Both lines are in chunk 6.</td></tr>
+</table>
+<h3>Mapped to</h3>
+<table><tr><th>Code</th><th>Jurisdiction</th><th>Framework</th><th>Grade</th><th>Statement</th></tr><tr><td><code>NY-5.G.2</code></td><td>New York</td><td>NY Next Generation Mathematics Learning Standards</td><td>5</td><td>Represent real world and mathematical problems by graphing points in the first quadrant of the coordinate plane, and interpret coordinate values of points in the context of the situation.</td></tr><tr><td><code>NY-6.NS.8</code></td><td>New York</td><td>NY Next Generation Mathematics Learning Standards</td><td>6</td><td>Solve real-world and mathematical problems by graphing points on a coordinate plane. Include use of coordinates and absolute value to find distances between points with the same first coordinate or the same second coordinate.</td></tr><tr><td><code>MP7</code></td><td>Multi-State</td><td>Standards for Mathematical Practice</td><td>K-12</td><td>Look for and make use of structure.</td></tr></table>
+<h3>If time runs out</h3><p>Chunk 6 can become the build brief's step 2 if time is short; the coin loop is the same shape as the catch gate. Chunk 3 can be shown on the projector in three minutes. The hinge is quick and should stay; the swap is the bug the build will hit.</p>
+</details>
+<section><h2>Running this in VS Code</h2><div class="grid2"><div class="card"><h3>Once, before the first run</h3><p>Open the terminal in VS Code and install the library: <code>pip install vpython</code>. Check it worked with <code>python -c "import vpython"</code>. It should print nothing at all and give you the prompt back. A traceback here is an install problem, not a problem with your program.</p></div><div class="card"><h3>Every run after that</h3><p>Save your file as <code>YourName_vpython07.py</code>: your first name, an underscore, then <code>vpython07</code>. Run it from the terminal. The 3D scene opens in a new browser tab, sometimes behind VS Code, so look for it before deciding that nothing happened. Click inside the scene before pressing any key. To end the program, close the tab or press Ctrl+C in the terminal. The program is written to run until you do. Run the file again and you get a fresh tab.</p></div></div><p class="note">VPython draws solid shapes that you can turn and zoom. Everything you print still goes to the terminal, and everything you draw goes to the browser tab. Words in the terminal, pictures in the tab.</p></section>
+</div></main>
+<nav class="pager"><a href="session06_a_game_catch_the_falling_balls.html?v=1">&larr; A game: catch the falling balls</a><a href="vpython_course_hub.html?v=1">Course home</a><a href="session08_a_scene_editor_dragging_with_the_mouse.html?v=1">A scene editor: dragging with the mouse &rarr;</a></nav>
+<footer><div class="wrap"><p>Python in 3D: ten sessions of VPython for ages 10 to 11, in the Lecture Light style, light ground for a projector, predict before reveal, three places to stop in every session.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-10-05. <a href="standards_map.html?v=1">Full standards map</a> &middot; <a href="vpython_ledger_card.html?v=1">Ledger card</a></p></div></footer>
+<script>
+document.addEventListener('click', function(e){
+  var b = e.target.closest('button.rev');
+  if(!b) return;
+  var t = document.getElementById(b.getAttribute('data-target'));
+  if(!t) return;
+  var open = t.classList.toggle('open');
+  b.setAttribute('aria-expanded', open ? 'true' : 'false');
+  b.textContent = open ? b.getAttribute('data-hide') : b.getAttribute('data-show');
+});
+</script>
+</body>
+</html>
