@@ -36,7 +36,7 @@ STDMAP = "standards_map"
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("VPL_OUT", ROOT)
-VERSION = "4"
+VERSION = "5"
 TMP = os.environ.get("VPL_TMP",
                      os.path.join(tempfile.gettempdir(), "vpython_lesson_build"))
 HARNESS = os.path.join(HERE, "vpython_harness.py")
@@ -512,10 +512,10 @@ def output_extra(ch, out, mode, tag):
 # page shows the rows for the settings its own code uses, found by scanning the
 # code, so the table never falls out of step with the programs.
 PARAMS = [
-    ("pos", "Where the shape is: three numbers, <code>vec(x, y, z)</code>. x is right, y is up, z is toward you. For a box or a sphere, pos is the middle. For a cylinder, cone, or arrow, pos is one end."),
+    ("pos", "Where the shape is: three numbers, <code>vec(x, y, z)</code>. x is right, y is up, z is toward you. For a box or a sphere, pos is the middle. For a cylinder, cone, or arrow, pos is the end the shape starts from, and it grows from there in the direction of its axis. For an arrow, pos is the tail."),
     ("size", "A box's three measurements, <code>vec(long, tall, deep)</code>: along x, along y, along z. Each starts at 1 if you do not say."),
     ("radius", "How big round a sphere, cylinder, cone, or ring is: the distance from the middle to the edge. The lowest point is the radius below the middle."),
-    ("axis", "For a cylinder, cone, or arrow: which way it points and how long it is, as a vector. The far end is at <code>pos + axis</code>. A wheel's axis points sideways, along z, so its round side touches the ground. For <code>rotate</code>: the line the thing turns around."),
+    ("axis", "For a cylinder, cone, or arrow: which way it grows from pos and how far, as a vector. The far end is at <code>pos + axis</code>. Flip the sign of the axis and the shape grows the other way from the same pos. A wheel's axis points sideways, along z, so its round side touches the ground. For <code>rotate</code>: the line the thing turns around."),
     ("angle", "How far <code>rotate</code> turns, always written <code>radians(degrees)</code>. A minus sign turns the other way."),
     ("origin", "For <code>rotate</code>: a point to turn around instead of the shape's own pos, like a moon going around a planet."),
     ("color", "<code>color.red</code>, <code>color.gray(0.4)</code>, or <code>vec(r, g, b)</code> with each number from 0 to 1."),
