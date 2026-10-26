@@ -107,6 +107,14 @@ pre{
 .tk-fn{color:#795E26}   /* functions */
 .tk-cls{color:#1D6A80}  /* classes, types, modules */
 .tk-var{color:#001080}  /* variables */
+/* Indent guides, the lines VS Code draws down each step of indentation. VS Code's are
+   1px and light grey, which vanish on a projector with the lights on, so these are 6px
+   and #595959. Each four-space step is one box as tall as the line, so the bars join
+   up from line to line. A border rather than a shadow, so the bars print. */
+pre .ig{
+  display:inline-block; width:4ch; height:1.6em; vertical-align:top;
+  border-left:6px solid #595959;
+}
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -281,8 +289,8 @@ a.btn.quiet:hover{background:#EFE9DA}
 <tr><td><code>MP8</code></td><td>Standards for Mathematical Practice</td><td>K-12</td><td>Look for and express regularity in repeated reasoning.</td><td>3, 5</td><td><code>6ba0d653-d7cc-11e8-824f-0242ac160002</code></td></tr>
 </table></section>
 </div></main>
-<nav class="pager"><span></span><a href="vpython_course_hub.html?v=5">Course home</a><span></span></nav>
-<footer><div class="wrap"><p>Python in 3D: eleven sessions of VPython for ages 10 to 11, in the Lecture Light style, light ground for a projector, predict before reveal, three places to stop in every session.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-10-05 (NY-7.G.4 added 2026-10-26). <a href="standards_map.html?v=5">Full standards map</a> &middot; <a href="vpython_ledger_card.html?v=5">Ledger card</a></p></div></footer>
+<nav class="pager"><span></span><a href="vpython_course_hub.html?v=6">Course home</a><span></span></nav>
+<footer><div class="wrap"><p>Python in 3D: eleven sessions of VPython for ages 10 to 11, in the Lecture Light style, light ground for a projector, predict before reveal, three places to stop in every session.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-10-05 (NY-7.G.4 added 2026-10-26). <a href="standards_map.html?v=6">Full standards map</a> &middot; <a href="vpython_ledger_card.html?v=6">Ledger card</a></p></div></footer>
 <script>
 document.addEventListener('click', function(e){
   var b = e.target.closest('button.rev');

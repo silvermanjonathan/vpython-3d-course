@@ -107,6 +107,14 @@ pre{
 .tk-fn{color:#795E26}   /* functions */
 .tk-cls{color:#1D6A80}  /* classes, types, modules */
 .tk-var{color:#001080}  /* variables */
+/* Indent guides, the lines VS Code draws down each step of indentation. VS Code's are
+   1px and light grey, which vanish on a projector with the lights on, so these are 6px
+   and #595959. Each four-space step is one box as tall as the line, so the bars join
+   up from line to line. A border rather than a shadow, so the bars print. */
+pre .ig{
+  display:inline-block; width:4ch; height:1.6em; vertical-align:top;
+  border-left:6px solid #595959;
+}
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -292,16 +300,16 @@ a.btn.quiet:hover{background:#EFE9DA}
 <span class="tk-fn">print</span>(<span class="tk-str">"knobs: gravity"</span>, <span class="tk-var">GRAVITY</span>, <span class="tk-str">" bounce"</span>, <span class="tk-var">BOUNCE</span>, <span class="tk-str">" start height"</span>, <span class="tk-var">START_HEIGHT</span>)
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
-    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
-
-    <span class="tk-var">ball</span>.<span class="tk-var">vel</span>.<span class="tk-var">y</span> = <span class="tk-var">ball</span>.<span class="tk-var">vel</span>.<span class="tk-var">y</span> - <span class="tk-var">GRAVITY</span> * <span class="tk-var">dt</span>
-    <span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span> + <span class="tk-var">ball</span>.<span class="tk-var">vel</span> * <span class="tk-var">dt</span>
-
-    <span class="tk-ctl">if</span> <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> &lt; <span class="tk-var">ball</span>.<span class="tk-var">radius</span>:
-        <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> = <span class="tk-var">ball</span>.<span class="tk-var">radius</span>
-        <span class="tk-var">ball</span>.<span class="tk-var">vel</span>.<span class="tk-var">y</span> = -<span class="tk-var">ball</span>.<span class="tk-var">vel</span>.<span class="tk-var">y</span> * <span class="tk-var">BOUNCE</span>
-        <span class="tk-fn">print</span>(<span class="tk-str">"bounce on pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  going up at"</span>, <span class="tk-fn">round</span>(<span class="tk-var">ball</span>.<span class="tk-var">vel</span>.<span class="tk-var">y</span>, <span class="tk-num">2</span>))</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+<span class="ig">    </span><span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-var">ball</span>.<span class="tk-var">vel</span>.<span class="tk-var">y</span> = <span class="tk-var">ball</span>.<span class="tk-var">vel</span>.<span class="tk-var">y</span> - <span class="tk-var">GRAVITY</span> * <span class="tk-var">dt</span>
+<span class="ig">    </span><span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span> + <span class="tk-var">ball</span>.<span class="tk-var">vel</span> * <span class="tk-var">dt</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> &lt; <span class="tk-var">ball</span>.<span class="tk-var">radius</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> = <span class="tk-var">ball</span>.<span class="tk-var">radius</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">ball</span>.<span class="tk-var">vel</span>.<span class="tk-var">y</span> = -<span class="tk-var">ball</span>.<span class="tk-var">vel</span>.<span class="tk-var">y</span> * <span class="tk-var">BOUNCE</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"bounce on pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  going up at"</span>, <span class="tk-fn">round</span>(<span class="tk-var">ball</span>.<span class="tk-var">vel</span>.<span class="tk-var">y</span>, <span class="tk-num">2</span>))</pre>
 <div class="predict"><p class="q">Predict: Which one line would you change to make the ball bounce higher each time, and which to make it fall faster? Would either change need a second line changed anywhere below?</p><button class="rev" data-target="s10-c1" aria-controls="s10-c1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s10-c1"><p class="outlabel">What it actually prints (run without a browser, quit after 100 passes of the loop)</p><pre class="out">knobs: gravity 9.8  bounce 0.8  start height 6
 bounce on pass 32   going up at 8.36
 bounce on pass 83   going up at 6.64</pre><p>Bounce higher: <code>BOUNCE = 0.8</code>, to a number closer to 1. Fall faster: <code>GRAVITY = 9.8</code>, to a bigger number. Neither needs any other line changed, because every line below uses the name, not the number.</p><p>The output box shows the first bounce on pass 32 at 8.36 per second and the second on pass 83. On a bigger START_HEIGHT the first bounce would come later and faster, and again nothing else would change.</p></div></div>
@@ -321,13 +329,13 @@ bounce on pass 83   going up at 6.64</pre><p>Bounce higher: <code>BOUNCE = 0.8</
 <span class="tk-var">things</span>.<span class="tk-fn">append</span>(<span class="tk-fn">cone</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(-<span class="tk-num">3</span>, <span class="tk-num">0</span>, <span class="tk-num">2</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1.5</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.5</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">red</span>))
 
 <span class="tk-kw">def</span> <span class="tk-fn">tapped</span>(<span class="tk-var">evt</span>):
-    <span class="tk-fn">print</span>(<span class="tk-str">"a key was tapped:"</span>, <span class="tk-var">evt</span>.<span class="tk-var">key</span>, <span class="tk-str">" (nothing wired to it yet)"</span>)
+<span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"a key was tapped:"</span>, <span class="tk-var">evt</span>.<span class="tk-var">key</span>, <span class="tk-str">" (nothing wired to it yet)"</span>)
 
 <span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"keydown"</span>, <span class="tk-var">tapped</span>)
 <span class="tk-fn">print</span>(<span class="tk-str">"skeleton is up:"</span>, <span class="tk-fn">len</span>(<span class="tk-var">things</span>), <span class="tk-str">"things on the ground, and the loop is running"</span>)
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
 <div class="predict"><p class="q">Predict: The loop body is only <code>rate(30)</code>. What does the program do when it runs, and what happens when a key is tapped?</p><button class="rev" data-target="s10-c2" aria-controls="s10-c2" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s10-c2"><p class="outlabel">What it actually prints (run without a browser, quit after 4 passes of the loop)</p><pre class="out">skeleton is up: 3 things on the ground, and the loop is running
 a key was tapped: left  (nothing wired to it yet)</pre><p class="note">Fed in by the build script: the left arrow key pressed on pass 2.</p><p>It draws the ground and the three things, prints that the skeleton is up, and then runs the loop 30 times a second doing nothing, so the scene stays on screen and can be turned with the mouse.</p><p>A tap calls <code>tapped</code>, which prints the key and nothing else. The output box shows the left arrow arriving. The function is already bound, so wiring the key is a matter of adding gates to a function that already runs.</p></div></div>
 </section>
@@ -346,17 +354,17 @@ a key was tapped: left  (nothing wired to it yet)</pre><p class="note">Fed in by
 <span class="tk-var">passes</span> = <span class="tk-num">0</span>
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
-    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
-    <span class="tk-var">keys</span> = <span class="tk-fn">keysdown</span>()
-
-    <span class="tk-ctl">if</span> <span class="tk-str">"right"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
-        <span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">pos</span>.<span class="tk-var">x</span> + <span class="tk-var">SPEED</span>
-    <span class="tk-ctl">if</span> <span class="tk-str">"left"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
-        <span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">pos</span>.<span class="tk-var">x</span> - <span class="tk-var">SPEED</span>
-
-    <span class="tk-ctl">if</span> <span class="tk-var">passes</span> == <span class="tk-num">5</span>:
-        <span class="tk-fn">print</span>(<span class="tk-str">"feature 1 check: box at"</span>, <span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">pos</span>, <span class="tk-str">"  ball still at"</span>, <span class="tk-var">things</span>[<span class="tk-num">1</span>].<span class="tk-var">pos</span>)</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+<span class="ig">    </span><span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+<span class="ig">    </span><span class="tk-var">keys</span> = <span class="tk-fn">keysdown</span>()
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-str">"right"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">pos</span>.<span class="tk-var">x</span> + <span class="tk-var">SPEED</span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-str">"left"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">pos</span>.<span class="tk-var">x</span> - <span class="tk-var">SPEED</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">passes</span> == <span class="tk-num">5</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"feature 1 check: box at"</span>, <span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">pos</span>, <span class="tk-str">"  ball still at"</span>, <span class="tk-var">things</span>[<span class="tk-num">1</span>].<span class="tk-var">pos</span>)</pre>
 <div class="predict"><p class="q">Predict: Before running: write down where the box should be after right is held for three passes, and where the ball should be. Then run and compare.</p><button class="rev" data-target="s10-c3" aria-controls="s10-c3" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s10-c3"><p class="outlabel">What it actually prints (run without a browser, quit after 5 passes of the loop)</p><pre class="out">feature 1 check: box at &lt;0.6, 0.5, 0&gt;   ball still at &lt;3, 0.5, -2&gt;</pre><p class="note">Fed in by the build script: the right arrow key held on passes 2 to 4.</p><p>The box should be at x = 0.6, three passes of 0.2, and the ball should not have moved from <code>&lt;3, 0.5, -2&gt;</code>. The output box shows both. If the ball had moved, the gate would be touching the wrong thing, and with only one feature added, that is the only place to look.</p><p>Write the expected value down first, every time. A check you make up after seeing the output is not a check.</p></div></div>
 </section>
 <section class="chunk"><p class="chunk-no">Chunk 4 of 4</p>
@@ -399,21 +407,21 @@ Press r to put everything back.</pre><p>Three lines. <code>\n</code> is the new-
 <span class="tk-var">scene</span>.<span class="tk-var">range</span> = <span class="tk-num">8</span>
 
 <span class="tk-kw">def</span> <span class="tk-fn">view</span>(<span class="tk-var">evt</span>):
-    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"1"</span>:
-        <span class="tk-var">scene</span>.<span class="tk-var">center</span> = <span class="tk-var">VIEW_1</span>[<span class="tk-num">0</span>]
-        <span class="tk-var">scene</span>.<span class="tk-var">forward</span> = <span class="tk-var">VIEW_1</span>[<span class="tk-num">1</span>]
-    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"2"</span>:
-        <span class="tk-var">scene</span>.<span class="tk-var">center</span> = <span class="tk-var">VIEW_2</span>[<span class="tk-num">0</span>]
-        <span class="tk-var">scene</span>.<span class="tk-var">forward</span> = <span class="tk-var">VIEW_2</span>[<span class="tk-num">1</span>]
-    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"3"</span>:
-        <span class="tk-var">scene</span>.<span class="tk-var">center</span> = <span class="tk-var">VIEW_3</span>[<span class="tk-num">0</span>]
-        <span class="tk-var">scene</span>.<span class="tk-var">forward</span> = <span class="tk-var">VIEW_3</span>[<span class="tk-num">1</span>]
-    <span class="tk-fn">print</span>(<span class="tk-str">"key"</span>, <span class="tk-var">evt</span>.<span class="tk-var">key</span>, <span class="tk-str">"  camera looks at"</span>, <span class="tk-var">scene</span>.<span class="tk-var">center</span>, <span class="tk-str">"  facing"</span>, <span class="tk-var">scene</span>.<span class="tk-var">forward</span>)
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"1"</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">scene</span>.<span class="tk-var">center</span> = <span class="tk-var">VIEW_1</span>[<span class="tk-num">0</span>]
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">scene</span>.<span class="tk-var">forward</span> = <span class="tk-var">VIEW_1</span>[<span class="tk-num">1</span>]
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"2"</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">scene</span>.<span class="tk-var">center</span> = <span class="tk-var">VIEW_2</span>[<span class="tk-num">0</span>]
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">scene</span>.<span class="tk-var">forward</span> = <span class="tk-var">VIEW_2</span>[<span class="tk-num">1</span>]
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"3"</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">scene</span>.<span class="tk-var">center</span> = <span class="tk-var">VIEW_3</span>[<span class="tk-num">0</span>]
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">scene</span>.<span class="tk-var">forward</span> = <span class="tk-var">VIEW_3</span>[<span class="tk-num">1</span>]
+<span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"key"</span>, <span class="tk-var">evt</span>.<span class="tk-var">key</span>, <span class="tk-str">"  camera looks at"</span>, <span class="tk-var">scene</span>.<span class="tk-var">center</span>, <span class="tk-str">"  facing"</span>, <span class="tk-var">scene</span>.<span class="tk-var">forward</span>)
 
 <span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"keydown"</span>, <span class="tk-var">view</span>)
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
 <div class="predict"><p class="q">Predict: 2 is pressed, then 3, then x. After the x, where does the camera look? Why does the print line run for x at all?</p><button class="rev" data-target="s10-card1" aria-controls="s10-card1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s10-card1"><p class="outlabel">What it actually prints (run without a browser, quit after 6 passes of the loop)</p><pre class="out">key 2   camera looks at &lt;4, 0, 0&gt;   facing &lt;-1, -0.3, 0&gt;
 key 3   camera looks at &lt;0, 2, 0&gt;   facing &lt;0, -1, -0.2&gt;
 key x   camera looks at &lt;0, 2, 0&gt;   facing &lt;0, -1, -0.2&gt;</pre><p class="note">Fed in by the build script: the 2 key pressed on pass 1, the 3 key pressed on pass 3, the x key pressed on pass 5.</p><p>After x the camera still looks at <code>&lt;0, 2, 0&gt;</code>, facing <code>&lt;0, -1, -0.2&gt;</code>, the third view, because none of the three gates named x and nothing changed. The print line runs for every key, because it is after the gates and not inside any of them, so the output box has three lines.</p><p>View 2 looks at the tower from the side, and view 3 looks straight down at the middle of the ground. The number keys arrive as the strings <code>"1"</code>, <code>"2"</code> and <code>"3"</code>.</p></div></div>
@@ -430,32 +438,32 @@ key x   camera looks at &lt;0, 2, 0&gt;   facing &lt;0, -1, -0.2&gt;</pre><p cla
 <span class="tk-var">player</span>.<span class="tk-var">lives</span> = <span class="tk-num">3</span>
 <span class="tk-var">blocks</span> = []
 <span class="tk-ctl">for</span> <span class="tk-var">i</span> <span class="tk-ctl">in</span> <span class="tk-fn">range</span>(<span class="tk-num">3</span>):
-    <span class="tk-var">b</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-cls">randint</span>(-<span class="tk-num">5</span>, <span class="tk-num">5</span>), <span class="tk-num">8</span> + <span class="tk-var">i</span> * <span class="tk-num">4</span>, <span class="tk-num">0</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">red</span>)
-    <span class="tk-var">b</span>.<span class="tk-var">vel</span> = <span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-var">FALL_SPEED</span>, <span class="tk-num">0</span>)
-    <span class="tk-var">blocks</span>.<span class="tk-fn">append</span>(<span class="tk-var">b</span>)
+<span class="ig">    </span><span class="tk-var">b</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-cls">randint</span>(-<span class="tk-num">5</span>, <span class="tk-num">5</span>), <span class="tk-num">8</span> + <span class="tk-var">i</span> * <span class="tk-num">4</span>, <span class="tk-num">0</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">red</span>)
+<span class="ig">    </span><span class="tk-var">b</span>.<span class="tk-var">vel</span> = <span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-var">FALL_SPEED</span>, <span class="tk-num">0</span>)
+<span class="ig">    </span><span class="tk-var">blocks</span>.<span class="tk-fn">append</span>(<span class="tk-var">b</span>)
 <span class="tk-var">player</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">blocks</span>[<span class="tk-num">0</span>].<span class="tk-var">pos</span>.<span class="tk-var">x</span>
 <span class="tk-var">dt</span> = <span class="tk-num">1</span> / <span class="tk-num">30</span>
 <span class="tk-var">passes</span> = <span class="tk-num">0</span>
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
-    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
-    <span class="tk-var">keys</span> = <span class="tk-fn">keysdown</span>()
-
-    <span class="tk-ctl">if</span> <span class="tk-str">"right"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
-        <span class="tk-var">player</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">player</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> + <span class="tk-num">0.3</span>
-    <span class="tk-ctl">if</span> <span class="tk-str">"left"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
-        <span class="tk-var">player</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">player</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> - <span class="tk-num">0.3</span>
-
-    <span class="tk-ctl">for</span> <span class="tk-var">b</span> <span class="tk-ctl">in</span> <span class="tk-var">blocks</span>:
-        <span class="tk-var">b</span>.<span class="tk-var">pos</span> = <span class="tk-var">b</span>.<span class="tk-var">pos</span> + <span class="tk-var">b</span>.<span class="tk-var">vel</span> * <span class="tk-var">dt</span>
-        <span class="tk-var">gap</span> = <span class="tk-fn">abs</span>(<span class="tk-var">b</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> - <span class="tk-var">player</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>)
-        <span class="tk-ctl">if</span> <span class="tk-var">b</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> &lt; <span class="tk-num">1</span> <span class="tk-kw">and</span> <span class="tk-var">gap</span> &lt; <span class="tk-var">REACH</span>:
-            <span class="tk-var">player</span>.<span class="tk-var">lives</span> = <span class="tk-var">player</span>.<span class="tk-var">lives</span> - <span class="tk-num">1</span>
-            <span class="tk-fn">print</span>(<span class="tk-str">"hit on pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  lives left"</span>, <span class="tk-var">player</span>.<span class="tk-var">lives</span>)
-            <span class="tk-var">b</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-cls">randint</span>(-<span class="tk-num">5</span>, <span class="tk-num">5</span>), <span class="tk-num">12</span>, <span class="tk-num">0</span>)
-        <span class="tk-ctl">if</span> <span class="tk-var">b</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> &lt; -<span class="tk-num">0.5</span>:
-            <span class="tk-var">b</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-cls">randint</span>(-<span class="tk-num">5</span>, <span class="tk-num">5</span>), <span class="tk-num">12</span>, <span class="tk-num">0</span>)</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+<span class="ig">    </span><span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+<span class="ig">    </span><span class="tk-var">keys</span> = <span class="tk-fn">keysdown</span>()
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-str">"right"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">player</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">player</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> + <span class="tk-num">0.3</span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-str">"left"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">player</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">player</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> - <span class="tk-num">0.3</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">for</span> <span class="tk-var">b</span> <span class="tk-ctl">in</span> <span class="tk-var">blocks</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">b</span>.<span class="tk-var">pos</span> = <span class="tk-var">b</span>.<span class="tk-var">pos</span> + <span class="tk-var">b</span>.<span class="tk-var">vel</span> * <span class="tk-var">dt</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">gap</span> = <span class="tk-fn">abs</span>(<span class="tk-var">b</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> - <span class="tk-var">player</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">b</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> &lt; <span class="tk-num">1</span> <span class="tk-kw">and</span> <span class="tk-var">gap</span> &lt; <span class="tk-var">REACH</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="tk-var">player</span>.<span class="tk-var">lives</span> = <span class="tk-var">player</span>.<span class="tk-var">lives</span> - <span class="tk-num">1</span>
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"hit on pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  lives left"</span>, <span class="tk-var">player</span>.<span class="tk-var">lives</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="tk-var">b</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-cls">randint</span>(-<span class="tk-num">5</span>, <span class="tk-num">5</span>), <span class="tk-num">12</span>, <span class="tk-num">0</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">b</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> &lt; -<span class="tk-num">0.5</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="tk-var">b</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-cls">randint</span>(-<span class="tk-num">5</span>, <span class="tk-num">5</span>), <span class="tk-num">12</span>, <span class="tk-num">0</span>)</pre>
 <div class="predict"><p class="q">Predict: Three blocks start at heights 8, 12 and 16, all falling at 4 per second, from random x positions, and the player is under the lowest one. On about which pass is the first hit? Will the second block hit too?</p><button class="rev" data-target="s10-card2" aria-controls="s10-card2" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s10-card2"><p class="outlabel">What it actually prints (run without a browser, quit after 60 passes of the loop)</p><pre class="out">hit on pass 53   lives left 2</pre><p>Pass 53. The lowest block reaches height 1 after falling 7 units, which at 4 per second is 1.75 seconds, and pass 53 is the first pass past that. Lives go from 3 to 2.</p><p>Whether the second block hits depends on where <code>randint</code> put it, and this run stops on pass 60 before it arrives. If its x is more than 1 from the player's x, the gap gate is False, the block falls past, and the second gate sends it back to the top with no print. A block that misses is not a bug; it is the game.</p></div></div>
 <h3>Card C: a windmill farm with a wind slider and a pause box</h3>
 <p>Every blade is in a list, and one loop turns them all by the wind speed, which lives on the ground as <code>ground.wind</code> so the slider can change it. The checkbox sets <code>ground.paused</code>, and the loop turns nothing while it is True.</p>
@@ -468,17 +476,17 @@ key x   camera looks at &lt;0, 2, 0&gt;   facing &lt;0, -1, -0.2&gt;</pre><p cla
 <span class="tk-var">ground</span>.<span class="tk-var">paused</span> = <span class="tk-kw">False</span>
 <span class="tk-var">blades</span> = []
 <span class="tk-ctl">for</span> <span class="tk-var">x</span> <span class="tk-ctl">in</span> [-<span class="tk-num">6</span>, <span class="tk-num">0</span>, <span class="tk-num">6</span>]:
-    <span class="tk-fn">cylinder</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">3</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.2</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">white</span>)
-    <span class="tk-var">blade</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">3</span>, <span class="tk-num">0.3</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">3</span>, <span class="tk-num">0.3</span>, <span class="tk-num">0.1</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">red</span>)
-    <span class="tk-var">blades</span>.<span class="tk-fn">append</span>(<span class="tk-var">blade</span>)
+<span class="ig">    </span><span class="tk-fn">cylinder</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">3</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.2</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">white</span>)
+<span class="ig">    </span><span class="tk-var">blade</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">3</span>, <span class="tk-num">0.3</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">3</span>, <span class="tk-num">0.3</span>, <span class="tk-num">0.1</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">red</span>)
+<span class="ig">    </span><span class="tk-var">blades</span>.<span class="tk-fn">append</span>(<span class="tk-var">blade</span>)
 
 <span class="tk-kw">def</span> <span class="tk-fn">set_wind</span>(<span class="tk-var">s</span>):
-    <span class="tk-var">ground</span>.<span class="tk-var">wind</span> = <span class="tk-var">s</span>.<span class="tk-var">value</span>
-    <span class="tk-fn">print</span>(<span class="tk-str">"wind is now"</span>, <span class="tk-var">ground</span>.<span class="tk-var">wind</span>)
+<span class="ig">    </span><span class="tk-var">ground</span>.<span class="tk-var">wind</span> = <span class="tk-var">s</span>.<span class="tk-var">value</span>
+<span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"wind is now"</span>, <span class="tk-var">ground</span>.<span class="tk-var">wind</span>)
 
 <span class="tk-kw">def</span> <span class="tk-fn">set_pause</span>(<span class="tk-var">c</span>):
-    <span class="tk-var">ground</span>.<span class="tk-var">paused</span> = <span class="tk-var">c</span>.<span class="tk-var">checked</span>
-    <span class="tk-fn">print</span>(<span class="tk-str">"paused is now"</span>, <span class="tk-var">ground</span>.<span class="tk-var">paused</span>)
+<span class="ig">    </span><span class="tk-var">ground</span>.<span class="tk-var">paused</span> = <span class="tk-var">c</span>.<span class="tk-var">checked</span>
+<span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"paused is now"</span>, <span class="tk-var">ground</span>.<span class="tk-var">paused</span>)
 
 <span class="tk-var">scene</span>.<span class="tk-fn">append_to_caption</span>(<span class="tk-str">"Wind: "</span>)
 <span class="tk-fn">slider</span>(<span class="tk-var">min</span>=<span class="tk-num">0</span>, <span class="tk-var">max</span>=<span class="tk-num">10</span>, <span class="tk-var">value</span>=<span class="tk-var">WIND</span>, <span class="tk-var">step</span>=<span class="tk-num">1</span>, <span class="tk-var">bind</span>=<span class="tk-var">set_wind</span>)
@@ -488,16 +496,16 @@ key x   camera looks at &lt;0, 2, 0&gt;   facing &lt;0, -1, -0.2&gt;</pre><p cla
 <span class="tk-var">passes</span> = <span class="tk-num">0</span>
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
-    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
-
-    <span class="tk-ctl">if</span> <span class="tk-var">ground</span>.<span class="tk-var">paused</span> == <span class="tk-kw">False</span>:
-        <span class="tk-ctl">for</span> <span class="tk-var">blade</span> <span class="tk-ctl">in</span> <span class="tk-var">blades</span>:
-            <span class="tk-var">blade</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(<span class="tk-var">ground</span>.<span class="tk-var">wind</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">1</span>))
-        <span class="tk-var">turned</span> = <span class="tk-var">turned</span> + <span class="tk-var">ground</span>.<span class="tk-var">wind</span>
-
-    <span class="tk-ctl">if</span> <span class="tk-var">passes</span> <span class="tk-kw">in</span> [<span class="tk-num">30</span>, <span class="tk-num">60</span>, <span class="tk-num">90</span>]:
-        <span class="tk-fn">print</span>(<span class="tk-str">"pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  each blade has turned"</span>, <span class="tk-var">turned</span>, <span class="tk-str">"degrees in total"</span>)</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+<span class="ig">    </span><span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">ground</span>.<span class="tk-var">paused</span> == <span class="tk-kw">False</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-ctl">for</span> <span class="tk-var">blade</span> <span class="tk-ctl">in</span> <span class="tk-var">blades</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="tk-var">blade</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(<span class="tk-var">ground</span>.<span class="tk-var">wind</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">1</span>))
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">turned</span> = <span class="tk-var">turned</span> + <span class="tk-var">ground</span>.<span class="tk-var">wind</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">passes</span> <span class="tk-kw">in</span> [<span class="tk-num">30</span>, <span class="tk-num">60</span>, <span class="tk-num">90</span>]:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  each blade has turned"</span>, <span class="tk-var">turned</span>, <span class="tk-str">"degrees in total"</span>)</pre>
 <div class="predict"><p class="q">Predict: The wind slider is set to 6 right after pass 30 and the pause box is ticked right after pass 60. How many degrees has each blade turned by pass 30, by 60, and by 90?</p><button class="rev" data-target="s10-card3" aria-controls="s10-card3" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s10-card3"><p class="outlabel">What it actually prints (run without a browser, quit after 90 passes of the loop)</p><pre class="out">pass 30   each blade has turned 90 degrees in total
 wind is now 6
 pass 60   each blade has turned 270 degrees in total
@@ -516,7 +524,7 @@ pass 90   each blade has turned 270 degrees in total</pre><p class="note">Fed in
 <div class="exit middle"><p class="tag">Middle</p><p>The skeleton plus two working controls, checked against the sheet.</p></div>
 <div class="exit stretch"><p class="tag">Stretch</p><p>Everything on the plan sheet working, so session 11 is polish and the demo only.</p></div>
 </div></section>
-<section><h2>Ledger card</h2><p>Stamp 10: knobs in capitals at the top, the skeleton runs before any feature, one feature then run then the next, write the expected value before running, the caption is the plan, the plan sheet: what is seen, the controls, what is remembered and where, the knobs.</p><p><a href="vpython_ledger_card.html?v=5">Open the course ledger card</a></p></section>
+<section><h2>Ledger card</h2><p>Stamp 10: knobs in capitals at the top, the skeleton runs before any feature, one feature then run then the next, write the expected value before running, the caption is the plan, the plan sheet: what is seen, the controls, what is remembered and where, the knobs.</p><p><a href="vpython_ledger_card.html?v=6">Open the course ledger card</a></p></section>
 <details class="teacher"><summary>Teacher panel</summary>
 <h3>Timing, 90 minutes</h3><ul>
 <li>0:00 retrieval opener, 5 min</li>
@@ -540,8 +548,8 @@ pass 90   each blade has turned 270 degrees in total</pre><p class="note">Fed in
 </details>
 <section><h2>Running this in VS Code</h2><div class="grid2"><div class="card"><h3>Once, before the first run</h3><p>Open the terminal in VS Code and install the library: <code>pip install vpython</code>. Check it worked with <code>python -c "import vpython"</code>. It should print nothing at all and give you the prompt back. A traceback here is an install problem, not a problem with your program.</p></div><div class="card"><h3>Every run after that</h3><p>Save your file as <code>YourName_vpython10.py</code>: your first name, an underscore, then <code>vpython10</code>. Run it from the terminal. The 3D scene opens in a new browser tab, sometimes behind VS Code, so look for it before deciding that nothing happened. Click inside the scene before pressing any key. To end the program, close the tab or press Ctrl+C in the terminal. The program is written to run until you do. Run the file again and you get a fresh tab.</p></div></div><p class="note">VPython draws solid shapes that you can turn and zoom. Everything you print still goes to the terminal, and everything you draw goes to the browser tab. Words in the terminal, pictures in the tab.</p></section>
 </div></main>
-<nav class="pager"><a href="session09_a_scene_editor_dragging_with_the_mouse.html?v=5">&larr; A scene editor: dragging with the mouse</a><a href="vpython_course_hub.html?v=5">Course home</a><a href="session11_finish_polish_and_show.html?v=5">Finish, polish, and show &rarr;</a></nav>
-<footer><div class="wrap"><p>Python in 3D: eleven sessions of VPython for ages 10 to 11, in the Lecture Light style, light ground for a projector, predict before reveal, three places to stop in every session.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-10-05 (NY-7.G.4 added 2026-10-26). <a href="standards_map.html?v=5">Full standards map</a> &middot; <a href="vpython_ledger_card.html?v=5">Ledger card</a></p></div></footer>
+<nav class="pager"><a href="session09_a_scene_editor_dragging_with_the_mouse.html?v=6">&larr; A scene editor: dragging with the mouse</a><a href="vpython_course_hub.html?v=6">Course home</a><a href="session11_finish_polish_and_show.html?v=6">Finish, polish, and show &rarr;</a></nav>
+<footer><div class="wrap"><p>Python in 3D: eleven sessions of VPython for ages 10 to 11, in the Lecture Light style, light ground for a projector, predict before reveal, three places to stop in every session.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-10-05 (NY-7.G.4 added 2026-10-26). <a href="standards_map.html?v=6">Full standards map</a> &middot; <a href="vpython_ledger_card.html?v=6">Ledger card</a></p></div></footer>
 <script>
 document.addEventListener('click', function(e){
   var b = e.target.closest('button.rev');

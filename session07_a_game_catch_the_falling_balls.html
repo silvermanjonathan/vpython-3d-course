@@ -107,6 +107,14 @@ pre{
 .tk-fn{color:#795E26}   /* functions */
 .tk-cls{color:#1D6A80}  /* classes, types, modules */
 .tk-var{color:#001080}  /* variables */
+/* Indent guides, the lines VS Code draws down each step of indentation. VS Code's are
+   1px and light grey, which vanish on a projector with the lights on, so these are 6px
+   and #595959. Each four-space step is one box as tall as the line, so the bars join
+   up from line to line. A border rather than a shadow, so the bars print. */
+pre .ig{
+  display:inline-block; width:4ch; height:1.6em; vertical-align:top;
+  border-left:6px solid #595959;
+}
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -290,19 +298,19 @@ a.btn.quiet:hover{background:#EFE9DA}
 <span class="tk-var">passes</span> = <span class="tk-num">0</span>
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
-    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
-    <span class="tk-var">keys</span> = <span class="tk-fn">keysdown</span>()
-
-    <span class="tk-ctl">if</span> <span class="tk-str">"right"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
-        <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> + <span class="tk-num">0.3</span>
-    <span class="tk-ctl">if</span> <span class="tk-str">"left"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
-        <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> - <span class="tk-num">0.3</span>
-
-    <span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span> + <span class="tk-var">ball</span>.<span class="tk-var">vel</span> * <span class="tk-var">dt</span>
-
-    <span class="tk-ctl">if</span> <span class="tk-var">passes</span> <span class="tk-kw">in</span> [<span class="tk-num">30</span>, <span class="tk-num">60</span>]:
-        <span class="tk-fn">print</span>(<span class="tk-str">"pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  ball height"</span>, <span class="tk-fn">round</span>(<span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span>, <span class="tk-num">2</span>), <span class="tk-str">"  paddle x"</span>, <span class="tk-fn">round</span>(<span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>))</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+<span class="ig">    </span><span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+<span class="ig">    </span><span class="tk-var">keys</span> = <span class="tk-fn">keysdown</span>()
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-str">"right"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> + <span class="tk-num">0.3</span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-str">"left"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> - <span class="tk-num">0.3</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span> + <span class="tk-var">ball</span>.<span class="tk-var">vel</span> * <span class="tk-var">dt</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">passes</span> <span class="tk-kw">in</span> [<span class="tk-num">30</span>, <span class="tk-num">60</span>]:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  ball height"</span>, <span class="tk-fn">round</span>(<span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span>, <span class="tk-num">2</span>), <span class="tk-str">"  paddle x"</span>, <span class="tk-fn">round</span>(<span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>))</pre>
 <div class="predict"><p class="q">Predict: The ball starts 8.5 up and falls 4 per second. On which pass does its middle reach the paddle's height, 0.5? The right arrow is held for six passes: where is the paddle after that?</p><button class="rev" data-target="s7-c1" aria-controls="s7-c1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s7-c1"><p class="outlabel">What it actually prints (run without a browser, quit after 60 passes of the loop)</p><pre class="out">pass 30   ball height 4.5   paddle x 1.8
 pass 60   ball height 0.5   paddle x 1.8</pre><p class="note">Fed in by the build script: the right arrow key held on passes 5 to 10.</p><p>Pass 60. In two seconds the ball falls 8, so on pass 60 its height is 0.5, and on pass 30 it was 4.5. The output box shows both.</p><p>The paddle is at x = 1.8 after six passes of 0.3 each, and it stays there once the key is let go, because the key gates change the position, not a velocity. Nothing stops the ball at the paddle yet. That is the next chunk.</p></div></div>
 </section>
@@ -321,16 +329,16 @@ pass 60   ball height 0.5   paddle x 1.8</pre><p class="note">Fed in by the buil
 <span class="tk-var">passes</span> = <span class="tk-num">0</span>
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
-    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
-    <span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span> + <span class="tk-var">ball</span>.<span class="tk-var">vel</span> * <span class="tk-var">dt</span>
-
-    <span class="tk-var">gap</span> = <span class="tk-fn">abs</span>(<span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> - <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>)
-    <span class="tk-ctl">if</span> <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> &lt; <span class="tk-num">0.9</span> <span class="tk-kw">and</span> <span class="tk-var">gap</span> &lt; <span class="tk-num">1.5</span>:
-        <span class="tk-var">score</span> = <span class="tk-var">score</span> + <span class="tk-num">1</span>
-        <span class="tk-fn">print</span>(<span class="tk-str">"caught on pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  the gap was"</span>, <span class="tk-fn">round</span>(<span class="tk-var">gap</span>, <span class="tk-num">2</span>), <span class="tk-str">"  score"</span>, <span class="tk-var">score</span>)
-        <span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-cls">randint</span>(-<span class="tk-num">4</span>, <span class="tk-num">4</span>), <span class="tk-num">8</span>, <span class="tk-num">0</span>)
-        <span class="tk-fn">print</span>(<span class="tk-str">"a new ball is at the top, height"</span>, <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span>)</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+<span class="ig">    </span><span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+<span class="ig">    </span><span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span> + <span class="tk-var">ball</span>.<span class="tk-var">vel</span> * <span class="tk-var">dt</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-var">gap</span> = <span class="tk-fn">abs</span>(<span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> - <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>)
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> &lt; <span class="tk-num">0.9</span> <span class="tk-kw">and</span> <span class="tk-var">gap</span> &lt; <span class="tk-num">1.5</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">score</span> = <span class="tk-var">score</span> + <span class="tk-num">1</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"caught on pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  the gap was"</span>, <span class="tk-fn">round</span>(<span class="tk-var">gap</span>, <span class="tk-num">2</span>), <span class="tk-str">"  score"</span>, <span class="tk-var">score</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-cls">randint</span>(-<span class="tk-num">4</span>, <span class="tk-num">4</span>), <span class="tk-num">8</span>, <span class="tk-num">0</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"a new ball is at the top, height"</span>, <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span>)</pre>
 <div class="predict"><p class="q">Predict: The ball starts at x = 1 and the paddle is at x = 0. Is the gap small enough for a catch? On about which pass does the catch happen, and where does the new ball start?</p><button class="rev" data-target="s7-c2" aria-controls="s7-c2" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s7-c2"><p class="outlabel">What it actually prints (run without a browser, quit after 60 passes of the loop)</p><pre class="out">caught on pass 54   the gap was 1.0   score 1
 a new ball is at the top, height 8.0</pre><p>Yes: the gap is 1.0, under 1.5. The catch happens on pass 54, the first pass where the ball's height is under 0.9. 7.1 units at 4 per second is 1.775 seconds, which is a little more than 53 passes.</p><p>The new ball starts at height 8 and at an x chosen by <code>randint</code>. The output box shows the x of one run; on your run it will probably be a different whole number from -4 to 4, because that is what random means.</p></div></div>
 </section>
@@ -349,14 +357,14 @@ a new ball is at the top, height 8.0</pre><p>Yes: the gap is 1.0, under 1.5. The
 <span class="tk-var">passes</span> = <span class="tk-num">0</span>
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
-    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
-    <span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span> + <span class="tk-var">ball</span>.<span class="tk-var">vel</span> * <span class="tk-var">dt</span>
-
-    <span class="tk-ctl">if</span> <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> &lt; -<span class="tk-num">0.5</span>:
-        <span class="tk-var">lives</span> = <span class="tk-var">lives</span> - <span class="tk-num">1</span>
-        <span class="tk-fn">print</span>(<span class="tk-str">"missed on pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  lives left"</span>, <span class="tk-var">lives</span>)
-        <span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-cls">randint</span>(-<span class="tk-num">4</span>, <span class="tk-num">4</span>), <span class="tk-num">8</span>, <span class="tk-num">0</span>)</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+<span class="ig">    </span><span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+<span class="ig">    </span><span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span> + <span class="tk-var">ball</span>.<span class="tk-var">vel</span> * <span class="tk-var">dt</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> &lt; -<span class="tk-num">0.5</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">lives</span> = <span class="tk-var">lives</span> - <span class="tk-num">1</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"missed on pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  lives left"</span>, <span class="tk-var">lives</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-cls">randint</span>(-<span class="tk-num">4</span>, <span class="tk-num">4</span>), <span class="tk-num">8</span>, <span class="tk-num">0</span>)</pre>
 <div class="predict"><p class="q">Predict: Every ball is missed. The first miss is on the first pass where the ball's height is below -0.5. On about which pass is that, and on which pass do the lives reach 0?</p><button class="rev" data-target="s7-c3" aria-controls="s7-c3" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s7-c3"><p class="outlabel">What it actually prints (run without a browser, quit after 200 passes of the loop)</p><pre class="out">missed on pass 64   lives left 2
 missed on pass 128   lives left 1
 missed on pass 192   lives left 0</pre><p>The first miss is on pass 64: the ball falls 8.5 units, from 8 to -0.5, at 4 per second, which takes 2.125 seconds, and pass 64 is the first pass past that. Each new ball starts at 8 again, so the misses come every 64 passes: 64, 128, 192. Lives reach 0 on pass 192.</p><p>The program keeps dropping balls after that, and lives would go to -1. Chunk 5 stops the game instead.</p></div></div>
@@ -377,16 +385,16 @@ missed on pass 192   lives left 0</pre><p>The first miss is on pass 64: the ball
 <span class="tk-var">passes</span> = <span class="tk-num">0</span>
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
-    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
-    <span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span> + <span class="tk-var">ball</span>.<span class="tk-var">vel</span> * <span class="tk-var">dt</span>
-
-    <span class="tk-var">gap</span> = <span class="tk-fn">abs</span>(<span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> - <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>)
-    <span class="tk-ctl">if</span> <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> &lt; <span class="tk-num">0.9</span> <span class="tk-kw">and</span> <span class="tk-var">gap</span> &lt; <span class="tk-num">6</span>:
-        <span class="tk-var">score</span> = <span class="tk-var">score</span> + <span class="tk-num">1</span>
-        <span class="tk-var">score_text</span>.<span class="tk-var">text</span> = <span class="tk-str">"Score: "</span> + <span class="tk-cls">str</span>(<span class="tk-var">score</span>)
-        <span class="tk-fn">print</span>(<span class="tk-str">"pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  the text under the scene now says:"</span>, <span class="tk-var">score_text</span>.<span class="tk-var">text</span>)
-        <span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-cls">randint</span>(-<span class="tk-num">4</span>, <span class="tk-num">4</span>), <span class="tk-num">8</span>, <span class="tk-num">0</span>)</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+<span class="ig">    </span><span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+<span class="ig">    </span><span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span> + <span class="tk-var">ball</span>.<span class="tk-var">vel</span> * <span class="tk-var">dt</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-var">gap</span> = <span class="tk-fn">abs</span>(<span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> - <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>)
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> &lt; <span class="tk-num">0.9</span> <span class="tk-kw">and</span> <span class="tk-var">gap</span> &lt; <span class="tk-num">6</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">score</span> = <span class="tk-var">score</span> + <span class="tk-num">1</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">score_text</span>.<span class="tk-var">text</span> = <span class="tk-str">"Score: "</span> + <span class="tk-cls">str</span>(<span class="tk-var">score</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  the text under the scene now says:"</span>, <span class="tk-var">score_text</span>.<span class="tk-var">text</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-cls">randint</span>(-<span class="tk-num">4</span>, <span class="tk-num">4</span>), <span class="tk-num">8</span>, <span class="tk-num">0</span>)</pre>
 <div class="predict"><p class="q">Predict: What does the line under the scene say after the second catch? What would go wrong if the line were <code>"Score: " + score</code> with no <code>str</code>?</p><button class="rev" data-target="s7-c4" aria-controls="s7-c4" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s7-c4"><p class="outlabel">What it actually prints (run without a browser, quit after 120 passes of the loop)</p><pre class="out">pass 54   the text under the scene now says: Score: 1
 pass 108   the text under the scene now says: Score: 2</pre><p>It says <code>Score: 2</code>, and the output box shows the text after each catch, on passes 54 and 108.</p><p>Without <code>str</code>, Python is asked to join a string to a number, and it stops with <code>TypeError: can only concatenate str (not "int") to str</code>. <code>str(score)</code> changes the type of the number to a string first, and then the join works.</p></div></div>
 </section>
@@ -408,29 +416,29 @@ pass 108   the text under the scene now says: Score: 2</pre><p>It says <code>Sco
 <span class="tk-var">passes</span> = <span class="tk-num">0</span>
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
-    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
-    <span class="tk-var">keys</span> = <span class="tk-fn">keysdown</span>()
-
-    <span class="tk-ctl">if</span> <span class="tk-var">state</span> == <span class="tk-str">"play"</span>:
-        <span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span> + <span class="tk-var">ball</span>.<span class="tk-var">vel</span> * <span class="tk-var">dt</span>
-
-    <span class="tk-ctl">if</span> <span class="tk-var">state</span> == <span class="tk-str">"play"</span> <span class="tk-kw">and</span> <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> &lt; -<span class="tk-num">0.5</span>:
-        <span class="tk-var">lives</span> = <span class="tk-var">lives</span> - <span class="tk-num">1</span>
-        <span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-cls">randint</span>(-<span class="tk-num">4</span>, <span class="tk-num">4</span>), <span class="tk-num">8</span>, <span class="tk-num">0</span>)
-        <span class="tk-fn">print</span>(<span class="tk-str">"missed on pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  lives left"</span>, <span class="tk-var">lives</span>)
-
-    <span class="tk-ctl">if</span> <span class="tk-var">state</span> == <span class="tk-str">"play"</span> <span class="tk-kw">and</span> <span class="tk-var">lives</span> == <span class="tk-num">0</span>:
-        <span class="tk-var">state</span> = <span class="tk-str">"over"</span>
-        <span class="tk-var">sign</span>.<span class="tk-var">text</span> = <span class="tk-str">"Game over. Press r."</span>
-        <span class="tk-fn">print</span>(<span class="tk-str">"pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  state is now"</span>, <span class="tk-var">state</span>)
-
-    <span class="tk-ctl">if</span> <span class="tk-var">state</span> == <span class="tk-str">"over"</span> <span class="tk-kw">and</span> <span class="tk-str">"r"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
-        <span class="tk-var">state</span> = <span class="tk-str">"play"</span>
-        <span class="tk-var">lives</span> = <span class="tk-num">3</span>
-        <span class="tk-var">sign</span>.<span class="tk-var">text</span> = <span class="tk-str">""</span>
-        <span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-cls">randint</span>(-<span class="tk-num">4</span>, <span class="tk-num">4</span>), <span class="tk-num">8</span>, <span class="tk-num">0</span>)
-        <span class="tk-fn">print</span>(<span class="tk-str">"pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  restarted, state is"</span>, <span class="tk-var">state</span>, <span class="tk-str">" lives"</span>, <span class="tk-var">lives</span>)</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+<span class="ig">    </span><span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+<span class="ig">    </span><span class="tk-var">keys</span> = <span class="tk-fn">keysdown</span>()
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">state</span> == <span class="tk-str">"play"</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span> + <span class="tk-var">ball</span>.<span class="tk-var">vel</span> * <span class="tk-var">dt</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">state</span> == <span class="tk-str">"play"</span> <span class="tk-kw">and</span> <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> &lt; -<span class="tk-num">0.5</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">lives</span> = <span class="tk-var">lives</span> - <span class="tk-num">1</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-cls">randint</span>(-<span class="tk-num">4</span>, <span class="tk-num">4</span>), <span class="tk-num">8</span>, <span class="tk-num">0</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"missed on pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  lives left"</span>, <span class="tk-var">lives</span>)
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">state</span> == <span class="tk-str">"play"</span> <span class="tk-kw">and</span> <span class="tk-var">lives</span> == <span class="tk-num">0</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">state</span> = <span class="tk-str">"over"</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">sign</span>.<span class="tk-var">text</span> = <span class="tk-str">"Game over. Press r."</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  state is now"</span>, <span class="tk-var">state</span>)
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">state</span> == <span class="tk-str">"over"</span> <span class="tk-kw">and</span> <span class="tk-str">"r"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">state</span> = <span class="tk-str">"play"</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">lives</span> = <span class="tk-num">3</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">sign</span>.<span class="tk-var">text</span> = <span class="tk-str">""</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-cls">randint</span>(-<span class="tk-num">4</span>, <span class="tk-num">4</span>), <span class="tk-num">8</span>, <span class="tk-num">0</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  restarted, state is"</span>, <span class="tk-var">state</span>, <span class="tk-str">" lives"</span>, <span class="tk-var">lives</span>)</pre>
 <div class="predict"><p class="q">Predict: r is pressed on pass 100 and again on pass 200. The game is over on pass 192. Which of the two presses restarts it, and why does the other one do nothing?</p><button class="rev" data-target="s7-c5" aria-controls="s7-c5" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s7-c5"><p class="outlabel">What it actually prints (run without a browser, quit after 210 passes of the loop)</p><pre class="out">missed on pass 64   lives left 2
 missed on pass 128   lives left 1
 missed on pass 192   lives left 0
@@ -452,16 +460,16 @@ pass 200   restarted, state is play  lives 3</pre><p class="note">Fed in by the 
 <span class="tk-var">passes</span> = <span class="tk-num">0</span>
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
-    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
-    <span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span> + <span class="tk-var">ball</span>.<span class="tk-var">vel</span> * <span class="tk-var">dt</span>
-
-    <span class="tk-var">gap</span> = <span class="tk-fn">abs</span>(<span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> - <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>)
-    <span class="tk-ctl">if</span> <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> &lt; <span class="tk-num">0.9</span> <span class="tk-kw">and</span> <span class="tk-var">gap</span> &lt; <span class="tk-num">6</span>:
-        <span class="tk-var">score</span> = <span class="tk-var">score</span> + <span class="tk-num">1</span>
-        <span class="tk-var">ball</span>.<span class="tk-var">vel</span>.<span class="tk-var">y</span> = <span class="tk-var">ball</span>.<span class="tk-var">vel</span>.<span class="tk-var">y</span> - <span class="tk-num">1</span>
-        <span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-cls">randint</span>(-<span class="tk-num">4</span>, <span class="tk-num">4</span>), <span class="tk-num">8</span>, <span class="tk-num">0</span>)
-        <span class="tk-fn">print</span>(<span class="tk-str">"catch"</span>, <span class="tk-var">score</span>, <span class="tk-str">"on pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  the next ball falls at"</span>, -<span class="tk-var">ball</span>.<span class="tk-var">vel</span>.<span class="tk-var">y</span>, <span class="tk-str">"per second"</span>)</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+<span class="ig">    </span><span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+<span class="ig">    </span><span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span> + <span class="tk-var">ball</span>.<span class="tk-var">vel</span> * <span class="tk-var">dt</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-var">gap</span> = <span class="tk-fn">abs</span>(<span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> - <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>)
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> &lt; <span class="tk-num">0.9</span> <span class="tk-kw">and</span> <span class="tk-var">gap</span> &lt; <span class="tk-num">6</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">score</span> = <span class="tk-var">score</span> + <span class="tk-num">1</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">ball</span>.<span class="tk-var">vel</span>.<span class="tk-var">y</span> = <span class="tk-var">ball</span>.<span class="tk-var">vel</span>.<span class="tk-var">y</span> - <span class="tk-num">1</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-cls">randint</span>(-<span class="tk-num">4</span>, <span class="tk-num">4</span>), <span class="tk-num">8</span>, <span class="tk-num">0</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"catch"</span>, <span class="tk-var">score</span>, <span class="tk-str">"on pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  the next ball falls at"</span>, -<span class="tk-var">ball</span>.<span class="tk-var">vel</span>.<span class="tk-var">y</span>, <span class="tk-str">"per second"</span>)</pre>
 <div class="predict"><p class="q">Predict: The first ball takes 54 passes to reach the paddle at 4 per second. The second ball falls at 5 per second. Does it take more passes or fewer? About how many?</p><button class="rev" data-target="s7-c6" aria-controls="s7-c6" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s7-c6"><p class="outlabel">What it actually prints (run without a browser, quit after 140 passes of the loop)</p><pre class="out">catch 1 on pass 54   the next ball falls at 5.0 per second
 catch 2 on pass 97   the next ball falls at 6.0 per second
 catch 3 on pass 133   the next ball falls at 7.0 per second</pre><p>Fewer: 43 passes, so the second catch is on pass 97. The ball has 7.1 units to fall at 5 per second, which is 1.42 seconds. The third ball, at 6 per second, takes 36 passes and is caught on pass 133.</p><p>Every catch takes a bigger bite out of the time the player has. That one line is what makes the game get harder.</p></div></div>
@@ -493,27 +501,27 @@ catch 3 on pass 133   the next ball falls at 7.0 per second</pre><p>Fewer: 43 pa
 <span class="tk-var">passes</span> = <span class="tk-num">0</span>
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
-    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
-    <span class="tk-var">keys</span> = <span class="tk-fn">keysdown</span>()
-
-    <span class="tk-ctl">if</span> <span class="tk-str">"right"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
-        <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> + <span class="tk-num">0.3</span>
-    <span class="tk-ctl">if</span> <span class="tk-str">"left"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
-        <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> - <span class="tk-num">0.3</span>
-    <span class="tk-ctl">if</span> <span class="tk-str">"up"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
-        <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span> = <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span> - <span class="tk-num">0.3</span>
-    <span class="tk-ctl">if</span> <span class="tk-str">"down"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
-        <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span> = <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span> + <span class="tk-num">0.3</span>
-
-    <span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span> + <span class="tk-var">ball</span>.<span class="tk-var">vel</span> * <span class="tk-var">dt</span>
-
-    <span class="tk-var">gap_x</span> = <span class="tk-fn">abs</span>(<span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> - <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>)
-    <span class="tk-var">gap_z</span> = <span class="tk-fn">abs</span>(<span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span> - <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span>)
-    <span class="tk-ctl">if</span> <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> &lt; <span class="tk-num">0.9</span> <span class="tk-kw">and</span> <span class="tk-var">gap_x</span> &lt; <span class="tk-num">1.5</span> <span class="tk-kw">and</span> <span class="tk-var">gap_z</span> &lt; <span class="tk-num">1.5</span>:
-        <span class="tk-var">score</span> = <span class="tk-var">score</span> + <span class="tk-num">1</span>
-        <span class="tk-fn">print</span>(<span class="tk-str">"caught on pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  gaps were"</span>, <span class="tk-fn">round</span>(<span class="tk-var">gap_x</span>, <span class="tk-num">2</span>), <span class="tk-str">"and"</span>, <span class="tk-fn">round</span>(<span class="tk-var">gap_z</span>, <span class="tk-num">2</span>), <span class="tk-str">"  score"</span>, <span class="tk-var">score</span>)
-        <span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-cls">randint</span>(-<span class="tk-num">4</span>, <span class="tk-num">4</span>), <span class="tk-num">8</span>, <span class="tk-cls">randint</span>(-<span class="tk-num">4</span>, <span class="tk-num">4</span>))</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+<span class="ig">    </span><span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+<span class="ig">    </span><span class="tk-var">keys</span> = <span class="tk-fn">keysdown</span>()
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-str">"right"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> + <span class="tk-num">0.3</span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-str">"left"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> - <span class="tk-num">0.3</span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-str">"up"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span> = <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span> - <span class="tk-num">0.3</span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-str">"down"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span> = <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span> + <span class="tk-num">0.3</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span> + <span class="tk-var">ball</span>.<span class="tk-var">vel</span> * <span class="tk-var">dt</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-var">gap_x</span> = <span class="tk-fn">abs</span>(<span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> - <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>)
+<span class="ig">    </span><span class="tk-var">gap_z</span> = <span class="tk-fn">abs</span>(<span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span> - <span class="tk-var">paddle</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span>)
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span> &lt; <span class="tk-num">0.9</span> <span class="tk-kw">and</span> <span class="tk-var">gap_x</span> &lt; <span class="tk-num">1.5</span> <span class="tk-kw">and</span> <span class="tk-var">gap_z</span> &lt; <span class="tk-num">1.5</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">score</span> = <span class="tk-var">score</span> + <span class="tk-num">1</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"caught on pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  gaps were"</span>, <span class="tk-fn">round</span>(<span class="tk-var">gap_x</span>, <span class="tk-num">2</span>), <span class="tk-str">"and"</span>, <span class="tk-fn">round</span>(<span class="tk-var">gap_z</span>, <span class="tk-num">2</span>), <span class="tk-str">"  score"</span>, <span class="tk-var">score</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">ball</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-cls">randint</span>(-<span class="tk-num">4</span>, <span class="tk-num">4</span>), <span class="tk-num">8</span>, <span class="tk-cls">randint</span>(-<span class="tk-num">4</span>, <span class="tk-num">4</span>))</pre>
 <div class="predict"><p class="q">Predict: The ball will land at x = 1, z = -1. The paddle starts at the middle and up is held for three passes. Where is the paddle then, and is the ball caught?</p><button class="rev" data-target="s7-card1" aria-controls="s7-card1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s7-card1"><p class="outlabel">What it actually prints (run without a browser, quit after 60 passes of the loop)</p><pre class="out">caught on pass 54   gaps were 1.0 and 0.1   score 1</pre><p class="note">Fed in by the build script: the up arrow key held on passes 10 to 12.</p><p>The paddle is at z = -0.9 after three passes of 0.3 toward negative z, and still at x = 0. The x gap is 1.0 and the z gap is 0.1, both under 1.5, so the ball is caught on pass 54. The output box shows both gaps.</p><p>Had up not been pressed, the z gap would be 1.0, which is also under 1.5, so the ball would be caught anyway. A ball at z = -2 would need the move.</p></div></div>
 <h3>Expected and got</h3><p>Fill in the left column before you run. Fill in the right column after.</p>
 <table><tr><th>Expected</th><th>Got</th></tr>
@@ -528,7 +536,7 @@ catch 3 on pass 133   the next ball falls at 7.0 per second</pre><p>Fewer: 43 pa
 <div class="exit middle"><p class="tag">Middle</p><p>The 3D catch game: two gaps, score and lives under the scene, game over, r to restart, faster each catch.</p></div>
 <div class="exit stretch"><p class="tag">Stretch</p><p>Two balls in a list, each with its own <code>vel</code>, both falling, with the catch and miss gates inside a loop over the list. Then a bonus ball in a different colour that is worth 3.</p></div>
 </div></section>
-<section><h2>Ledger card</h2><p>Stamp 7: <code>abs(a - b)</code> is a gap, <code>randint(lo, hi)</code> from <code>random</code>, a catch is two checks joined by <code>and</code>, a gate that should fire once must change what it checks, <code>wtext</code> and <code>text = "Score: " + str(score)</code>, lives, a <code>state</code> name gated on everywhere, restart with a key in the loop, <code>ball.vel.y - 1</code> to speed up.</p><p><a href="vpython_ledger_card.html?v=5">Open the course ledger card</a></p></section>
+<section><h2>Ledger card</h2><p>Stamp 7: <code>abs(a - b)</code> is a gap, <code>randint(lo, hi)</code> from <code>random</code>, a catch is two checks joined by <code>and</code>, a gate that should fire once must change what it checks, <code>wtext</code> and <code>text = "Score: " + str(score)</code>, lives, a <code>state</code> name gated on everywhere, restart with a key in the loop, <code>ball.vel.y - 1</code> to speed up.</p><p><a href="vpython_ledger_card.html?v=6">Open the course ledger card</a></p></section>
 <details class="teacher"><summary>Teacher panel</summary>
 <h3>Timing, 90 minutes</h3><ul>
 <li>0:00 retrieval opener, 10 min</li>
@@ -554,8 +562,8 @@ catch 3 on pass 133   the next ball falls at 7.0 per second</pre><p>Fewer: 43 pa
 </details>
 <section><h2>Running this in VS Code</h2><div class="grid2"><div class="card"><h3>Once, before the first run</h3><p>Open the terminal in VS Code and install the library: <code>pip install vpython</code>. Check it worked with <code>python -c "import vpython"</code>. It should print nothing at all and give you the prompt back. A traceback here is an install problem, not a problem with your program.</p></div><div class="card"><h3>Every run after that</h3><p>Save your file as <code>YourName_vpython07.py</code>: your first name, an underscore, then <code>vpython07</code>. Run it from the terminal. The 3D scene opens in a new browser tab, sometimes behind VS Code, so look for it before deciding that nothing happened. Click inside the scene before pressing any key. To end the program, close the tab or press Ctrl+C in the terminal. The program is written to run until you do. Run the file again and you get a fresh tab.</p></div></div><p class="note">VPython draws solid shapes that you can turn and zoom. Everything you print still goes to the terminal, and everything you draw goes to the browser tab. Words in the terminal, pictures in the tab.</p></section>
 </div></main>
-<nav class="pager"><a href="session06_a_solar_system_objects_carry_their_numbers.html?v=5">&larr; A solar system: objects that carry their own numbers</a><a href="vpython_course_hub.html?v=5">Course home</a><a href="session08_a_grid_world_from_a_list_of_strings.html?v=5">A grid world: a level from a list of strings &rarr;</a></nav>
-<footer><div class="wrap"><p>Python in 3D: eleven sessions of VPython for ages 10 to 11, in the Lecture Light style, light ground for a projector, predict before reveal, three places to stop in every session.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-10-05 (NY-7.G.4 added 2026-10-26). <a href="standards_map.html?v=5">Full standards map</a> &middot; <a href="vpython_ledger_card.html?v=5">Ledger card</a></p></div></footer>
+<nav class="pager"><a href="session06_a_solar_system_objects_carry_their_numbers.html?v=6">&larr; A solar system: objects that carry their own numbers</a><a href="vpython_course_hub.html?v=6">Course home</a><a href="session08_a_grid_world_from_a_list_of_strings.html?v=6">A grid world: a level from a list of strings &rarr;</a></nav>
+<footer><div class="wrap"><p>Python in 3D: eleven sessions of VPython for ages 10 to 11, in the Lecture Light style, light ground for a projector, predict before reveal, three places to stop in every session.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-10-05 (NY-7.G.4 added 2026-10-26). <a href="standards_map.html?v=6">Full standards map</a> &middot; <a href="vpython_ledger_card.html?v=6">Ledger card</a></p></div></footer>
 <script>
 document.addEventListener('click', function(e){
   var b = e.target.closest('button.rev');

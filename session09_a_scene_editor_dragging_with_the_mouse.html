@@ -107,6 +107,14 @@ pre{
 .tk-fn{color:#795E26}   /* functions */
 .tk-cls{color:#1D6A80}  /* classes, types, modules */
 .tk-var{color:#001080}  /* variables */
+/* Indent guides, the lines VS Code draws down each step of indentation. VS Code's are
+   1px and light grey, which vanish on a projector with the lights on, so these are 6px
+   and #595959. Each four-space step is one box as tall as the line, so the bars join
+   up from line to line. A border rather than a shadow, so the bars print. */
+pre .ig{
+  display:inline-block; width:4ch; height:1.6em; vertical-align:top;
+  border-left:6px solid #595959;
+}
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -285,20 +293,20 @@ a.btn.quiet:hover{background:#EFE9DA}
 <span class="tk-var">crate</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">orange</span>)
 
 <span class="tk-kw">def</span> <span class="tk-fn">down</span>(<span class="tk-var">evt</span>):
-    <span class="tk-fn">print</span>(<span class="tk-str">"mousedown   press is"</span>, <span class="tk-var">evt</span>.<span class="tk-var">press</span>)
+<span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"mousedown   press is"</span>, <span class="tk-var">evt</span>.<span class="tk-var">press</span>)
 
 <span class="tk-kw">def</span> <span class="tk-fn">move</span>(<span class="tk-var">evt</span>):
-    <span class="tk-fn">print</span>(<span class="tk-str">"mousemove   press is"</span>, <span class="tk-var">evt</span>.<span class="tk-var">press</span>)
+<span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"mousemove   press is"</span>, <span class="tk-var">evt</span>.<span class="tk-var">press</span>)
 
 <span class="tk-kw">def</span> <span class="tk-fn">up</span>(<span class="tk-var">evt</span>):
-    <span class="tk-fn">print</span>(<span class="tk-str">"mouseup     press is"</span>, <span class="tk-var">evt</span>.<span class="tk-var">press</span>)
+<span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"mouseup     press is"</span>, <span class="tk-var">evt</span>.<span class="tk-var">press</span>)
 
 <span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"mousedown"</span>, <span class="tk-var">down</span>)
 <span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"mousemove"</span>, <span class="tk-var">move</span>)
 <span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"mouseup"</span>, <span class="tk-var">up</span>)
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
 <div class="predict"><p class="q">Predict: The mouse presses on the box, moves once, lets go, and then moves once more with no button down. Four events. For which of them is <code>evt.press</code> True?</p><button class="rev" data-target="s9-c1" aria-controls="s9-c1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s9-c1"><p class="outlabel">What it actually prints (run without a browser, quit after 6 passes of the loop)</p><pre class="out">mousedown   press is True
 mousemove   press is True
 mouseup     press is False
@@ -315,18 +323,18 @@ mousemove   press is False</pre><p class="note">Fed in by the build script: the 
 <span class="tk-var">ball</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(-<span class="tk-num">2</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.5</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">cyan</span>)
 
 <span class="tk-kw">def</span> <span class="tk-fn">grab</span>(<span class="tk-var">evt</span>):
-    <span class="tk-var">thing</span> = <span class="tk-var">scene</span>.<span class="tk-var">mouse</span>.<span class="tk-var">pick</span>
-    <span class="tk-ctl">if</span> <span class="tk-var">thing</span> <span class="tk-kw">is</span> <span class="tk-kw">None</span> <span class="tk-kw">or</span> <span class="tk-var">thing</span> <span class="tk-kw">is</span> <span class="tk-var">floor</span>:
-        <span class="tk-var">floor</span>.<span class="tk-var">held</span> = <span class="tk-kw">None</span>
-        <span class="tk-fn">print</span>(<span class="tk-str">"pressed on nothing to grab"</span>)
-    <span class="tk-ctl">else</span>:
-        <span class="tk-var">floor</span>.<span class="tk-var">held</span> = <span class="tk-var">thing</span>
-        <span class="tk-fn">print</span>(<span class="tk-str">"grabbed the thing at"</span>, <span class="tk-var">floor</span>.<span class="tk-var">held</span>.<span class="tk-var">pos</span>)
+<span class="ig">    </span><span class="tk-var">thing</span> = <span class="tk-var">scene</span>.<span class="tk-var">mouse</span>.<span class="tk-var">pick</span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">thing</span> <span class="tk-kw">is</span> <span class="tk-kw">None</span> <span class="tk-kw">or</span> <span class="tk-var">thing</span> <span class="tk-kw">is</span> <span class="tk-var">floor</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">floor</span>.<span class="tk-var">held</span> = <span class="tk-kw">None</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"pressed on nothing to grab"</span>)
+<span class="ig">    </span><span class="tk-ctl">else</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">floor</span>.<span class="tk-var">held</span> = <span class="tk-var">thing</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"grabbed the thing at"</span>, <span class="tk-var">floor</span>.<span class="tk-var">held</span>.<span class="tk-var">pos</span>)
 
 <span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"mousedown"</span>, <span class="tk-var">grab</span>)
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
 <div class="predict"><p class="q">Predict: Three presses: on the crate, on an empty patch of floor, and on the ball. What does <code>floor.held</code> hold after each one?</p><button class="rev" data-target="s9-c2" aria-controls="s9-c2" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s9-c2"><p class="outlabel">What it actually prints (run without a browser, quit after 6 passes of the loop)</p><pre class="out">grabbed the thing at &lt;2, 0.5, 0&gt;
 pressed on nothing to grab
 grabbed the thing at &lt;-2, 0.5, 0&gt;</pre><p class="note">Fed in by the build script: the button pressed at (2, 0.5, 0) on pass 1, the button pressed at (0, 0, 3) on pass 3, the button pressed at (-2, 0.5, 0) on pass 5.</p><p>After the first press it holds the crate, and the print shows the crate's pos. After the second it holds None: the pick was the floor, and the gate treats the floor like empty space. After the third it holds the ball.</p><p>The gate uses <code>or</code>: either reason, None or the floor, means there is nothing to grab. Without the floor check, a press on the floor would grab the floor, and the next chunk would drag the whole ground around.</p></div></div>
@@ -342,23 +350,23 @@ grabbed the thing at &lt;-2, 0.5, 0&gt;</pre><p class="note">Fed in by the build
 <span class="tk-var">scene</span>.<span class="tk-var">forward</span> = <span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-num">0.6</span>, -<span class="tk-num">1</span>)
 
 <span class="tk-kw">def</span> <span class="tk-fn">grab</span>(<span class="tk-var">evt</span>):
-    <span class="tk-var">thing</span> = <span class="tk-var">scene</span>.<span class="tk-var">mouse</span>.<span class="tk-var">pick</span>
-    <span class="tk-ctl">if</span> <span class="tk-var">thing</span> <span class="tk-kw">is</span> <span class="tk-kw">None</span> <span class="tk-kw">or</span> <span class="tk-var">thing</span> <span class="tk-kw">is</span> <span class="tk-var">floor</span>:
-        <span class="tk-var">floor</span>.<span class="tk-var">held</span> = <span class="tk-kw">None</span>
-    <span class="tk-ctl">else</span>:
-        <span class="tk-var">floor</span>.<span class="tk-var">held</span> = <span class="tk-var">thing</span>
+<span class="ig">    </span><span class="tk-var">thing</span> = <span class="tk-var">scene</span>.<span class="tk-var">mouse</span>.<span class="tk-var">pick</span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">thing</span> <span class="tk-kw">is</span> <span class="tk-kw">None</span> <span class="tk-kw">or</span> <span class="tk-var">thing</span> <span class="tk-kw">is</span> <span class="tk-var">floor</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">floor</span>.<span class="tk-var">held</span> = <span class="tk-kw">None</span>
+<span class="ig">    </span><span class="tk-ctl">else</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">floor</span>.<span class="tk-var">held</span> = <span class="tk-var">thing</span>
 
 <span class="tk-kw">def</span> <span class="tk-fn">drag</span>(<span class="tk-var">evt</span>):
-    <span class="tk-ctl">if</span> <span class="tk-var">floor</span>.<span class="tk-var">held</span> <span class="tk-kw">is</span> <span class="tk-kw">not</span> <span class="tk-kw">None</span>:
-        <span class="tk-var">spot</span> = <span class="tk-var">scene</span>.<span class="tk-var">mouse</span>.<span class="tk-fn">project</span>(<span class="tk-var">normal</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">point</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span>))
-        <span class="tk-var">floor</span>.<span class="tk-var">held</span>.<span class="tk-var">pos</span> = <span class="tk-var">spot</span>
-        <span class="tk-fn">print</span>(<span class="tk-str">"dragged to"</span>, <span class="tk-var">spot</span>)
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">floor</span>.<span class="tk-var">held</span> <span class="tk-kw">is</span> <span class="tk-kw">not</span> <span class="tk-kw">None</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">spot</span> = <span class="tk-var">scene</span>.<span class="tk-var">mouse</span>.<span class="tk-fn">project</span>(<span class="tk-var">normal</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">point</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span>))
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">floor</span>.<span class="tk-var">held</span>.<span class="tk-var">pos</span> = <span class="tk-var">spot</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"dragged to"</span>, <span class="tk-var">spot</span>)
 
 <span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"mousedown"</span>, <span class="tk-var">grab</span>)
 <span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"mousemove"</span>, <span class="tk-var">drag</span>)
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
 <div class="predict"><p class="q">Predict: The mouse presses on the crate and moves twice. After the second move, what is the crate's y, and why is it not 0?</p><button class="rev" data-target="s9-c3" aria-controls="s9-c3" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s9-c3"><p class="outlabel">What it actually prints (run without a browser, quit after 6 passes of the loop)</p><pre class="out">dragged to &lt;2.8, 0.5, 1.1&gt;
 dragged to &lt;3.6, 0.5, 2.3&gt;</pre><p class="note">Fed in by the build script: the button pressed at (2, 0.5, 0) on pass 1, the mouse moved at (2.8, 0.5, 1.1) on pass 2, the mouse moved at (3.6, 0.5, 2.3) on pass 3.</p><p>The crate's y is 0.5 after every move. The plane that <code>project</code> uses passes through <code>vec(0, 0.5, 0)</code>, so every point it gives has y = 0.5, and the crate's middle stays half a unit above the floor.</p><p>With <code>point=vec(0, 0, 0)</code> the crate's middle would be put on the floor itself, and half of it would be under the ground, the session 1 mistake made by the mouse instead of by a typed number.</p></div></div>
 </section>
@@ -373,28 +381,28 @@ dragged to &lt;3.6, 0.5, 2.3&gt;</pre><p class="note">Fed in by the build script
 <span class="tk-var">scene</span>.<span class="tk-var">forward</span> = <span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-num">0.6</span>, -<span class="tk-num">1</span>)
 
 <span class="tk-kw">def</span> <span class="tk-fn">grab</span>(<span class="tk-var">evt</span>):
-    <span class="tk-var">thing</span> = <span class="tk-var">scene</span>.<span class="tk-var">mouse</span>.<span class="tk-var">pick</span>
-    <span class="tk-ctl">if</span> <span class="tk-var">thing</span> <span class="tk-kw">is</span> <span class="tk-kw">None</span> <span class="tk-kw">or</span> <span class="tk-var">thing</span> <span class="tk-kw">is</span> <span class="tk-var">floor</span>:
-        <span class="tk-var">floor</span>.<span class="tk-var">held</span> = <span class="tk-kw">None</span>
-    <span class="tk-ctl">else</span>:
-        <span class="tk-var">floor</span>.<span class="tk-var">held</span> = <span class="tk-var">thing</span>
+<span class="ig">    </span><span class="tk-var">thing</span> = <span class="tk-var">scene</span>.<span class="tk-var">mouse</span>.<span class="tk-var">pick</span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">thing</span> <span class="tk-kw">is</span> <span class="tk-kw">None</span> <span class="tk-kw">or</span> <span class="tk-var">thing</span> <span class="tk-kw">is</span> <span class="tk-var">floor</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">floor</span>.<span class="tk-var">held</span> = <span class="tk-kw">None</span>
+<span class="ig">    </span><span class="tk-ctl">else</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">floor</span>.<span class="tk-var">held</span> = <span class="tk-var">thing</span>
 
 <span class="tk-kw">def</span> <span class="tk-fn">drag</span>(<span class="tk-var">evt</span>):
-    <span class="tk-ctl">if</span> <span class="tk-var">floor</span>.<span class="tk-var">held</span> <span class="tk-kw">is</span> <span class="tk-kw">not</span> <span class="tk-kw">None</span>:
-        <span class="tk-var">floor</span>.<span class="tk-var">held</span>.<span class="tk-var">pos</span> = <span class="tk-var">scene</span>.<span class="tk-var">mouse</span>.<span class="tk-fn">project</span>(<span class="tk-var">normal</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">point</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span>))
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">floor</span>.<span class="tk-var">held</span> <span class="tk-kw">is</span> <span class="tk-kw">not</span> <span class="tk-kw">None</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">floor</span>.<span class="tk-var">held</span>.<span class="tk-var">pos</span> = <span class="tk-var">scene</span>.<span class="tk-var">mouse</span>.<span class="tk-fn">project</span>(<span class="tk-var">normal</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">point</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span>))
 
 <span class="tk-kw">def</span> <span class="tk-fn">drop</span>(<span class="tk-var">evt</span>):
-    <span class="tk-ctl">if</span> <span class="tk-var">floor</span>.<span class="tk-var">held</span> <span class="tk-kw">is</span> <span class="tk-kw">not</span> <span class="tk-kw">None</span>:
-        <span class="tk-var">floor</span>.<span class="tk-var">held</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-fn">round</span>(<span class="tk-var">floor</span>.<span class="tk-var">held</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>), <span class="tk-num">0.5</span>, <span class="tk-fn">round</span>(<span class="tk-var">floor</span>.<span class="tk-var">held</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span>))
-        <span class="tk-fn">print</span>(<span class="tk-str">"dropped at"</span>, <span class="tk-var">floor</span>.<span class="tk-var">held</span>.<span class="tk-var">pos</span>)
-        <span class="tk-var">floor</span>.<span class="tk-var">held</span> = <span class="tk-kw">None</span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">floor</span>.<span class="tk-var">held</span> <span class="tk-kw">is</span> <span class="tk-kw">not</span> <span class="tk-kw">None</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">floor</span>.<span class="tk-var">held</span>.<span class="tk-var">pos</span> = <span class="tk-fn">vec</span>(<span class="tk-fn">round</span>(<span class="tk-var">floor</span>.<span class="tk-var">held</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>), <span class="tk-num">0.5</span>, <span class="tk-fn">round</span>(<span class="tk-var">floor</span>.<span class="tk-var">held</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span>))
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"dropped at"</span>, <span class="tk-var">floor</span>.<span class="tk-var">held</span>.<span class="tk-var">pos</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">floor</span>.<span class="tk-var">held</span> = <span class="tk-kw">None</span>
 
 <span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"mousedown"</span>, <span class="tk-var">grab</span>)
 <span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"mousemove"</span>, <span class="tk-var">drag</span>)
 <span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"mouseup"</span>, <span class="tk-var">drop</span>)
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
 <div class="predict"><p class="q">Predict: The crate is dragged to x = 3.6, z = 2.3 and dropped there. Where does it land? After the drop, the mouse moves again. Does the crate follow it?</p><button class="rev" data-target="s9-c4" aria-controls="s9-c4" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s9-c4"><p class="outlabel">What it actually prints (run without a browser, quit after 8 passes of the loop)</p><pre class="out">dropped at &lt;4, 0.5, 2&gt;</pre><p class="note">Fed in by the build script: the button pressed at (2, 0.5, 0) on pass 1, the mouse moved at (3.6, 0.5, 2.3) on pass 2, the button released at (3.6, 0.5, 2.3) on pass 3, the mouse moved at (-4, 0.5, -4) on pass 5.</p><p>It lands at <code>&lt;4, 0.5, 2&gt;</code>: 3.6 rounds to 4 and 2.3 rounds to 2.</p><p>The crate does not follow the later move. <code>drop</code> set <code>floor.held</code> to None, so the gate in <code>drag</code> is False and the move does nothing. That line is what ends a drag; without it, every move for the rest of the program would carry the crate along.</p></div></div>
 </section>
 <section class="chunk"><p class="chunk-no">Chunk 5 of 6</p>
@@ -407,28 +415,28 @@ dragged to &lt;3.6, 0.5, 2.3&gt;</pre><p class="note">Fed in by the build script
 <span class="tk-var">scene</span>.<span class="tk-var">forward</span> = <span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-num">0.6</span>, -<span class="tk-num">1</span>)
 
 <span class="tk-kw">def</span> <span class="tk-fn">pick_tool</span>(<span class="tk-var">m</span>):
-    <span class="tk-var">floor</span>.<span class="tk-var">tool</span> = <span class="tk-var">m</span>.<span class="tk-var">selected</span>
-    <span class="tk-fn">print</span>(<span class="tk-str">"tool is now"</span>, <span class="tk-var">floor</span>.<span class="tk-var">tool</span>)
+<span class="ig">    </span><span class="tk-var">floor</span>.<span class="tk-var">tool</span> = <span class="tk-var">m</span>.<span class="tk-var">selected</span>
+<span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"tool is now"</span>, <span class="tk-var">floor</span>.<span class="tk-var">tool</span>)
 
 <span class="tk-fn">menu</span>(<span class="tk-var">choices</span>=[<span class="tk-str">"box"</span>, <span class="tk-str">"ball"</span>, <span class="tk-str">"cone"</span>], <span class="tk-var">bind</span>=<span class="tk-var">pick_tool</span>)
 
 <span class="tk-kw">def</span> <span class="tk-fn">make</span>(<span class="tk-var">evt</span>):
-    <span class="tk-ctl">if</span> <span class="tk-var">scene</span>.<span class="tk-var">mouse</span>.<span class="tk-var">pick</span> <span class="tk-kw">is</span> <span class="tk-var">floor</span>:
-        <span class="tk-var">spot</span> = <span class="tk-var">scene</span>.<span class="tk-var">mouse</span>.<span class="tk-fn">project</span>(<span class="tk-var">normal</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">point</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>))
-        <span class="tk-var">x</span> = <span class="tk-fn">round</span>(<span class="tk-var">spot</span>.<span class="tk-var">x</span>)
-        <span class="tk-var">z</span> = <span class="tk-fn">round</span>(<span class="tk-var">spot</span>.<span class="tk-var">z</span>)
-        <span class="tk-ctl">if</span> <span class="tk-var">floor</span>.<span class="tk-var">tool</span> == <span class="tk-str">"box"</span>:
-            <span class="tk-var">thing</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0.5</span>, <span class="tk-var">z</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">orange</span>)
-        <span class="tk-ctl">if</span> <span class="tk-var">floor</span>.<span class="tk-var">tool</span> == <span class="tk-str">"ball"</span>:
-            <span class="tk-var">thing</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0.5</span>, <span class="tk-var">z</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.5</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">cyan</span>)
-        <span class="tk-ctl">if</span> <span class="tk-var">floor</span>.<span class="tk-var">tool</span> == <span class="tk-str">"cone"</span>:
-            <span class="tk-var">thing</span> = <span class="tk-fn">cone</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0</span>, <span class="tk-var">z</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.5</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">red</span>)
-        <span class="tk-fn">print</span>(<span class="tk-str">"made a"</span>, <span class="tk-var">floor</span>.<span class="tk-var">tool</span>, <span class="tk-str">"at"</span>, <span class="tk-var">thing</span>.<span class="tk-var">pos</span>)
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">scene</span>.<span class="tk-var">mouse</span>.<span class="tk-var">pick</span> <span class="tk-kw">is</span> <span class="tk-var">floor</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">spot</span> = <span class="tk-var">scene</span>.<span class="tk-var">mouse</span>.<span class="tk-fn">project</span>(<span class="tk-var">normal</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">point</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>))
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">x</span> = <span class="tk-fn">round</span>(<span class="tk-var">spot</span>.<span class="tk-var">x</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">z</span> = <span class="tk-fn">round</span>(<span class="tk-var">spot</span>.<span class="tk-var">z</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">floor</span>.<span class="tk-var">tool</span> == <span class="tk-str">"box"</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="tk-var">thing</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0.5</span>, <span class="tk-var">z</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">orange</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">floor</span>.<span class="tk-var">tool</span> == <span class="tk-str">"ball"</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="tk-var">thing</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0.5</span>, <span class="tk-var">z</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.5</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">cyan</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">floor</span>.<span class="tk-var">tool</span> == <span class="tk-str">"cone"</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="tk-var">thing</span> = <span class="tk-fn">cone</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0</span>, <span class="tk-var">z</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.5</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">red</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"made a"</span>, <span class="tk-var">floor</span>.<span class="tk-var">tool</span>, <span class="tk-str">"at"</span>, <span class="tk-var">thing</span>.<span class="tk-var">pos</span>)
 
 <span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"click"</span>, <span class="tk-var">make</span>)
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
 <div class="predict"><p class="q">Predict: A click on the floor, then the menu is set to cone, then two clicks at the same spot. What is made by each click, and why does the third click make nothing?</p><button class="rev" data-target="s9-c5" aria-controls="s9-c5" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s9-c5"><p class="outlabel">What it actually prints (run without a browser, quit after 8 passes of the loop)</p><pre class="out">made a box at &lt;1, 0.5, 2&gt;
 tool is now cone
 made a cone at &lt;-3, 0, 1&gt;</pre><p class="note">Fed in by the build script: a click at (1.2, 0, 1.8) on pass 1, the widget bound to pick_tool set to 2 on pass 3, a click at (-3.4, 0, 0.6) on pass 4, a click at (-3.4, 0, 0.6) on pass 6.</p><p>The first click makes a box at <code>&lt;1, 0.5, 2&gt;</code>, because the tool starts as box. The second makes a cone at <code>&lt;-3, 0, 1&gt;</code>: y is 0 for a cone, because its pos is its flat end.</p><p>The third click is on the same spot, where the cone now stands, so the pick is the cone and not the floor. The gate <code>scene.mouse.pick is floor</code> is False and nothing is made. A click on a shape is the next chunk's job.</p></div></div>
@@ -445,26 +453,26 @@ made a cone at &lt;-3, 0, 1&gt;</pre><p class="note">Fed in by the build script:
 <span class="tk-var">ball</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(-<span class="tk-num">2</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.5</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">cyan</span>)
 
 <span class="tk-kw">def</span> <span class="tk-fn">set_delete</span>(<span class="tk-var">c</span>):
-    <span class="tk-var">floor</span>.<span class="tk-var">delete</span> = <span class="tk-var">c</span>.<span class="tk-var">checked</span>
-    <span class="tk-fn">print</span>(<span class="tk-str">"delete mode is"</span>, <span class="tk-var">floor</span>.<span class="tk-var">delete</span>)
+<span class="ig">    </span><span class="tk-var">floor</span>.<span class="tk-var">delete</span> = <span class="tk-var">c</span>.<span class="tk-var">checked</span>
+<span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"delete mode is"</span>, <span class="tk-var">floor</span>.<span class="tk-var">delete</span>)
 
 <span class="tk-fn">checkbox</span>(<span class="tk-var">text</span>=<span class="tk-str">"Delete mode"</span>, <span class="tk-var">bind</span>=<span class="tk-var">set_delete</span>)
 
 <span class="tk-kw">def</span> <span class="tk-fn">grab</span>(<span class="tk-var">evt</span>):
-    <span class="tk-var">thing</span> = <span class="tk-var">scene</span>.<span class="tk-var">mouse</span>.<span class="tk-var">pick</span>
-    <span class="tk-ctl">if</span> <span class="tk-var">thing</span> <span class="tk-kw">is</span> <span class="tk-kw">None</span> <span class="tk-kw">or</span> <span class="tk-var">thing</span> <span class="tk-kw">is</span> <span class="tk-var">floor</span>:
-        <span class="tk-var">floor</span>.<span class="tk-var">held</span> = <span class="tk-kw">None</span>
-    <span class="tk-ctl">elif</span> <span class="tk-var">floor</span>.<span class="tk-var">delete</span>:
-        <span class="tk-var">thing</span>.<span class="tk-var">visible</span> = <span class="tk-kw">False</span>
-        <span class="tk-fn">print</span>(<span class="tk-str">"deleted the thing at"</span>, <span class="tk-var">thing</span>.<span class="tk-var">pos</span>)
-    <span class="tk-ctl">else</span>:
-        <span class="tk-var">floor</span>.<span class="tk-var">held</span> = <span class="tk-var">thing</span>
-        <span class="tk-fn">print</span>(<span class="tk-str">"grabbed the thing at"</span>, <span class="tk-var">thing</span>.<span class="tk-var">pos</span>)
+<span class="ig">    </span><span class="tk-var">thing</span> = <span class="tk-var">scene</span>.<span class="tk-var">mouse</span>.<span class="tk-var">pick</span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">thing</span> <span class="tk-kw">is</span> <span class="tk-kw">None</span> <span class="tk-kw">or</span> <span class="tk-var">thing</span> <span class="tk-kw">is</span> <span class="tk-var">floor</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">floor</span>.<span class="tk-var">held</span> = <span class="tk-kw">None</span>
+<span class="ig">    </span><span class="tk-ctl">elif</span> <span class="tk-var">floor</span>.<span class="tk-var">delete</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">thing</span>.<span class="tk-var">visible</span> = <span class="tk-kw">False</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"deleted the thing at"</span>, <span class="tk-var">thing</span>.<span class="tk-var">pos</span>)
+<span class="ig">    </span><span class="tk-ctl">else</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">floor</span>.<span class="tk-var">held</span> = <span class="tk-var">thing</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"grabbed the thing at"</span>, <span class="tk-var">thing</span>.<span class="tk-var">pos</span>)
 
 <span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"mousedown"</span>, <span class="tk-var">grab</span>)
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
 <div class="predict"><p class="q">Predict: A press on the crate, then the box is ticked, then two presses on the ball. What happens on each press? Why does the last press not delete anything?</p><button class="rev" data-target="s9-c6" aria-controls="s9-c6" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s9-c6"><p class="outlabel">What it actually prints (run without a browser, quit after 8 passes of the loop)</p><pre class="out">grabbed the thing at &lt;2, 0.5, 0&gt;
 delete mode is True
 deleted the thing at &lt;-2, 0.5, 0&gt;</pre><p class="note">Fed in by the build script: the button pressed at (2, 0.5, 0) on pass 1, the widget bound to set_delete set to True on pass 3, the button pressed at (-2, 0.5, 0) on pass 4, the button pressed at (-2, 0.5, 0) on pass 6.</p><p>The first press grabs the crate, because delete mode is off. The second press, after the tick, deletes the ball: it is hidden. The third press is on the same spot, but a hidden shape cannot be picked, so the pick is the floor and the first gate catches it. Nothing is deleted and nothing is grabbed.</p><p><code>elif</code> is a second gate that is only checked when the first was False. Here it means: not nothing, and delete mode is on.</p></div></div>
@@ -492,39 +500,39 @@ deleted the thing at &lt;-2, 0.5, 0&gt;</pre><p class="note">Fed in by the build
 <span class="tk-var">scene</span>.<span class="tk-var">forward</span> = <span class="tk-fn">vec</span>(<span class="tk-num">0</span>, -<span class="tk-num">0.6</span>, -<span class="tk-num">1</span>)
 
 <span class="tk-kw">def</span> <span class="tk-fn">pick_tool</span>(<span class="tk-var">m</span>):
-    <span class="tk-var">floor</span>.<span class="tk-var">tool</span> = <span class="tk-var">m</span>.<span class="tk-var">selected</span>
+<span class="ig">    </span><span class="tk-var">floor</span>.<span class="tk-var">tool</span> = <span class="tk-var">m</span>.<span class="tk-var">selected</span>
 
 <span class="tk-kw">def</span> <span class="tk-fn">pick_paint</span>(<span class="tk-var">m</span>):
-    <span class="tk-ctl">if</span> <span class="tk-var">m</span>.<span class="tk-var">selected</span> == <span class="tk-str">"orange"</span>:
-        <span class="tk-var">floor</span>.<span class="tk-var">paint</span> = <span class="tk-var">color</span>.<span class="tk-var">orange</span>
-    <span class="tk-ctl">if</span> <span class="tk-var">m</span>.<span class="tk-var">selected</span> == <span class="tk-str">"cyan"</span>:
-        <span class="tk-var">floor</span>.<span class="tk-var">paint</span> = <span class="tk-var">color</span>.<span class="tk-var">cyan</span>
-    <span class="tk-ctl">if</span> <span class="tk-var">m</span>.<span class="tk-var">selected</span> == <span class="tk-str">"white"</span>:
-        <span class="tk-var">floor</span>.<span class="tk-var">paint</span> = <span class="tk-var">color</span>.<span class="tk-var">white</span>
-    <span class="tk-fn">print</span>(<span class="tk-str">"paint is now"</span>, <span class="tk-var">floor</span>.<span class="tk-var">paint</span>)
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">m</span>.<span class="tk-var">selected</span> == <span class="tk-str">"orange"</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">floor</span>.<span class="tk-var">paint</span> = <span class="tk-var">color</span>.<span class="tk-var">orange</span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">m</span>.<span class="tk-var">selected</span> == <span class="tk-str">"cyan"</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">floor</span>.<span class="tk-var">paint</span> = <span class="tk-var">color</span>.<span class="tk-var">cyan</span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">m</span>.<span class="tk-var">selected</span> == <span class="tk-str">"white"</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">floor</span>.<span class="tk-var">paint</span> = <span class="tk-var">color</span>.<span class="tk-var">white</span>
+<span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"paint is now"</span>, <span class="tk-var">floor</span>.<span class="tk-var">paint</span>)
 
 <span class="tk-fn">menu</span>(<span class="tk-var">choices</span>=[<span class="tk-str">"box"</span>, <span class="tk-str">"ball"</span>, <span class="tk-str">"cone"</span>], <span class="tk-var">bind</span>=<span class="tk-var">pick_tool</span>)
 <span class="tk-var">scene</span>.<span class="tk-fn">append_to_caption</span>(<span class="tk-str">"  "</span>)
 <span class="tk-fn">menu</span>(<span class="tk-var">choices</span>=[<span class="tk-str">"orange"</span>, <span class="tk-str">"cyan"</span>, <span class="tk-str">"white"</span>], <span class="tk-var">bind</span>=<span class="tk-var">pick_paint</span>)
 
 <span class="tk-kw">def</span> <span class="tk-fn">make</span>(<span class="tk-var">evt</span>):
-    <span class="tk-ctl">if</span> <span class="tk-var">scene</span>.<span class="tk-var">mouse</span>.<span class="tk-var">pick</span> <span class="tk-kw">is</span> <span class="tk-var">floor</span>:
-        <span class="tk-var">spot</span> = <span class="tk-var">scene</span>.<span class="tk-var">mouse</span>.<span class="tk-fn">project</span>(<span class="tk-var">normal</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">point</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>))
-        <span class="tk-var">x</span> = <span class="tk-fn">round</span>(<span class="tk-var">spot</span>.<span class="tk-var">x</span>)
-        <span class="tk-var">z</span> = <span class="tk-fn">round</span>(<span class="tk-var">spot</span>.<span class="tk-var">z</span>)
-        <span class="tk-ctl">if</span> <span class="tk-var">floor</span>.<span class="tk-var">tool</span> == <span class="tk-str">"box"</span>:
-            <span class="tk-var">thing</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0.5</span>, <span class="tk-var">z</span>), <span class="tk-var">color</span>=<span class="tk-var">floor</span>.<span class="tk-var">paint</span>)
-        <span class="tk-ctl">if</span> <span class="tk-var">floor</span>.<span class="tk-var">tool</span> == <span class="tk-str">"ball"</span>:
-            <span class="tk-var">thing</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0.5</span>, <span class="tk-var">z</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.5</span>, <span class="tk-var">color</span>=<span class="tk-var">floor</span>.<span class="tk-var">paint</span>)
-        <span class="tk-ctl">if</span> <span class="tk-var">floor</span>.<span class="tk-var">tool</span> == <span class="tk-str">"cone"</span>:
-            <span class="tk-var">thing</span> = <span class="tk-fn">cone</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0</span>, <span class="tk-var">z</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.5</span>, <span class="tk-var">color</span>=<span class="tk-var">floor</span>.<span class="tk-var">paint</span>)
-        <span class="tk-var">shapes</span>.<span class="tk-fn">append</span>(<span class="tk-var">thing</span>)
-        <span class="tk-fn">print</span>(<span class="tk-str">"shape"</span>, <span class="tk-fn">len</span>(<span class="tk-var">shapes</span>), <span class="tk-str">"is a"</span>, <span class="tk-var">floor</span>.<span class="tk-var">tool</span>, <span class="tk-str">"at"</span>, <span class="tk-var">thing</span>.<span class="tk-var">pos</span>, <span class="tk-str">"coloured"</span>, <span class="tk-var">thing</span>.<span class="tk-var">color</span>)
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">scene</span>.<span class="tk-var">mouse</span>.<span class="tk-var">pick</span> <span class="tk-kw">is</span> <span class="tk-var">floor</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">spot</span> = <span class="tk-var">scene</span>.<span class="tk-var">mouse</span>.<span class="tk-fn">project</span>(<span class="tk-var">normal</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">point</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>))
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">x</span> = <span class="tk-fn">round</span>(<span class="tk-var">spot</span>.<span class="tk-var">x</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">z</span> = <span class="tk-fn">round</span>(<span class="tk-var">spot</span>.<span class="tk-var">z</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">floor</span>.<span class="tk-var">tool</span> == <span class="tk-str">"box"</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="tk-var">thing</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0.5</span>, <span class="tk-var">z</span>), <span class="tk-var">color</span>=<span class="tk-var">floor</span>.<span class="tk-var">paint</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">floor</span>.<span class="tk-var">tool</span> == <span class="tk-str">"ball"</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="tk-var">thing</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0.5</span>, <span class="tk-var">z</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.5</span>, <span class="tk-var">color</span>=<span class="tk-var">floor</span>.<span class="tk-var">paint</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">floor</span>.<span class="tk-var">tool</span> == <span class="tk-str">"cone"</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="tk-var">thing</span> = <span class="tk-fn">cone</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0</span>, <span class="tk-var">z</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.5</span>, <span class="tk-var">color</span>=<span class="tk-var">floor</span>.<span class="tk-var">paint</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">shapes</span>.<span class="tk-fn">append</span>(<span class="tk-var">thing</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"shape"</span>, <span class="tk-fn">len</span>(<span class="tk-var">shapes</span>), <span class="tk-str">"is a"</span>, <span class="tk-var">floor</span>.<span class="tk-var">tool</span>, <span class="tk-str">"at"</span>, <span class="tk-var">thing</span>.<span class="tk-var">pos</span>, <span class="tk-str">"coloured"</span>, <span class="tk-var">thing</span>.<span class="tk-var">color</span>)
 
 <span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"click"</span>, <span class="tk-var">make</span>)
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)</pre>
 <div class="predict"><p class="q">Predict: A click, then the paint is set to cyan and the tool to ball, then two more clicks. What colour and kind is each of the three shapes, and how long is the list at the end?</p><button class="rev" data-target="s9-card1" aria-controls="s9-card1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s9-card1"><p class="outlabel">What it actually prints (run without a browser, quit after 8 passes of the loop)</p><pre class="out">shape 1 is a box at &lt;2, 0.5, 2&gt; coloured &lt;1, 0.6, 0&gt;
 paint is now &lt;0, 1, 1&gt;
 shape 2 is a ball at &lt;-2, 0.5, 2&gt; coloured &lt;0, 1, 1&gt;
@@ -542,7 +550,7 @@ shape 3 is a ball at &lt;0, 0.5, -3&gt; coloured &lt;0, 1, 1&gt;</pre><p class="
 <div class="exit middle"><p class="tag">Middle</p><p>The scene editor: two menus, make on click, drag, delete mode, the count, Reset.</p></div>
 <div class="exit stretch"><p class="tag">Stretch</p><p>A height slider: a dragged shape's y follows the slider, so shapes can be stacked. Then a Save key that prints every visible shape's kind and pos in the terminal, one line each, so a scene can be typed back in later.</p></div>
 </div></section>
-<section><h2>Ledger card</h2><p>Stamp 9: <code>mousedown</code>, <code>mousemove</code>, <code>mouseup</code>, <code>evt.press</code>, what is held lives on an object (<code>floor.held</code>, or None), <code>project</code> onto a plane at the shape's height, <code>round</code> on drop, <code>menu(choices, bind)</code> and <code>m.selected</code>, <code>checkbox(text, bind)</code> and <code>c.checked</code>, <code>elif</code>, a hidden shape cannot be picked.</p><p><a href="vpython_ledger_card.html?v=5">Open the course ledger card</a></p></section>
+<section><h2>Ledger card</h2><p>Stamp 9: <code>mousedown</code>, <code>mousemove</code>, <code>mouseup</code>, <code>evt.press</code>, what is held lives on an object (<code>floor.held</code>, or None), <code>project</code> onto a plane at the shape's height, <code>round</code> on drop, <code>menu(choices, bind)</code> and <code>m.selected</code>, <code>checkbox(text, bind)</code> and <code>c.checked</code>, <code>elif</code>, a hidden shape cannot be picked.</p><p><a href="vpython_ledger_card.html?v=6">Open the course ledger card</a></p></section>
 <details class="teacher"><summary>Teacher panel</summary>
 <h3>Timing, 90 minutes</h3><ul>
 <li>0:00 retrieval opener, 10 min</li>
@@ -567,8 +575,8 @@ shape 3 is a ball at &lt;0, 0.5, -3&gt; coloured &lt;0, 1, 1&gt;</pre><p class="
 </details>
 <section><h2>Running this in VS Code</h2><div class="grid2"><div class="card"><h3>Once, before the first run</h3><p>Open the terminal in VS Code and install the library: <code>pip install vpython</code>. Check it worked with <code>python -c "import vpython"</code>. It should print nothing at all and give you the prompt back. A traceback here is an install problem, not a problem with your program.</p></div><div class="card"><h3>Every run after that</h3><p>Save your file as <code>YourName_vpython09.py</code>: your first name, an underscore, then <code>vpython09</code>. Run it from the terminal. The 3D scene opens in a new browser tab, sometimes behind VS Code, so look for it before deciding that nothing happened. Click inside the scene before pressing any key. To end the program, close the tab or press Ctrl+C in the terminal. The program is written to run until you do. Run the file again and you get a fresh tab.</p></div></div><p class="note">VPython draws solid shapes that you can turn and zoom. Everything you print still goes to the terminal, and everything you draw goes to the browser tab. Words in the terminal, pictures in the tab.</p></section>
 </div></main>
-<nav class="pager"><a href="session08_a_grid_world_from_a_list_of_strings.html?v=5">&larr; A grid world: a level from a list of strings</a><a href="vpython_course_hub.html?v=5">Course home</a><a href="session10_your_project.html?v=5">Your project &rarr;</a></nav>
-<footer><div class="wrap"><p>Python in 3D: eleven sessions of VPython for ages 10 to 11, in the Lecture Light style, light ground for a projector, predict before reveal, three places to stop in every session.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-10-05 (NY-7.G.4 added 2026-10-26). <a href="standards_map.html?v=5">Full standards map</a> &middot; <a href="vpython_ledger_card.html?v=5">Ledger card</a></p></div></footer>
+<nav class="pager"><a href="session08_a_grid_world_from_a_list_of_strings.html?v=6">&larr; A grid world: a level from a list of strings</a><a href="vpython_course_hub.html?v=6">Course home</a><a href="session10_your_project.html?v=6">Your project &rarr;</a></nav>
+<footer><div class="wrap"><p>Python in 3D: eleven sessions of VPython for ages 10 to 11, in the Lecture Light style, light ground for a projector, predict before reveal, three places to stop in every session.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-10-05 (NY-7.G.4 added 2026-10-26). <a href="standards_map.html?v=6">Full standards map</a> &middot; <a href="vpython_ledger_card.html?v=6">Ledger card</a></p></div></footer>
 <script>
 document.addEventListener('click', function(e){
   var b = e.target.closest('button.rev');

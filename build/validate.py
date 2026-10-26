@@ -81,6 +81,16 @@ def check(name, text, all_names):
             fail.append("unescaped angle bracket inside a pre block: "
                         + block[:60].replace("\n", " "))
 
+    # every step of indentation in a code block sits in an indent guide span, so the
+    # page draws VS Code's guides; a guide span holds four spaces or, on a blank line,
+    # nothing
+    for block in re.findall(r'<pre>(.*?)</pre>', text, re.S):
+        if any(ln.startswith("    ") for ln in block.split("\n")):
+            fail.append("indentation without indent guides: " + block[:60].replace("\n", " "))
+        for inner in re.findall(r'<span class="ig">(.*?)</span>', block):
+            if inner not in ("    ", ""):
+                fail.append("an indent guide span holds %r, not four spaces" % inner)
+
     for api in ("localStorage", "sessionStorage", "indexedDB"):
         if api in text:
             fail.append("storage API present: " + api)

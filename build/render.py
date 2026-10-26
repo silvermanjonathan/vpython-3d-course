@@ -36,7 +36,7 @@ STDMAP = "standards_map"
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("VPL_OUT", ROOT)
-VERSION = "5"
+VERSION = "6"
 TMP = os.environ.get("VPL_TMP",
                      os.path.join(tempfile.gettempdir(), "vpython_lesson_build"))
 HARNESS = os.path.join(HERE, "vpython_harness.py")
@@ -243,6 +243,14 @@ pre{
 .tk-fn{color:#795E26}   /* functions */
 .tk-cls{color:#1D6A80}  /* classes, types, modules */
 .tk-var{color:#001080}  /* variables */
+/* Indent guides, the lines VS Code draws down each step of indentation. VS Code's are
+   1px and light grey, which vanish on a projector with the lights on, so these are 6px
+   and #595959. Each four-space step is one box as tall as the line, so the bars join
+   up from line to line. A border rather than a shadow, so the bars print. */
+pre .ig{
+  display:inline-block; width:4ch; height:1.6em; vertical-align:top;
+  border-left:6px solid #595959;
+}
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -430,7 +438,32 @@ def page(title, body, head_extra=""):
 def code_block(code):
     # Coloured by role, the way VS Code's Light+ theme colours Python. Output boxes
     # (out_block) stay plain: they are output, not code.
-    return '<pre>' + highlight(code.rstrip("\n")) + '</pre>'
+    return '<pre>' + indent_guides(highlight(code.rstrip("\n"))) + '</pre>'
+
+
+def indent_guides(colored):
+    """Put each four-space step of indentation in its own guide span.
+
+    colored is code that highlight.py has colored, one line of code per line of text.
+    Each step's four spaces go inside <span class="ig">, which the CSS draws as a thick
+    bar down its left edge: the indent guides VS Code shows. A blank line inside an
+    indented block gets empty guide spans, as many steps as the lines above and below
+    it share, so the bars run through it unbroken the way they do in VS Code. The
+    spaces stay spaces and nothing is added to the text, so code copied from a page
+    pastes with its indentation as it was.
+    """
+    lines = colored.split("\n")
+    steps = [(len(ln) - len(ln.lstrip(" "))) // 4 if ln.strip() else None for ln in lines]
+    out = []
+    for i, ln in enumerate(lines):
+        n = steps[i]
+        if n is None:
+            above = next((s for s in reversed(steps[:i]) if s is not None), 0)
+            below = next((s for s in steps[i + 1:] if s is not None), 0)
+            out.append('<span class="ig"></span>' * min(above, below) + ln)
+        else:
+            out.append('<span class="ig">    </span>' * n + ln[4 * n:])
+    return "\n".join(out)
 
 
 def out_block(text, label="What actually happens"):

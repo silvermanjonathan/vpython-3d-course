@@ -107,6 +107,14 @@ pre{
 .tk-fn{color:#795E26}   /* functions */
 .tk-cls{color:#1D6A80}  /* classes, types, modules */
 .tk-var{color:#001080}  /* variables */
+/* Indent guides, the lines VS Code draws down each step of indentation. VS Code's are
+   1px and light grey, which vanish on a projector with the lights on, so these are 6px
+   and #595959. Each four-space step is one box as tall as the line, so the bars join
+   up from line to line. A border rather than a shadow, so the bars print. */
+pre .ig{
+  display:inline-block; width:4ch; height:1.6em; vertical-align:top;
+  border-left:6px solid #595959;
+}
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -279,7 +287,7 @@ a.btn.quiet:hover{background:#EFE9DA}
 <pre><span class="tk-var">parts</span> = [<span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span>)), <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">1</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.3</span>)]
 
 <span class="tk-ctl">for</span> <span class="tk-var">part</span> <span class="tk-ctl">in</span> <span class="tk-var">parts</span>:
-    <span class="tk-var">part</span>.<span class="tk-var">pos</span> = <span class="tk-var">part</span>.<span class="tk-var">pos</span> + <span class="tk-fn">vec</span>(<span class="tk-num">2</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>)</pre>
+<span class="ig">    </span><span class="tk-var">part</span>.<span class="tk-var">pos</span> = <span class="tk-var">part</span>.<span class="tk-var">pos</span> + <span class="tk-fn">vec</span>(<span class="tk-num">2</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>)</pre>
 <div class="predict"><p class="q">Question: A model made of a box and a sphere is kept in a list called <code>parts</code>. What does the loop do to each part? After it, is the sphere still 1 to the right of the box?</p><button class="rev" data-target="s5-op2" aria-controls="s5-op2" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s5-op2"><p>It adds <code>vec(2, 0, 0)</code> to each part's pos, so the box and the sphere both move 2 to the right. The sphere is still 1 to the right of the box, because both got the same vector.</p><p>That is why a model is kept in a list. One loop moves every part, however many there are, and the parts stay together. Today's car has nine parts, and every move it makes is a loop like this one.</p></div></div>
 </section>
 <section class="chunk"><p class="chunk-no">Chunk 1 of 6</p>
@@ -307,11 +315,11 @@ the lowest point of the wheel is at y = 0.0</pre><p>The other face is at <code>&
 <span class="tk-var">rolling</span> = []
 
 <span class="tk-kw">def</span> <span class="tk-fn">add_wheel</span>(<span class="tk-var">x</span>, <span class="tk-var">z</span>):
-    <span class="tk-var">wheel</span> = <span class="tk-fn">cylinder</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0.4</span>, <span class="tk-var">z</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0.3</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.4</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">black</span>)
-    <span class="tk-var">spoke</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0.4</span>, <span class="tk-var">z</span> + <span class="tk-num">0.15</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0.7</span>, <span class="tk-num">0.08</span>, <span class="tk-num">0.32</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">white</span>)
-    <span class="tk-var">parts</span>.<span class="tk-fn">append</span>(<span class="tk-var">wheel</span>)
-    <span class="tk-var">parts</span>.<span class="tk-fn">append</span>(<span class="tk-var">spoke</span>)
-    <span class="tk-var">rolling</span>.<span class="tk-fn">append</span>(<span class="tk-var">spoke</span>)
+<span class="ig">    </span><span class="tk-var">wheel</span> = <span class="tk-fn">cylinder</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0.4</span>, <span class="tk-var">z</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0.3</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.4</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">black</span>)
+<span class="ig">    </span><span class="tk-var">spoke</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0.4</span>, <span class="tk-var">z</span> + <span class="tk-num">0.15</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0.7</span>, <span class="tk-num">0.08</span>, <span class="tk-num">0.32</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">white</span>)
+<span class="ig">    </span><span class="tk-var">parts</span>.<span class="tk-fn">append</span>(<span class="tk-var">wheel</span>)
+<span class="ig">    </span><span class="tk-var">parts</span>.<span class="tk-fn">append</span>(<span class="tk-var">spoke</span>)
+<span class="ig">    </span><span class="tk-var">rolling</span>.<span class="tk-fn">append</span>(<span class="tk-var">spoke</span>)
 
 <span class="tk-fn">add_wheel</span>(<span class="tk-num">1</span>, <span class="tk-num">0.7</span>)
 <span class="tk-fn">add_wheel</span>(-<span class="tk-num">1</span>, <span class="tk-num">0.7</span>)
@@ -334,8 +342,8 @@ the first spoke is at &lt;1, 0.4, 0.85&gt;</pre><p>Nine in <code>parts</code>: t
 <span class="tk-var">dashes</span> = <span class="tk-num">0</span>
 
 <span class="tk-ctl">for</span> <span class="tk-var">i</span> <span class="tk-ctl">in</span> <span class="tk-fn">range</span>(<span class="tk-num">10</span>):
-    <span class="tk-var">dash</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(-<span class="tk-num">18</span> + <span class="tk-var">i</span> * <span class="tk-num">4</span>, <span class="tk-num">0.01</span>, <span class="tk-num">0</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">1.5</span>, <span class="tk-num">0.02</span>, <span class="tk-num">0.2</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">yellow</span>)
-    <span class="tk-var">dashes</span> = <span class="tk-var">dashes</span> + <span class="tk-num">1</span>
+<span class="ig">    </span><span class="tk-var">dash</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(-<span class="tk-num">18</span> + <span class="tk-var">i</span> * <span class="tk-num">4</span>, <span class="tk-num">0.01</span>, <span class="tk-num">0</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">1.5</span>, <span class="tk-num">0.02</span>, <span class="tk-num">0.2</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">yellow</span>)
+<span class="ig">    </span><span class="tk-var">dashes</span> = <span class="tk-var">dashes</span> + <span class="tk-num">1</span>
 
 <span class="tk-fn">print</span>(<span class="tk-var">dashes</span>, <span class="tk-str">"dashes, the last one at x ="</span>, <span class="tk-var">dash</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>)
 <span class="tk-fn">print</span>(<span class="tk-str">"the road runs from x ="</span>, <span class="tk-var">road</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> - <span class="tk-var">road</span>.<span class="tk-var">size</span>.<span class="tk-var">x</span> / <span class="tk-num">2</span>, <span class="tk-str">"to x ="</span>, <span class="tk-var">road</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> + <span class="tk-var">road</span>.<span class="tk-var">size</span>.<span class="tk-var">x</span> / <span class="tk-num">2</span>)</pre>
@@ -352,8 +360,8 @@ the road runs from x = -20.0 to x = 20.0</pre><p>The tenth dash is at x = 18: th
 <span class="tk-var">parts</span> = [<span class="tk-var">body</span>]
 
 <span class="tk-kw">def</span> <span class="tk-fn">add_wheel</span>(<span class="tk-var">x</span>, <span class="tk-var">z</span>):
-    <span class="tk-var">wheel</span> = <span class="tk-fn">cylinder</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0.4</span>, <span class="tk-var">z</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0.3</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.4</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">black</span>)
-    <span class="tk-var">parts</span>.<span class="tk-fn">append</span>(<span class="tk-var">wheel</span>)
+<span class="ig">    </span><span class="tk-var">wheel</span> = <span class="tk-fn">cylinder</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0.4</span>, <span class="tk-var">z</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0.3</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.4</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">black</span>)
+<span class="ig">    </span><span class="tk-var">parts</span>.<span class="tk-fn">append</span>(<span class="tk-var">wheel</span>)
 
 <span class="tk-fn">add_wheel</span>(<span class="tk-num">1</span>, <span class="tk-num">0.7</span>)
 <span class="tk-fn">add_wheel</span>(-<span class="tk-num">1</span>, <span class="tk-num">0.7</span>)
@@ -365,16 +373,16 @@ the road runs from x = -20.0 to x = 20.0</pre><p>The tenth dash is at x = 18: th
 <span class="tk-var">passes</span> = <span class="tk-num">0</span>
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
-    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
-    <span class="tk-var">step</span> = <span class="tk-var">speed</span> * <span class="tk-var">dt</span>
-    <span class="tk-ctl">for</span> <span class="tk-var">part</span> <span class="tk-ctl">in</span> <span class="tk-var">parts</span>:
-        <span class="tk-var">part</span>.<span class="tk-var">pos</span> = <span class="tk-var">part</span>.<span class="tk-var">pos</span> + <span class="tk-fn">vec</span>(<span class="tk-var">step</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>)
-
-    <span class="tk-ctl">if</span> <span class="tk-var">passes</span> == <span class="tk-num">30</span>:
-        <span class="tk-fn">print</span>(<span class="tk-str">"after 1 second the body is at x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">body</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>), <span class="tk-str">" front wheel at x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">parts</span>[<span class="tk-num">1</span>].<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>))
-    <span class="tk-ctl">if</span> <span class="tk-var">passes</span> == <span class="tk-num">60</span>:
-        <span class="tk-fn">print</span>(<span class="tk-str">"after 2 seconds the body is at x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">body</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>), <span class="tk-str">" front wheel at x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">parts</span>[<span class="tk-num">1</span>].<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>))</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+<span class="ig">    </span><span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+<span class="ig">    </span><span class="tk-var">step</span> = <span class="tk-var">speed</span> * <span class="tk-var">dt</span>
+<span class="ig">    </span><span class="tk-ctl">for</span> <span class="tk-var">part</span> <span class="tk-ctl">in</span> <span class="tk-var">parts</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">part</span>.<span class="tk-var">pos</span> = <span class="tk-var">part</span>.<span class="tk-var">pos</span> + <span class="tk-fn">vec</span>(<span class="tk-var">step</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>)
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">passes</span> == <span class="tk-num">30</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"after 1 second the body is at x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">body</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>), <span class="tk-str">" front wheel at x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">parts</span>[<span class="tk-num">1</span>].<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>))
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">passes</span> == <span class="tk-num">60</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"after 2 seconds the body is at x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">body</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>), <span class="tk-str">" front wheel at x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">parts</span>[<span class="tk-num">1</span>].<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>))</pre>
 <div class="predict"><p class="q">Predict: The speed is 3 units per second. Where is the body after one second, and after two? Is the front wheel still exactly 1 ahead of the body on both lines?</p><button class="rev" data-target="s5-c4" aria-controls="s5-c4" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s5-c4"><p class="outlabel">What it actually prints (run without a browser, quit after 60 passes of the loop)</p><pre class="out">after 1 second the body is at x = 3.0  front wheel at x = 4.0
 after 2 seconds the body is at x = 6.0  front wheel at x = 7.0</pre><p>After one second the body is at x = 3.0 and after two it is at x = 6.0: thirty passes of 0.1 each, then thirty more. The front wheel is at 4.0 and then 7.0, still 1 ahead on both lines, because every part got the same step on every pass.</p><p>Change <code>speed</code> to 6 and the body is at 6.0 after one second with nothing else touched. That is why the speed is a number of units per second and not a number per pass: you can read it, and <code>rate</code> can change without the car changing speed.</p></div></div>
 </section>
@@ -389,11 +397,11 @@ after 2 seconds the body is at x = 6.0  front wheel at x = 7.0</pre><p>After one
 <span class="tk-var">rolling</span> = []
 
 <span class="tk-kw">def</span> <span class="tk-fn">add_wheel</span>(<span class="tk-var">x</span>, <span class="tk-var">z</span>):
-    <span class="tk-var">wheel</span> = <span class="tk-fn">cylinder</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0.4</span>, <span class="tk-var">z</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0.3</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.4</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">black</span>)
-    <span class="tk-var">spoke</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0.4</span>, <span class="tk-var">z</span> + <span class="tk-num">0.15</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0.7</span>, <span class="tk-num">0.08</span>, <span class="tk-num">0.32</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">white</span>)
-    <span class="tk-var">parts</span>.<span class="tk-fn">append</span>(<span class="tk-var">wheel</span>)
-    <span class="tk-var">parts</span>.<span class="tk-fn">append</span>(<span class="tk-var">spoke</span>)
-    <span class="tk-var">rolling</span>.<span class="tk-fn">append</span>(<span class="tk-var">spoke</span>)
+<span class="ig">    </span><span class="tk-var">wheel</span> = <span class="tk-fn">cylinder</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0.4</span>, <span class="tk-var">z</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0.3</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.4</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">black</span>)
+<span class="ig">    </span><span class="tk-var">spoke</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0.4</span>, <span class="tk-var">z</span> + <span class="tk-num">0.15</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0.7</span>, <span class="tk-num">0.08</span>, <span class="tk-num">0.32</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">white</span>)
+<span class="ig">    </span><span class="tk-var">parts</span>.<span class="tk-fn">append</span>(<span class="tk-var">wheel</span>)
+<span class="ig">    </span><span class="tk-var">parts</span>.<span class="tk-fn">append</span>(<span class="tk-var">spoke</span>)
+<span class="ig">    </span><span class="tk-var">rolling</span>.<span class="tk-fn">append</span>(<span class="tk-var">spoke</span>)
 
 <span class="tk-fn">add_wheel</span>(<span class="tk-num">1</span>, <span class="tk-num">0.7</span>)
 <span class="tk-fn">add_wheel</span>(-<span class="tk-num">1</span>, <span class="tk-num">0.7</span>)
@@ -409,25 +417,25 @@ after 2 seconds the body is at x = 6.0  front wheel at x = 7.0</pre><p>After one
 <span class="tk-fn">print</span>(<span class="tk-str">"circumference of a wheel:"</span>, <span class="tk-fn">round</span>(<span class="tk-num">2</span> * <span class="tk-var">pi</span> * <span class="tk-var">radius</span>, <span class="tk-num">2</span>))
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
-    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
-    <span class="tk-var">step</span> = <span class="tk-var">speed</span> * <span class="tk-var">dt</span>
-    <span class="tk-ctl">for</span> <span class="tk-var">part</span> <span class="tk-ctl">in</span> <span class="tk-var">parts</span>:
-        <span class="tk-var">part</span>.<span class="tk-var">pos</span> = <span class="tk-var">part</span>.<span class="tk-var">pos</span> + <span class="tk-fn">vec</span>(<span class="tk-var">step</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>)
-    <span class="tk-var">moved</span> = <span class="tk-var">moved</span> + <span class="tk-var">step</span>
-
-    <span class="tk-var">turn</span> = <span class="tk-num">360</span> * <span class="tk-var">step</span> / (<span class="tk-num">2</span> * <span class="tk-var">pi</span> * <span class="tk-var">radius</span>)
-    <span class="tk-ctl">for</span> <span class="tk-var">spoke</span> <span class="tk-ctl">in</span> <span class="tk-var">rolling</span>:
-        <span class="tk-var">spoke</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(-<span class="tk-var">turn</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">1</span>))
-    <span class="tk-var">turned</span> = <span class="tk-var">turned</span> + <span class="tk-var">turn</span>
-
-    <span class="tk-ctl">if</span> <span class="tk-var">passes</span> == <span class="tk-num">25</span>:
-        <span class="tk-fn">print</span>(<span class="tk-str">"pass 25: moved"</span>, <span class="tk-fn">round</span>(<span class="tk-var">moved</span>, <span class="tk-num">2</span>), <span class="tk-str">" turned"</span>, <span class="tk-fn">round</span>(<span class="tk-var">turned</span>, <span class="tk-num">1</span>), <span class="tk-str">"degrees"</span>)
-    <span class="tk-ctl">if</span> <span class="tk-var">passes</span> == <span class="tk-num">26</span>:
-        <span class="tk-fn">print</span>(<span class="tk-str">"pass 26: moved"</span>, <span class="tk-fn">round</span>(<span class="tk-var">moved</span>, <span class="tk-num">2</span>), <span class="tk-str">" turned"</span>, <span class="tk-fn">round</span>(<span class="tk-var">turned</span>, <span class="tk-num">1</span>), <span class="tk-str">"degrees"</span>)
-    <span class="tk-ctl">if</span> <span class="tk-var">passes</span> == <span class="tk-num">30</span>:
-        <span class="tk-fn">print</span>(<span class="tk-str">"pass 30: moved"</span>, <span class="tk-fn">round</span>(<span class="tk-var">moved</span>, <span class="tk-num">2</span>), <span class="tk-str">" turned"</span>, <span class="tk-fn">round</span>(<span class="tk-var">turned</span>, <span class="tk-num">1</span>), <span class="tk-str">"degrees, which is"</span>,
-              <span class="tk-fn">round</span>(<span class="tk-var">turned</span> / <span class="tk-num">360</span>, <span class="tk-num">2</span>), <span class="tk-str">"full turns"</span>)</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+<span class="ig">    </span><span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+<span class="ig">    </span><span class="tk-var">step</span> = <span class="tk-var">speed</span> * <span class="tk-var">dt</span>
+<span class="ig">    </span><span class="tk-ctl">for</span> <span class="tk-var">part</span> <span class="tk-ctl">in</span> <span class="tk-var">parts</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">part</span>.<span class="tk-var">pos</span> = <span class="tk-var">part</span>.<span class="tk-var">pos</span> + <span class="tk-fn">vec</span>(<span class="tk-var">step</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>)
+<span class="ig">    </span><span class="tk-var">moved</span> = <span class="tk-var">moved</span> + <span class="tk-var">step</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-var">turn</span> = <span class="tk-num">360</span> * <span class="tk-var">step</span> / (<span class="tk-num">2</span> * <span class="tk-var">pi</span> * <span class="tk-var">radius</span>)
+<span class="ig">    </span><span class="tk-ctl">for</span> <span class="tk-var">spoke</span> <span class="tk-ctl">in</span> <span class="tk-var">rolling</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">spoke</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(-<span class="tk-var">turn</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">1</span>))
+<span class="ig">    </span><span class="tk-var">turned</span> = <span class="tk-var">turned</span> + <span class="tk-var">turn</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">passes</span> == <span class="tk-num">25</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"pass 25: moved"</span>, <span class="tk-fn">round</span>(<span class="tk-var">moved</span>, <span class="tk-num">2</span>), <span class="tk-str">" turned"</span>, <span class="tk-fn">round</span>(<span class="tk-var">turned</span>, <span class="tk-num">1</span>), <span class="tk-str">"degrees"</span>)
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">passes</span> == <span class="tk-num">26</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"pass 26: moved"</span>, <span class="tk-fn">round</span>(<span class="tk-var">moved</span>, <span class="tk-num">2</span>), <span class="tk-str">" turned"</span>, <span class="tk-fn">round</span>(<span class="tk-var">turned</span>, <span class="tk-num">1</span>), <span class="tk-str">"degrees"</span>)
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">passes</span> == <span class="tk-num">30</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"pass 30: moved"</span>, <span class="tk-fn">round</span>(<span class="tk-var">moved</span>, <span class="tk-num">2</span>), <span class="tk-str">" turned"</span>, <span class="tk-fn">round</span>(<span class="tk-var">turned</span>, <span class="tk-num">1</span>), <span class="tk-str">"degrees, which is"</span>,
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span>  <span class="tk-fn">round</span>(<span class="tk-var">turned</span> / <span class="tk-num">360</span>, <span class="tk-num">2</span>), <span class="tk-str">"full turns"</span>)</pre>
 <div class="predict"><p class="q">Predict: The circumference is 2.51 and the car moves 0.1 per pass. On which pass does <code>turned</code> go past 360? After one second the car has moved 3: is that more or less than one full turn of the wheel?</p><button class="rev" data-target="s5-c5" aria-controls="s5-c5" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s5-c5"><p class="outlabel">What it actually prints (run without a browser, quit after 30 passes of the loop)</p><pre class="out">circumference of a wheel: 2.51
 pass 25: moved 2.5  turned 358.1 degrees
 pass 26: moved 2.6  turned 372.4 degrees
@@ -444,8 +452,8 @@ pass 30: moved 3.0  turned 429.7 degrees, which is 1.19 full turns</pre><p>On pa
 <span class="tk-var">parts</span> = [<span class="tk-var">body</span>]
 
 <span class="tk-kw">def</span> <span class="tk-fn">add_wheel</span>(<span class="tk-var">x</span>, <span class="tk-var">z</span>):
-    <span class="tk-var">wheel</span> = <span class="tk-fn">cylinder</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0.4</span>, <span class="tk-var">z</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0.3</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.4</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">black</span>)
-    <span class="tk-var">parts</span>.<span class="tk-fn">append</span>(<span class="tk-var">wheel</span>)
+<span class="ig">    </span><span class="tk-var">wheel</span> = <span class="tk-fn">cylinder</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0.4</span>, <span class="tk-var">z</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0.3</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.4</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">black</span>)
+<span class="ig">    </span><span class="tk-var">parts</span>.<span class="tk-fn">append</span>(<span class="tk-var">wheel</span>)
 
 <span class="tk-fn">add_wheel</span>(<span class="tk-num">1</span>, <span class="tk-num">0.7</span>)
 <span class="tk-fn">add_wheel</span>(-<span class="tk-num">1</span>, <span class="tk-num">0.7</span>)
@@ -462,19 +470,19 @@ pass 30: moved 3.0  turned 429.7 degrees, which is 1.19 full turns</pre><p>On pa
 <span class="tk-var">passes</span> = <span class="tk-num">0</span>
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
-    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
-    <span class="tk-var">step</span> = <span class="tk-var">speed</span> * <span class="tk-var">dt</span>
-    <span class="tk-ctl">for</span> <span class="tk-var">part</span> <span class="tk-ctl">in</span> <span class="tk-var">parts</span>:
-        <span class="tk-var">part</span>.<span class="tk-var">pos</span> = <span class="tk-var">part</span>.<span class="tk-var">pos</span> + <span class="tk-fn">vec</span>(<span class="tk-var">step</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>)
-
-    <span class="tk-ctl">if</span> <span class="tk-var">passes</span> == <span class="tk-num">157</span>:
-        <span class="tk-fn">print</span>(<span class="tk-str">"pass 157: body at x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">body</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>))
-    <span class="tk-ctl">if</span> <span class="tk-var">body</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> &gt; <span class="tk-num">21</span>:
-        <span class="tk-ctl">for</span> <span class="tk-var">part</span> <span class="tk-ctl">in</span> <span class="tk-var">parts</span>:
-            <span class="tk-var">part</span>.<span class="tk-var">pos</span> = <span class="tk-var">part</span>.<span class="tk-var">pos</span> - <span class="tk-fn">vec</span>(<span class="tk-num">42</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>)
-        <span class="tk-fn">print</span>(<span class="tk-str">"back to the other end on pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">" body at x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">body</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>),
-              <span class="tk-str">" front wheel at x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">parts</span>[<span class="tk-num">1</span>].<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>))</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+<span class="ig">    </span><span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+<span class="ig">    </span><span class="tk-var">step</span> = <span class="tk-var">speed</span> * <span class="tk-var">dt</span>
+<span class="ig">    </span><span class="tk-ctl">for</span> <span class="tk-var">part</span> <span class="tk-ctl">in</span> <span class="tk-var">parts</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">part</span>.<span class="tk-var">pos</span> = <span class="tk-var">part</span>.<span class="tk-var">pos</span> + <span class="tk-fn">vec</span>(<span class="tk-var">step</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>)
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">passes</span> == <span class="tk-num">157</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"pass 157: body at x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">body</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>))
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">body</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> &gt; <span class="tk-num">21</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-ctl">for</span> <span class="tk-var">part</span> <span class="tk-ctl">in</span> <span class="tk-var">parts</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="tk-var">part</span>.<span class="tk-var">pos</span> = <span class="tk-var">part</span>.<span class="tk-var">pos</span> - <span class="tk-fn">vec</span>(<span class="tk-num">42</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"back to the other end on pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">" body at x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">body</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>),
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span>  <span class="tk-str">" front wheel at x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">parts</span>[<span class="tk-num">1</span>].<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>))</pre>
 <div class="predict"><p class="q">Predict: The body starts at x = 0 and speed 4 moves it 0.13 per pass, a little more. About how many passes until the body is past 21? Right after the gate fires, is the front wheel still 1 ahead of the body?</p><button class="rev" data-target="s5-c6" aria-controls="s5-c6" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s5-c6"><p class="outlabel">What it actually prints (run without a browser, quit after 160 passes of the loop)</p><pre class="out">pass 157: body at x = 20.93
 back to the other end on pass 158  body at x = -20.93  front wheel at x = -19.93</pre><p>About 158 passes: 21 divided by 0.13 is a little under 158. After 157 passes the body is at 20.93, not yet past 21, so the gate waits. On pass 158 it is at 21.07, the gate fires, and 42 is taken off, which puts the body at x = -20.93 and the front wheel at -19.93, still 1 ahead.</p><p>In the tab the car vanishes past the right end of the road and comes on at the left end, with the camera jumping to it. If the gate had done <code>body.pos = vec(0, 0.9, 0)</code> instead, the body would jump and the wheels would carry on without it, so the loop over the parts is the whole point of the gate.</p></div></div>
 </section>
@@ -502,11 +510,11 @@ back to the other end on pass 158  body at x = -20.93  front wheel at x = -19.93
 <span class="tk-var">rolling</span> = []
 
 <span class="tk-kw">def</span> <span class="tk-fn">add_wheel</span>(<span class="tk-var">x</span>, <span class="tk-var">z</span>):
-    <span class="tk-var">wheel</span> = <span class="tk-fn">cylinder</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0.4</span>, <span class="tk-var">z</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0.3</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.4</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">black</span>)
-    <span class="tk-var">spoke</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0.4</span>, <span class="tk-var">z</span> + <span class="tk-num">0.15</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0.7</span>, <span class="tk-num">0.08</span>, <span class="tk-num">0.32</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">white</span>)
-    <span class="tk-var">parts</span>.<span class="tk-fn">append</span>(<span class="tk-var">wheel</span>)
-    <span class="tk-var">parts</span>.<span class="tk-fn">append</span>(<span class="tk-var">spoke</span>)
-    <span class="tk-var">rolling</span>.<span class="tk-fn">append</span>(<span class="tk-var">spoke</span>)
+<span class="ig">    </span><span class="tk-var">wheel</span> = <span class="tk-fn">cylinder</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0.4</span>, <span class="tk-var">z</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0.3</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.4</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">black</span>)
+<span class="ig">    </span><span class="tk-var">spoke</span> = <span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">x</span>, <span class="tk-num">0.4</span>, <span class="tk-var">z</span> + <span class="tk-num">0.15</span>), <span class="tk-var">size</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0.7</span>, <span class="tk-num">0.08</span>, <span class="tk-num">0.32</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">white</span>)
+<span class="ig">    </span><span class="tk-var">parts</span>.<span class="tk-fn">append</span>(<span class="tk-var">wheel</span>)
+<span class="ig">    </span><span class="tk-var">parts</span>.<span class="tk-fn">append</span>(<span class="tk-var">spoke</span>)
+<span class="ig">    </span><span class="tk-var">rolling</span>.<span class="tk-fn">append</span>(<span class="tk-var">spoke</span>)
 
 <span class="tk-fn">add_wheel</span>(<span class="tk-num">1</span>, <span class="tk-num">0.7</span>)
 <span class="tk-fn">add_wheel</span>(-<span class="tk-num">1</span>, <span class="tk-num">0.7</span>)
@@ -518,27 +526,27 @@ back to the other end on pass 158  body at x = -20.93  front wheel at x = -19.93
 <span class="tk-var">dt</span> = <span class="tk-num">1</span> / <span class="tk-num">30</span>
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
-    <span class="tk-var">keys</span> = <span class="tk-fn">keysdown</span>()
-    <span class="tk-ctl">if</span> <span class="tk-str">"up"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
-        <span class="tk-var">speed</span> = <span class="tk-var">speed</span> + <span class="tk-num">0.2</span>
-    <span class="tk-ctl">if</span> <span class="tk-str">"down"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
-        <span class="tk-var">speed</span> = <span class="tk-var">speed</span> - <span class="tk-num">0.2</span>
-    <span class="tk-ctl">if</span> <span class="tk-var">speed</span> &gt; <span class="tk-num">6</span>:
-        <span class="tk-var">speed</span> = <span class="tk-num">6</span>
-    <span class="tk-ctl">if</span> <span class="tk-var">speed</span> &lt; -<span class="tk-num">3</span>:
-        <span class="tk-var">speed</span> = -<span class="tk-num">3</span>
-
-    <span class="tk-var">step</span> = <span class="tk-var">speed</span> * <span class="tk-var">dt</span>
-    <span class="tk-ctl">for</span> <span class="tk-var">part</span> <span class="tk-ctl">in</span> <span class="tk-var">parts</span>:
-        <span class="tk-var">part</span>.<span class="tk-var">pos</span> = <span class="tk-var">part</span>.<span class="tk-var">pos</span> + <span class="tk-fn">vec</span>(<span class="tk-var">step</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>)
-
-    <span class="tk-var">turn</span> = <span class="tk-num">360</span> * <span class="tk-var">step</span> / (<span class="tk-num">2</span> * <span class="tk-var">pi</span> * <span class="tk-var">radius</span>)
-    <span class="tk-ctl">for</span> <span class="tk-var">spoke</span> <span class="tk-ctl">in</span> <span class="tk-var">rolling</span>:
-        <span class="tk-var">spoke</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(-<span class="tk-var">turn</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">1</span>))
-
-    <span class="tk-ctl">if</span> <span class="tk-fn">len</span>(<span class="tk-var">keys</span>) &gt; <span class="tk-num">0</span>:
-        <span class="tk-fn">print</span>(<span class="tk-var">keys</span>, <span class="tk-str">" speed"</span>, <span class="tk-fn">round</span>(<span class="tk-var">speed</span>, <span class="tk-num">1</span>), <span class="tk-str">" turn this pass"</span>, <span class="tk-fn">round</span>(<span class="tk-var">turn</span>, <span class="tk-num">2</span>), <span class="tk-str">"degrees"</span>)</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+<span class="ig">    </span><span class="tk-var">keys</span> = <span class="tk-fn">keysdown</span>()
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-str">"up"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">speed</span> = <span class="tk-var">speed</span> + <span class="tk-num">0.2</span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-str">"down"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">speed</span> = <span class="tk-var">speed</span> - <span class="tk-num">0.2</span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">speed</span> &gt; <span class="tk-num">6</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">speed</span> = <span class="tk-num">6</span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">speed</span> &lt; -<span class="tk-num">3</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">speed</span> = -<span class="tk-num">3</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-var">step</span> = <span class="tk-var">speed</span> * <span class="tk-var">dt</span>
+<span class="ig">    </span><span class="tk-ctl">for</span> <span class="tk-var">part</span> <span class="tk-ctl">in</span> <span class="tk-var">parts</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">part</span>.<span class="tk-var">pos</span> = <span class="tk-var">part</span>.<span class="tk-var">pos</span> + <span class="tk-fn">vec</span>(<span class="tk-var">step</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>)
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-var">turn</span> = <span class="tk-num">360</span> * <span class="tk-var">step</span> / (<span class="tk-num">2</span> * <span class="tk-var">pi</span> * <span class="tk-var">radius</span>)
+<span class="ig">    </span><span class="tk-ctl">for</span> <span class="tk-var">spoke</span> <span class="tk-ctl">in</span> <span class="tk-var">rolling</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">spoke</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(-<span class="tk-var">turn</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">1</span>))
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-fn">len</span>(<span class="tk-var">keys</span>) &gt; <span class="tk-num">0</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-var">keys</span>, <span class="tk-str">" speed"</span>, <span class="tk-fn">round</span>(<span class="tk-var">speed</span>, <span class="tk-num">1</span>), <span class="tk-str">" turn this pass"</span>, <span class="tk-fn">round</span>(<span class="tk-var">turn</span>, <span class="tk-num">2</span>), <span class="tk-str">"degrees"</span>)</pre>
 <div class="predict"><p class="q">Predict: Up is held for three passes, then down for five. What is the speed after the three ups, and after the five downs? Does the sign of <code>turn</code> change, and what does that look like on the spokes?</p><button class="rev" data-target="s5-card1" aria-controls="s5-card1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s5-card1"><p class="outlabel">What it actually prints (run without a browser, quit after 10 passes of the loop)</p><pre class="out">[&#x27;up&#x27;]  speed 0.2  turn this pass 0.95 degrees
 [&#x27;up&#x27;]  speed 0.4  turn this pass 1.91 degrees
 [&#x27;up&#x27;]  speed 0.6  turn this pass 2.86 degrees
@@ -560,7 +568,7 @@ back to the other end on pass 158  body at x = -20.93  front wheel at x = -19.93
 <div class="exit middle"><p class="tag">Middle</p><p>The road trip: speed on the keys, reverse, the loop-back at both ends, the camera following, and the dashes.</p></div>
 <div class="exit stretch"><p class="tag">Stretch</p><p>Lamp posts both sides, then brake lights: two small red boxes on the back of the car, in <code>parts</code>, whose <code>emissive</code> is True only while the down arrow is held. Then a second car in its own two lists, driving the other way at its own speed.</p></div>
 </div></section>
-<section><h2>Ledger card</h2><p>Stamp 5: a wheel is <code>cylinder(axis=vec(0, 0, w), radius=r)</code> lifted by its radius, two lists for one model (<code>parts</code> moves, <code>rolling</code> turns), a road placed by a loop with a counter, <code>step = speed * dt</code> moves every part, one circumference <code>2 * pi * radius</code> is one full turn, <code>turn = 360 * step / (2 * pi * radius)</code> then <code>radians(-turn)</code>, a negative step rolls backwards on its own, a loop-back gate shifts every part by the same vector.</p><p><a href="vpython_ledger_card.html?v=5">Open the course ledger card</a></p></section>
+<section><h2>Ledger card</h2><p>Stamp 5: a wheel is <code>cylinder(axis=vec(0, 0, w), radius=r)</code> lifted by its radius, two lists for one model (<code>parts</code> moves, <code>rolling</code> turns), a road placed by a loop with a counter, <code>step = speed * dt</code> moves every part, one circumference <code>2 * pi * radius</code> is one full turn, <code>turn = 360 * step / (2 * pi * radius)</code> then <code>radians(-turn)</code>, a negative step rolls backwards on its own, a loop-back gate shifts every part by the same vector.</p><p><a href="vpython_ledger_card.html?v=6">Open the course ledger card</a></p></section>
 <details class="teacher"><summary>Teacher panel</summary>
 <h3>Timing, 90 minutes</h3><ul>
 <li>0:00 retrieval opener, 10 min</li>
@@ -591,8 +599,8 @@ back to the other end on pass 158  body at x = -20.93  front wheel at x = -19.93
 </details>
 <section><h2>Running this in VS Code</h2><div class="grid2"><div class="card"><h3>Once, before the first run</h3><p>Open the terminal in VS Code and install the library: <code>pip install vpython</code>. Check it worked with <code>python -c "import vpython"</code>. It should print nothing at all and give you the prompt back. A traceback here is an install problem, not a problem with your program.</p></div><div class="card"><h3>Every run after that</h3><p>Save your file as <code>YourName_vpython05.py</code>: your first name, an underscore, then <code>vpython05</code>. Run it from the terminal. The 3D scene opens in a new browser tab, sometimes behind VS Code, so look for it before deciding that nothing happened. Click inside the scene before pressing any key. To end the program, close the tab or press Ctrl+C in the terminal. The program is written to run until you do. Run the file again and you get a fresh tab.</p></div></div><p class="note">VPython draws solid shapes that you can turn and zoom. Everything you print still goes to the terminal, and everything you draw goes to the browser tab. Words in the terminal, pictures in the tab.</p></section>
 </div></main>
-<nav class="pager"><a href="session04_turning_things_and_the_camera.html?v=5">&larr; Turning things, and turning the camera</a><a href="vpython_course_hub.html?v=5">Course home</a><a href="session06_a_solar_system_objects_carry_their_numbers.html?v=5">A solar system: objects that carry their own numbers &rarr;</a></nav>
-<footer><div class="wrap"><p>Python in 3D: eleven sessions of VPython for ages 10 to 11, in the Lecture Light style, light ground for a projector, predict before reveal, three places to stop in every session.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-10-05 (NY-7.G.4 added 2026-10-26). <a href="standards_map.html?v=5">Full standards map</a> &middot; <a href="vpython_ledger_card.html?v=5">Ledger card</a></p></div></footer>
+<nav class="pager"><a href="session04_turning_things_and_the_camera.html?v=6">&larr; Turning things, and turning the camera</a><a href="vpython_course_hub.html?v=6">Course home</a><a href="session06_a_solar_system_objects_carry_their_numbers.html?v=6">A solar system: objects that carry their own numbers &rarr;</a></nav>
+<footer><div class="wrap"><p>Python in 3D: eleven sessions of VPython for ages 10 to 11, in the Lecture Light style, light ground for a projector, predict before reveal, three places to stop in every session.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-10-05 (NY-7.G.4 added 2026-10-26). <a href="standards_map.html?v=6">Full standards map</a> &middot; <a href="vpython_ledger_card.html?v=6">Ledger card</a></p></div></footer>
 <script>
 document.addEventListener('click', function(e){
   var b = e.target.closest('button.rev');

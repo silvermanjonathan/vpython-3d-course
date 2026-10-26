@@ -107,6 +107,14 @@ pre{
 .tk-fn{color:#795E26}   /* functions */
 .tk-cls{color:#1D6A80}  /* classes, types, modules */
 .tk-var{color:#001080}  /* variables */
+/* Indent guides, the lines VS Code draws down each step of indentation. VS Code's are
+   1px and light grey, which vanish on a projector with the lights on, so these are 6px
+   and #595959. Each four-space step is one box as tall as the line, so the bars join
+   up from line to line. A border rather than a shadow, so the bars print. */
+pre .ig{
+  display:inline-block; width:4ch; height:1.6em; vertical-align:top;
+  border-left:6px solid #595959;
+}
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -287,24 +295,24 @@ a.btn.quiet:hover{background:#EFE9DA}
 <span class="tk-var">ground</span>.<span class="tk-var">state</span> = <span class="tk-str">"start"</span>
 
 <span class="tk-kw">def</span> <span class="tk-fn">begin</span>(<span class="tk-var">evt</span>):
-    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">" "</span> <span class="tk-kw">and</span> <span class="tk-var">ground</span>.<span class="tk-var">state</span> == <span class="tk-str">"start"</span>:
-        <span class="tk-var">ground</span>.<span class="tk-var">state</span> = <span class="tk-str">"play"</span>
-        <span class="tk-var">title</span>.<span class="tk-var">visible</span> = <span class="tk-kw">False</span>
-        <span class="tk-fn">print</span>(<span class="tk-str">"space pressed: state is now"</span>, <span class="tk-var">ground</span>.<span class="tk-var">state</span>)
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">" "</span> <span class="tk-kw">and</span> <span class="tk-var">ground</span>.<span class="tk-var">state</span> == <span class="tk-str">"start"</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">ground</span>.<span class="tk-var">state</span> = <span class="tk-str">"play"</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">title</span>.<span class="tk-var">visible</span> = <span class="tk-kw">False</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"space pressed: state is now"</span>, <span class="tk-var">ground</span>.<span class="tk-var">state</span>)
 
 <span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"keydown"</span>, <span class="tk-var">begin</span>)
 <span class="tk-var">passes</span> = <span class="tk-num">0</span>
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
-    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
-    <span class="tk-var">keys</span> = <span class="tk-fn">keysdown</span>()
-
-    <span class="tk-ctl">if</span> <span class="tk-var">ground</span>.<span class="tk-var">state</span> == <span class="tk-str">"play"</span> <span class="tk-kw">and</span> <span class="tk-str">"right"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
-        <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> + <span class="tk-num">0.2</span>
-
-    <span class="tk-ctl">if</span> <span class="tk-var">passes</span> <span class="tk-kw">in</span> [<span class="tk-num">3</span>, <span class="tk-num">6</span>]:
-        <span class="tk-fn">print</span>(<span class="tk-str">"pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  state"</span>, <span class="tk-var">ground</span>.<span class="tk-var">state</span>, <span class="tk-str">"  ball at"</span>, <span class="tk-var">ball</span>.<span class="tk-var">pos</span>)</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+<span class="ig">    </span><span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+<span class="ig">    </span><span class="tk-var">keys</span> = <span class="tk-fn">keysdown</span>()
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">ground</span>.<span class="tk-var">state</span> == <span class="tk-str">"play"</span> <span class="tk-kw">and</span> <span class="tk-str">"right"</span> <span class="tk-kw">in</span> <span class="tk-var">keys</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">ball</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span> + <span class="tk-num">0.2</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">passes</span> <span class="tk-kw">in</span> [<span class="tk-num">3</span>, <span class="tk-num">6</span>]:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  state"</span>, <span class="tk-var">ground</span>.<span class="tk-var">state</span>, <span class="tk-str">"  ball at"</span>, <span class="tk-var">ball</span>.<span class="tk-var">pos</span>)</pre>
 <div class="predict"><p class="q">Predict: The right arrow is held on pass 2, before space is pressed, and again on passes 5 and 6, after it. Does the ball move on pass 2? Where is it on pass 6?</p><button class="rev" data-target="s11-c1" aria-controls="s11-c1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s11-c1"><p class="outlabel">What it actually prints (run without a browser, quit after 6 passes of the loop)</p><pre class="out">pass 3   state start   ball at &lt;0, 0.5, 0&gt;
 space pressed: state is now play
 pass 6   state play   ball at &lt;0.4, 0.5, 0&gt;</pre><p class="note">Fed in by the build script: the right arrow key held on pass 2, the space key pressed on pass 4, the right arrow key held on passes 5 to 6.</p><p>No. On pass 2 the state is still start, so the gate <code>ground.state == "play" and "right" in keys</code> is False and the ball stays at x = 0; the pass 3 line shows that. After space on pass 4, the state is play, and the two held passes move the ball to x = 0.4 by pass 6.</p><p>The state lives on the ground, because the bound function and the loop both need it. The space key's name is a single space character, which is easy to miss when reading the program.</p></div></div>
@@ -319,25 +327,25 @@ pass 6   state play   ball at &lt;0.4, 0.5, 0&gt;</pre><p class="note">Fed in by
 <span class="tk-var">things</span>.<span class="tk-fn">append</span>(<span class="tk-fn">box</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0.5</span>, <span class="tk-num">0</span>), <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">orange</span>))
 <span class="tk-var">things</span>.<span class="tk-fn">append</span>(<span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">3</span>, <span class="tk-num">0.5</span>, -<span class="tk-num">2</span>), <span class="tk-var">radius</span>=<span class="tk-num">0.5</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">cyan</span>))
 <span class="tk-ctl">for</span> <span class="tk-var">thing</span> <span class="tk-ctl">in</span> <span class="tk-var">things</span>:
-    <span class="tk-var">thing</span>.<span class="tk-var">home</span> = <span class="tk-fn">vec</span>(<span class="tk-var">thing</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-var">thing</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span>, <span class="tk-var">thing</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span>)
+<span class="ig">    </span><span class="tk-var">thing</span>.<span class="tk-var">home</span> = <span class="tk-fn">vec</span>(<span class="tk-var">thing</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-var">thing</span>.<span class="tk-var">pos</span>.<span class="tk-var">y</span>, <span class="tk-var">thing</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span>)
 
 <span class="tk-kw">def</span> <span class="tk-fn">reset</span>(<span class="tk-var">b</span>):
-    <span class="tk-ctl">for</span> <span class="tk-var">thing</span> <span class="tk-ctl">in</span> <span class="tk-var">things</span>:
-        <span class="tk-var">thing</span>.<span class="tk-var">pos</span> = <span class="tk-var">thing</span>.<span class="tk-var">home</span>
-        <span class="tk-var">thing</span>.<span class="tk-var">visible</span> = <span class="tk-kw">True</span>
-    <span class="tk-fn">print</span>(<span class="tk-str">"reset: box at"</span>, <span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">pos</span>, <span class="tk-str">" ball at"</span>, <span class="tk-var">things</span>[<span class="tk-num">1</span>].<span class="tk-var">pos</span>)
+<span class="ig">    </span><span class="tk-ctl">for</span> <span class="tk-var">thing</span> <span class="tk-ctl">in</span> <span class="tk-var">things</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">thing</span>.<span class="tk-var">pos</span> = <span class="tk-var">thing</span>.<span class="tk-var">home</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">thing</span>.<span class="tk-var">visible</span> = <span class="tk-kw">True</span>
+<span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"reset: box at"</span>, <span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">pos</span>, <span class="tk-str">" ball at"</span>, <span class="tk-var">things</span>[<span class="tk-num">1</span>].<span class="tk-var">pos</span>)
 
 <span class="tk-fn">button</span>(<span class="tk-var">text</span>=<span class="tk-str">"Reset"</span>, <span class="tk-var">bind</span>=<span class="tk-var">reset</span>)
 <span class="tk-var">passes</span> = <span class="tk-num">0</span>
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
-    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
-    <span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">pos</span>.<span class="tk-var">x</span> + <span class="tk-num">0.5</span>
-    <span class="tk-var">things</span>[<span class="tk-num">1</span>].<span class="tk-var">pos</span>.<span class="tk-var">z</span> = <span class="tk-var">things</span>[<span class="tk-num">1</span>].<span class="tk-var">pos</span>.<span class="tk-var">z</span> + <span class="tk-num">0.5</span>
-
-    <span class="tk-ctl">if</span> <span class="tk-var">passes</span> == <span class="tk-num">4</span>:
-        <span class="tk-fn">print</span>(<span class="tk-str">"pass 4: box at"</span>, <span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">pos</span>, <span class="tk-str">" ball at"</span>, <span class="tk-var">things</span>[<span class="tk-num">1</span>].<span class="tk-var">pos</span>, <span class="tk-str">" box home is still"</span>, <span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">home</span>)</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+<span class="ig">    </span><span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+<span class="ig">    </span><span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">pos</span>.<span class="tk-var">x</span> = <span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">pos</span>.<span class="tk-var">x</span> + <span class="tk-num">0.5</span>
+<span class="ig">    </span><span class="tk-var">things</span>[<span class="tk-num">1</span>].<span class="tk-var">pos</span>.<span class="tk-var">z</span> = <span class="tk-var">things</span>[<span class="tk-num">1</span>].<span class="tk-var">pos</span>.<span class="tk-var">z</span> + <span class="tk-num">0.5</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">passes</span> == <span class="tk-num">4</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"pass 4: box at"</span>, <span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">pos</span>, <span class="tk-str">" ball at"</span>, <span class="tk-var">things</span>[<span class="tk-num">1</span>].<span class="tk-var">pos</span>, <span class="tk-str">" box home is still"</span>, <span class="tk-var">things</span>[<span class="tk-num">0</span>].<span class="tk-var">home</span>)</pre>
 <div class="predict"><p class="q">Predict: The box and the ball move 0.5 on every pass. Reset is clicked on pass 6. Where are they after the click, and why is the box's <code>home</code> on pass 4 still <code>&lt;0, 0.5, 0&gt;</code> after four moves?</p><button class="rev" data-target="s11-c2" aria-controls="s11-c2" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s11-c2"><p class="outlabel">What it actually prints (run without a browser, quit after 8 passes of the loop)</p><pre class="out">pass 4: box at &lt;2, 0.5, 0&gt;  ball at &lt;3, 0.5, 0&gt;  box home is still &lt;0, 0.5, 0&gt;
 reset: box at &lt;0, 0.5, 0&gt;  ball at &lt;3, 0.5, -2&gt;</pre><p class="note">Fed in by the build script: the widget bound to reset clicked on pass 6.</p><p>After the click the box is back at <code>&lt;0, 0.5, 0&gt;</code> and the ball at <code>&lt;3, 0.5, -2&gt;</code>, their starting places. The loop then moves them again from there.</p><p>The home is unchanged on pass 4 because it is a copy: a new vector built from the three numbers the pos had at the start. The moves change the pos and never touch the copy. Written as <code>thing.home = thing.pos</code> with no copy, the home would be the pos itself, and Reset would put each thing back exactly where it already was.</p></div></div>
 </section>
@@ -385,7 +393,7 @@ background: &lt;0.1, 0.1, 0.25&gt;   ground opacity: 0.8</pre><p>Dark, because a
 <div class="exit middle"><p class="tag">Middle</p><p>The project with a start screen, a Reset, a partner test done, and the demo.</p></div>
 <div class="exit stretch"><p class="tag">Stretch</p><p>The project with every feature on the plan sheet, a visitor's slip of ideas read, and one of those ideas added.</p></div>
 </div></section>
-<section><h2>Ledger card</h2><p>Stamp 11: a <code>state</code> that starts as start, the space key is <code>" "</code>, a <code>home</code> copy on every moving thing (<code>vec(p.x, p.y, p.z)</code>), Reset loops over the list, <code>scene.title</code>, <code>scene.background</code>, the partner test from the caption alone, the demo: what it is, what it does, what was hard, what is next.</p><p><a href="vpython_ledger_card.html?v=5">Open the course ledger card</a></p></section>
+<section><h2>Ledger card</h2><p>Stamp 11: a <code>state</code> that starts as start, the space key is <code>" "</code>, a <code>home</code> copy on every moving thing (<code>vec(p.x, p.y, p.z)</code>), Reset loops over the list, <code>scene.title</code>, <code>scene.background</code>, the partner test from the caption alone, the demo: what it is, what it does, what was hard, what is next.</p><p><a href="vpython_ledger_card.html?v=6">Open the course ledger card</a></p></section>
 <details class="teacher"><summary>Teacher panel</summary>
 <h3>Timing, 90 minutes</h3><ul>
 <li>0:00 plan sheet opener, 5 min</li>
@@ -408,8 +416,8 @@ background: &lt;0.1, 0.1, 0.25&gt;   ground opacity: 0.8</pre><p>Dark, because a
 </details>
 <section><h2>Running this in VS Code</h2><div class="grid2"><div class="card"><h3>Once, before the first run</h3><p>Open the terminal in VS Code and install the library: <code>pip install vpython</code>. Check it worked with <code>python -c "import vpython"</code>. It should print nothing at all and give you the prompt back. A traceback here is an install problem, not a problem with your program.</p></div><div class="card"><h3>Every run after that</h3><p>Save your file as <code>YourName_vpython11.py</code>: your first name, an underscore, then <code>vpython11</code>. Run it from the terminal. The 3D scene opens in a new browser tab, sometimes behind VS Code, so look for it before deciding that nothing happened. Click inside the scene before pressing any key. To end the program, close the tab or press Ctrl+C in the terminal. The program is written to run until you do. Run the file again and you get a fresh tab.</p></div></div><p class="note">VPython draws solid shapes that you can turn and zoom. Everything you print still goes to the terminal, and everything you draw goes to the browser tab. Words in the terminal, pictures in the tab.</p></section>
 </div></main>
-<nav class="pager"><a href="session10_your_project.html?v=5">&larr; Your project</a><a href="vpython_course_hub.html?v=5">Course home</a><span></span></nav>
-<footer><div class="wrap"><p>Python in 3D: eleven sessions of VPython for ages 10 to 11, in the Lecture Light style, light ground for a projector, predict before reveal, three places to stop in every session.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-10-05 (NY-7.G.4 added 2026-10-26). <a href="standards_map.html?v=5">Full standards map</a> &middot; <a href="vpython_ledger_card.html?v=5">Ledger card</a></p></div></footer>
+<nav class="pager"><a href="session10_your_project.html?v=6">&larr; Your project</a><a href="vpython_course_hub.html?v=6">Course home</a><span></span></nav>
+<footer><div class="wrap"><p>Python in 3D: eleven sessions of VPython for ages 10 to 11, in the Lecture Light style, light ground for a projector, predict before reveal, three places to stop in every session.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-10-05 (NY-7.G.4 added 2026-10-26). <a href="standards_map.html?v=6">Full standards map</a> &middot; <a href="vpython_ledger_card.html?v=6">Ledger card</a></p></div></footer>
 <script>
 document.addEventListener('click', function(e){
   var b = e.target.closest('button.rev');

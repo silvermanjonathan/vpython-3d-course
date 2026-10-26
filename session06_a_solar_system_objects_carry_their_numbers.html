@@ -107,6 +107,14 @@ pre{
 .tk-fn{color:#795E26}   /* functions */
 .tk-cls{color:#1D6A80}  /* classes, types, modules */
 .tk-var{color:#001080}  /* variables */
+/* Indent guides, the lines VS Code draws down each step of indentation. VS Code's are
+   1px and light grey, which vanish on a projector with the lights on, so these are 6px
+   and #595959. Each four-space step is one box as tall as the line, so the bars join
+   up from line to line. A border rather than a shadow, so the bars print. */
+pre .ig{
+  display:inline-block; width:4ch; height:1.6em; vertical-align:top;
+  border-left:6px solid #595959;
+}
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -284,8 +292,8 @@ a.btn.quiet:hover{background:#EFE9DA}
 <span class="tk-var">sun</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">1.2</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">yellow</span>)
 
 <span class="tk-kw">def</span> <span class="tk-fn">make_planet</span>(<span class="tk-var">distance</span>, <span class="tk-var">size</span>, <span class="tk-var">colour</span>):
-    <span class="tk-var">p</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">distance</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-var">size</span>, <span class="tk-var">color</span>=<span class="tk-var">colour</span>)
-    <span class="tk-ctl">return</span> <span class="tk-var">p</span>
+<span class="ig">    </span><span class="tk-var">p</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">distance</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-var">size</span>, <span class="tk-var">color</span>=<span class="tk-var">colour</span>)
+<span class="ig">    </span><span class="tk-ctl">return</span> <span class="tk-var">p</span>
 
 <span class="tk-var">earth</span> = <span class="tk-fn">make_planet</span>(<span class="tk-num">5</span>, <span class="tk-num">0.4</span>, <span class="tk-var">color</span>.<span class="tk-var">blue</span>)
 <span class="tk-var">mars</span> = <span class="tk-fn">make_planet</span>(<span class="tk-num">7</span>, <span class="tk-num">0.3</span>, <span class="tk-var">color</span>.<span class="tk-var">red</span>)
@@ -328,11 +336,11 @@ AttributeError: &#x27;sphere&#x27; object has no attribute &#x27;year&#x27;</pre
 <span class="tk-var">sun</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">1.2</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">yellow</span>)
 
 <span class="tk-kw">def</span> <span class="tk-fn">make_planet</span>(<span class="tk-var">name</span>, <span class="tk-var">distance</span>, <span class="tk-var">size</span>, <span class="tk-var">colour</span>, <span class="tk-var">speed</span>):
-    <span class="tk-var">p</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">distance</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-var">size</span>, <span class="tk-var">color</span>=<span class="tk-var">colour</span>)
-    <span class="tk-var">p</span>.<span class="tk-var">name</span> = <span class="tk-var">name</span>
-    <span class="tk-var">p</span>.<span class="tk-var">speed</span> = <span class="tk-var">speed</span>
-    <span class="tk-var">p</span>.<span class="tk-var">turned</span> = <span class="tk-num">0</span>
-    <span class="tk-ctl">return</span> <span class="tk-var">p</span>
+<span class="ig">    </span><span class="tk-var">p</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">distance</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-var">size</span>, <span class="tk-var">color</span>=<span class="tk-var">colour</span>)
+<span class="ig">    </span><span class="tk-var">p</span>.<span class="tk-var">name</span> = <span class="tk-var">name</span>
+<span class="ig">    </span><span class="tk-var">p</span>.<span class="tk-var">speed</span> = <span class="tk-var">speed</span>
+<span class="ig">    </span><span class="tk-var">p</span>.<span class="tk-var">turned</span> = <span class="tk-num">0</span>
+<span class="ig">    </span><span class="tk-ctl">return</span> <span class="tk-var">p</span>
 
 <span class="tk-var">planets</span> = []
 <span class="tk-var">planets</span>.<span class="tk-fn">append</span>(<span class="tk-fn">make_planet</span>(<span class="tk-str">"Mercury"</span>, <span class="tk-num">3</span>, <span class="tk-num">0.2</span>, <span class="tk-var">color</span>.<span class="tk-fn">gray</span>(<span class="tk-num">0.6</span>), <span class="tk-num">6</span>))
@@ -341,15 +349,15 @@ AttributeError: &#x27;sphere&#x27; object has no attribute &#x27;year&#x27;</pre
 <span class="tk-var">passes</span> = <span class="tk-num">0</span>
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
-    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
-
-    <span class="tk-ctl">for</span> <span class="tk-var">p</span> <span class="tk-ctl">in</span> <span class="tk-var">planets</span>:
-        <span class="tk-var">p</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(<span class="tk-var">p</span>.<span class="tk-var">speed</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">origin</span>=<span class="tk-var">sun</span>.<span class="tk-var">pos</span>)
-        <span class="tk-var">p</span>.<span class="tk-var">turned</span> = <span class="tk-var">p</span>.<span class="tk-var">turned</span> + <span class="tk-var">p</span>.<span class="tk-var">speed</span>
-        <span class="tk-ctl">if</span> <span class="tk-var">p</span>.<span class="tk-var">turned</span> == <span class="tk-num">360</span>:
-            <span class="tk-fn">print</span>(<span class="tk-var">p</span>.<span class="tk-var">name</span>, <span class="tk-str">"finished a year on pass"</span>, <span class="tk-var">passes</span>)
-            <span class="tk-var">p</span>.<span class="tk-var">turned</span> = <span class="tk-num">0</span></pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+<span class="ig">    </span><span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">for</span> <span class="tk-var">p</span> <span class="tk-ctl">in</span> <span class="tk-var">planets</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">p</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(<span class="tk-var">p</span>.<span class="tk-var">speed</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">origin</span>=<span class="tk-var">sun</span>.<span class="tk-var">pos</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">p</span>.<span class="tk-var">turned</span> = <span class="tk-var">p</span>.<span class="tk-var">turned</span> + <span class="tk-var">p</span>.<span class="tk-var">speed</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">p</span>.<span class="tk-var">turned</span> == <span class="tk-num">360</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-var">p</span>.<span class="tk-var">name</span>, <span class="tk-str">"finished a year on pass"</span>, <span class="tk-var">passes</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="tk-var">p</span>.<span class="tk-var">turned</span> = <span class="tk-num">0</span></pre>
 <div class="predict"><p class="q">Predict: Mercury turns 6 degrees per pass, Earth 3, and Mars 2. Which planet finishes a year first, and on which pass? How many Mercury years fit in one Mars year?</p><button class="rev" data-target="s6-c3" aria-controls="s6-c3" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s6-c3"><p class="outlabel">What it actually prints (run without a browser, quit after 180 passes of the loop)</p><pre class="out">Mercury finished a year on pass 60
 Mercury finished a year on pass 120
 Earth finished a year on pass 120
@@ -367,16 +375,16 @@ Mars finished a year on pass 180</pre><p>Mercury first, on pass 60: 360 divided 
 <span class="tk-var">passes</span> = <span class="tk-num">0</span>
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
-    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
-
-    <span class="tk-var">earth</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(<span class="tk-num">3</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">origin</span>=<span class="tk-var">sun</span>.<span class="tk-var">pos</span>)
-    <span class="tk-var">moon</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(<span class="tk-num">3</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">origin</span>=<span class="tk-var">sun</span>.<span class="tk-var">pos</span>)
-    <span class="tk-var">moon</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(<span class="tk-num">12</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">origin</span>=<span class="tk-var">earth</span>.<span class="tk-var">pos</span>)
-
-    <span class="tk-ctl">if</span> <span class="tk-var">passes</span> <span class="tk-kw">in</span> [<span class="tk-num">10</span>, <span class="tk-num">60</span>, <span class="tk-num">120</span>]:
-        <span class="tk-fn">print</span>(<span class="tk-str">"pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  moon to earth"</span>, <span class="tk-fn">round</span>(<span class="tk-fn">mag</span>(<span class="tk-var">moon</span>.<span class="tk-var">pos</span> - <span class="tk-var">earth</span>.<span class="tk-var">pos</span>), <span class="tk-num">2</span>),
-              <span class="tk-str">"  earth to sun"</span>, <span class="tk-fn">round</span>(<span class="tk-fn">mag</span>(<span class="tk-var">earth</span>.<span class="tk-var">pos</span> - <span class="tk-var">sun</span>.<span class="tk-var">pos</span>), <span class="tk-num">2</span>))</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+<span class="ig">    </span><span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-var">earth</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(<span class="tk-num">3</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">origin</span>=<span class="tk-var">sun</span>.<span class="tk-var">pos</span>)
+<span class="ig">    </span><span class="tk-var">moon</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(<span class="tk-num">3</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">origin</span>=<span class="tk-var">sun</span>.<span class="tk-var">pos</span>)
+<span class="ig">    </span><span class="tk-var">moon</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(<span class="tk-num">12</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">origin</span>=<span class="tk-var">earth</span>.<span class="tk-var">pos</span>)
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">passes</span> <span class="tk-kw">in</span> [<span class="tk-num">10</span>, <span class="tk-num">60</span>, <span class="tk-num">120</span>]:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  moon to earth"</span>, <span class="tk-fn">round</span>(<span class="tk-fn">mag</span>(<span class="tk-var">moon</span>.<span class="tk-var">pos</span> - <span class="tk-var">earth</span>.<span class="tk-var">pos</span>), <span class="tk-num">2</span>),
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span>  <span class="tk-str">"  earth to sun"</span>, <span class="tk-fn">round</span>(<span class="tk-fn">mag</span>(<span class="tk-var">earth</span>.<span class="tk-var">pos</span> - <span class="tk-var">sun</span>.<span class="tk-var">pos</span>), <span class="tk-num">2</span>))</pre>
 <div class="predict"><p class="q">Predict: The moon starts 0.8 from the earth. After 120 passes, is it still 0.8 from the earth? What would happen to that distance if the first <code>moon.rotate</code> line, the one around the sun, were deleted?</p><button class="rev" data-target="s6-c4" aria-controls="s6-c4" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s6-c4"><p class="outlabel">What it actually prints (run without a browser, quit after 120 passes of the loop)</p><pre class="out">pass 10   moon to earth 0.8   earth to sun 5.0
 pass 60   moon to earth 0.8   earth to sun 5.0
 pass 120   moon to earth 0.8   earth to sun 5.0</pre><p>Still 0.8, on every line, and the earth is still 5.0 from the sun. The first moon line moves the moon along with the earth, and the second swings it around the earth, so the moon stays with the earth and circles it.</p><p>Without the first moon line, the moon would only turn around wherever the earth is on that pass, by 12 degrees, while the earth moves on without it. The distance would drift, growing and shrinking, and the moon would wander off its circle. Delete the line and watch; then put it back.</p></div></div>
@@ -390,8 +398,8 @@ pass 120   moon to earth 0.8   earth to sun 5.0</pre><p>Still 0.8, on every line
 <span class="tk-var">sun</span>.<span class="tk-var">factor</span> = <span class="tk-num">1</span>
 
 <span class="tk-kw">def</span> <span class="tk-fn">set_time</span>(<span class="tk-var">s</span>):
-    <span class="tk-var">sun</span>.<span class="tk-var">factor</span> = <span class="tk-var">s</span>.<span class="tk-var">value</span>
-    <span class="tk-fn">print</span>(<span class="tk-str">"time now runs"</span>, <span class="tk-var">sun</span>.<span class="tk-var">factor</span>, <span class="tk-str">"times as fast"</span>)
+<span class="ig">    </span><span class="tk-var">sun</span>.<span class="tk-var">factor</span> = <span class="tk-var">s</span>.<span class="tk-var">value</span>
+<span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"time now runs"</span>, <span class="tk-var">sun</span>.<span class="tk-var">factor</span>, <span class="tk-str">"times as fast"</span>)
 
 <span class="tk-var">scene</span>.<span class="tk-fn">append_to_caption</span>(<span class="tk-str">"Time: "</span>)
 <span class="tk-fn">slider</span>(<span class="tk-var">min</span>=<span class="tk-num">0</span>, <span class="tk-var">max</span>=<span class="tk-num">4</span>, <span class="tk-var">value</span>=<span class="tk-num">1</span>, <span class="tk-var">step</span>=<span class="tk-num">0.5</span>, <span class="tk-var">bind</span>=<span class="tk-var">set_time</span>)
@@ -401,15 +409,15 @@ pass 120   moon to earth 0.8   earth to sun 5.0</pre><p>Still 0.8, on every line
 <span class="tk-var">passes</span> = <span class="tk-num">0</span>
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
-    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
-
-    <span class="tk-var">mercury</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(<span class="tk-num">6</span> * <span class="tk-var">sun</span>.<span class="tk-var">factor</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">origin</span>=<span class="tk-var">sun</span>.<span class="tk-var">pos</span>)
-    <span class="tk-var">mercury</span>.<span class="tk-var">turned</span> = <span class="tk-var">mercury</span>.<span class="tk-var">turned</span> + <span class="tk-num">6</span> * <span class="tk-var">sun</span>.<span class="tk-var">factor</span>
-
-    <span class="tk-ctl">if</span> <span class="tk-var">mercury</span>.<span class="tk-var">turned</span> &gt;= <span class="tk-num">360</span>:
-        <span class="tk-fn">print</span>(<span class="tk-str">"Mercury finished a year on pass"</span>, <span class="tk-var">passes</span>)
-        <span class="tk-var">mercury</span>.<span class="tk-var">turned</span> = <span class="tk-var">mercury</span>.<span class="tk-var">turned</span> - <span class="tk-num">360</span></pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+<span class="ig">    </span><span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-var">mercury</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(<span class="tk-num">6</span> * <span class="tk-var">sun</span>.<span class="tk-var">factor</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">origin</span>=<span class="tk-var">sun</span>.<span class="tk-var">pos</span>)
+<span class="ig">    </span><span class="tk-var">mercury</span>.<span class="tk-var">turned</span> = <span class="tk-var">mercury</span>.<span class="tk-var">turned</span> + <span class="tk-num">6</span> * <span class="tk-var">sun</span>.<span class="tk-var">factor</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">mercury</span>.<span class="tk-var">turned</span> &gt;= <span class="tk-num">360</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"Mercury finished a year on pass"</span>, <span class="tk-var">passes</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">mercury</span>.<span class="tk-var">turned</span> = <span class="tk-var">mercury</span>.<span class="tk-var">turned</span> - <span class="tk-num">360</span></pre>
 <div class="predict"><p class="q">Predict: The slider is moved to 2 on pass 30, and to 0 on pass 80. Without the slider, Mercury's first year would end on pass 60. When does it end now? And what does Mercury do after pass 80?</p><button class="rev" data-target="s6-c5" aria-controls="s6-c5" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s6-c5"><p class="outlabel">What it actually prints (run without a browser, quit after 120 passes of the loop)</p><pre class="out">time now runs 2 times as fast
 Mercury finished a year on pass 45
 Mercury finished a year on pass 75
@@ -426,25 +434,25 @@ time now runs 0 times as fast</pre><p class="note">Fed in by the build script: t
 <span class="tk-var">earth</span>.<span class="tk-var">tag</span> = <span class="tk-fn">label</span>(<span class="tk-var">pos</span>=<span class="tk-var">earth</span>.<span class="tk-var">pos</span>, <span class="tk-var">text</span>=<span class="tk-str">"Earth"</span>, <span class="tk-var">height</span>=<span class="tk-num">14</span>, <span class="tk-var">box</span>=<span class="tk-kw">False</span>, <span class="tk-var">yoffset</span>=<span class="tk-num">20</span>)
 
 <span class="tk-kw">def</span> <span class="tk-fn">pick_view</span>(<span class="tk-var">evt</span>):
-    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"e"</span>:
-        <span class="tk-var">scene</span>.<span class="tk-var">camera</span>.<span class="tk-fn">follow</span>(<span class="tk-var">earth</span>)
-        <span class="tk-fn">print</span>(<span class="tk-str">"the camera follows the Earth"</span>)
-    <span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"s"</span>:
-        <span class="tk-var">scene</span>.<span class="tk-var">camera</span>.<span class="tk-fn">follow</span>(<span class="tk-var">sun</span>)
-        <span class="tk-fn">print</span>(<span class="tk-str">"the camera follows the Sun"</span>)
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"e"</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">scene</span>.<span class="tk-var">camera</span>.<span class="tk-fn">follow</span>(<span class="tk-var">earth</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"the camera follows the Earth"</span>)
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">evt</span>.<span class="tk-var">key</span> == <span class="tk-str">"s"</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">scene</span>.<span class="tk-var">camera</span>.<span class="tk-fn">follow</span>(<span class="tk-var">sun</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"the camera follows the Sun"</span>)
 
 <span class="tk-var">scene</span>.<span class="tk-fn">bind</span>(<span class="tk-str">"keydown"</span>, <span class="tk-var">pick_view</span>)
 <span class="tk-var">passes</span> = <span class="tk-num">0</span>
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
-    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
-    <span class="tk-var">earth</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(<span class="tk-num">3</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">origin</span>=<span class="tk-var">sun</span>.<span class="tk-var">pos</span>)
-    <span class="tk-var">earth</span>.<span class="tk-var">tag</span>.<span class="tk-var">pos</span> = <span class="tk-var">earth</span>.<span class="tk-var">pos</span>
-
-    <span class="tk-ctl">if</span> <span class="tk-var">passes</span> <span class="tk-kw">in</span> [<span class="tk-num">20</span>, <span class="tk-num">40</span>]:
-        <span class="tk-fn">print</span>(<span class="tk-str">"pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  label at x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">earth</span>.<span class="tk-var">tag</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>), <span class="tk-str">" z ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">earth</span>.<span class="tk-var">tag</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span>, <span class="tk-num">2</span>),
-              <span class="tk-str">"  earth at x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">earth</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>), <span class="tk-str">" z ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">earth</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span>, <span class="tk-num">2</span>))</pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+<span class="ig">    </span><span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+<span class="ig">    </span><span class="tk-var">earth</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(<span class="tk-num">3</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">origin</span>=<span class="tk-var">sun</span>.<span class="tk-var">pos</span>)
+<span class="ig">    </span><span class="tk-var">earth</span>.<span class="tk-var">tag</span>.<span class="tk-var">pos</span> = <span class="tk-var">earth</span>.<span class="tk-var">pos</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">passes</span> <span class="tk-kw">in</span> [<span class="tk-num">20</span>, <span class="tk-num">40</span>]:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-str">"pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  label at x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">earth</span>.<span class="tk-var">tag</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>), <span class="tk-str">" z ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">earth</span>.<span class="tk-var">tag</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span>, <span class="tk-num">2</span>),
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span>  <span class="tk-str">"  earth at x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">earth</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>), <span class="tk-str">" z ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">earth</span>.<span class="tk-var">pos</span>.<span class="tk-var">z</span>, <span class="tk-num">2</span>))</pre>
 <div class="predict"><p class="q">Predict: The label is a separate object from the earth. Why does the loop need the line <code>earth.tag.pos = earth.pos</code>? What would you see without it?</p><button class="rev" data-target="s6-c6" aria-controls="s6-c6" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s6-c6"><p class="outlabel">What it actually prints (run without a browser, quit after 40 passes of the loop)</p><pre class="out">the camera follows the Earth
 pass 20   label at x = 2.5  z = -4.33   earth at x = 2.5  z = -4.33
 the camera follows the Sun
@@ -470,12 +478,12 @@ pass 40   label at x = -2.5  z = -4.33   earth at x = -2.5  z = -4.33</pre><p cl
 <span class="tk-var">sun</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-num">1.2</span>, <span class="tk-var">color</span>=<span class="tk-var">color</span>.<span class="tk-var">yellow</span>)
 
 <span class="tk-kw">def</span> <span class="tk-fn">make_planet</span>(<span class="tk-var">name</span>, <span class="tk-var">distance</span>, <span class="tk-var">size</span>, <span class="tk-var">colour</span>, <span class="tk-var">speed</span>):
-    <span class="tk-var">p</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">distance</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-var">size</span>, <span class="tk-var">color</span>=<span class="tk-var">colour</span>)
-    <span class="tk-var">p</span>.<span class="tk-var">name</span> = <span class="tk-var">name</span>
-    <span class="tk-var">p</span>.<span class="tk-var">speed</span> = <span class="tk-var">speed</span>
-    <span class="tk-var">p</span>.<span class="tk-var">turned</span> = <span class="tk-num">0</span>
-    <span class="tk-var">p</span>.<span class="tk-var">tag</span> = <span class="tk-fn">label</span>(<span class="tk-var">pos</span>=<span class="tk-var">p</span>.<span class="tk-var">pos</span>, <span class="tk-var">text</span>=<span class="tk-var">name</span>, <span class="tk-var">height</span>=<span class="tk-num">12</span>, <span class="tk-var">box</span>=<span class="tk-kw">False</span>, <span class="tk-var">yoffset</span>=<span class="tk-num">16</span>)
-    <span class="tk-ctl">return</span> <span class="tk-var">p</span>
+<span class="ig">    </span><span class="tk-var">p</span> = <span class="tk-fn">sphere</span>(<span class="tk-var">pos</span>=<span class="tk-fn">vec</span>(<span class="tk-var">distance</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>), <span class="tk-var">radius</span>=<span class="tk-var">size</span>, <span class="tk-var">color</span>=<span class="tk-var">colour</span>)
+<span class="ig">    </span><span class="tk-var">p</span>.<span class="tk-var">name</span> = <span class="tk-var">name</span>
+<span class="ig">    </span><span class="tk-var">p</span>.<span class="tk-var">speed</span> = <span class="tk-var">speed</span>
+<span class="ig">    </span><span class="tk-var">p</span>.<span class="tk-var">turned</span> = <span class="tk-num">0</span>
+<span class="ig">    </span><span class="tk-var">p</span>.<span class="tk-var">tag</span> = <span class="tk-fn">label</span>(<span class="tk-var">pos</span>=<span class="tk-var">p</span>.<span class="tk-var">pos</span>, <span class="tk-var">text</span>=<span class="tk-var">name</span>, <span class="tk-var">height</span>=<span class="tk-num">12</span>, <span class="tk-var">box</span>=<span class="tk-kw">False</span>, <span class="tk-var">yoffset</span>=<span class="tk-num">16</span>)
+<span class="ig">    </span><span class="tk-ctl">return</span> <span class="tk-var">p</span>
 
 <span class="tk-var">planets</span> = []
 <span class="tk-var">planets</span>.<span class="tk-fn">append</span>(<span class="tk-fn">make_planet</span>(<span class="tk-str">"Mercury"</span>, <span class="tk-num">3</span>, <span class="tk-num">0.2</span>, <span class="tk-var">color</span>.<span class="tk-fn">gray</span>(<span class="tk-num">0.6</span>), <span class="tk-num">6</span>))
@@ -483,16 +491,16 @@ pass 40   label at x = -2.5  z = -4.33   earth at x = -2.5  z = -4.33</pre><p cl
 <span class="tk-var">passes</span> = <span class="tk-num">0</span>
 
 <span class="tk-ctl">while</span> <span class="tk-kw">True</span>:
-    <span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
-    <span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
-
-    <span class="tk-ctl">for</span> <span class="tk-var">p</span> <span class="tk-ctl">in</span> <span class="tk-var">planets</span>:
-        <span class="tk-var">p</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(<span class="tk-var">p</span>.<span class="tk-var">speed</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">origin</span>=<span class="tk-var">sun</span>.<span class="tk-var">pos</span>)
-        <span class="tk-var">p</span>.<span class="tk-var">tag</span>.<span class="tk-var">pos</span> = <span class="tk-var">p</span>.<span class="tk-var">pos</span>
-        <span class="tk-var">p</span>.<span class="tk-var">turned</span> = <span class="tk-var">p</span>.<span class="tk-var">turned</span> + <span class="tk-var">p</span>.<span class="tk-var">speed</span>
-        <span class="tk-ctl">if</span> <span class="tk-var">p</span>.<span class="tk-var">turned</span> == <span class="tk-num">360</span>:
-            <span class="tk-fn">print</span>(<span class="tk-var">p</span>.<span class="tk-var">name</span>, <span class="tk-str">"finished a year on pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  its label is at x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">p</span>.<span class="tk-var">tag</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>))
-            <span class="tk-var">p</span>.<span class="tk-var">turned</span> = <span class="tk-num">0</span></pre>
+<span class="ig">    </span><span class="tk-fn">rate</span>(<span class="tk-num">30</span>)
+<span class="ig">    </span><span class="tk-var">passes</span> = <span class="tk-var">passes</span> + <span class="tk-num">1</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="tk-ctl">for</span> <span class="tk-var">p</span> <span class="tk-ctl">in</span> <span class="tk-var">planets</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">p</span>.<span class="tk-fn">rotate</span>(<span class="tk-var">angle</span>=<span class="tk-fn">radians</span>(<span class="tk-var">p</span>.<span class="tk-var">speed</span>), <span class="tk-var">axis</span>=<span class="tk-fn">vec</span>(<span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>), <span class="tk-var">origin</span>=<span class="tk-var">sun</span>.<span class="tk-var">pos</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">p</span>.<span class="tk-var">tag</span>.<span class="tk-var">pos</span> = <span class="tk-var">p</span>.<span class="tk-var">pos</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-var">p</span>.<span class="tk-var">turned</span> = <span class="tk-var">p</span>.<span class="tk-var">turned</span> + <span class="tk-var">p</span>.<span class="tk-var">speed</span>
+<span class="ig">    </span><span class="ig">    </span><span class="tk-ctl">if</span> <span class="tk-var">p</span>.<span class="tk-var">turned</span> == <span class="tk-num">360</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="tk-fn">print</span>(<span class="tk-var">p</span>.<span class="tk-var">name</span>, <span class="tk-str">"finished a year on pass"</span>, <span class="tk-var">passes</span>, <span class="tk-str">"  its label is at x ="</span>, <span class="tk-fn">round</span>(<span class="tk-var">p</span>.<span class="tk-var">tag</span>.<span class="tk-var">pos</span>.<span class="tk-var">x</span>, <span class="tk-num">2</span>))
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="tk-var">p</span>.<span class="tk-var">turned</span> = <span class="tk-num">0</span></pre>
 <div class="predict"><p class="q">Predict: Venus turns 4 degrees per pass. On which pass does it finish a year? Where is its label on that pass?</p><button class="rev" data-target="s6-card1" aria-controls="s6-card1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s6-card1"><p class="outlabel">What it actually prints (run without a browser, quit after 90 passes of the loop)</p><pre class="out">Mercury finished a year on pass 60   its label is at x = 3.0
 Venus finished a year on pass 90   its label is at x = 4.0</pre><p>Pass 90: 360 divided by 4. On that pass Venus is back where it started, at x = 4, and its label is at x = 4.0 as well, because the loop moved the label to the planet on every pass.</p><p>Mercury finishes on pass 60, with its label at x = 3.0, back at its start too.</p></div></div>
 <h3>Expected and got</h3><p>Fill in the left column before you run. Fill in the right column after.</p>
@@ -508,7 +516,7 @@ Venus finished a year on pass 90   its label is at x = 4.0</pre><p>Pass 90: 360 
 <div class="exit middle"><p class="tag">Middle</p><p>The solar system: four planets with labels, a moon, the time slider, and the number keys choosing what the camera follows.</p></div>
 <div class="exit stretch"><p class="tag">Stretch</p><p>Give each planet a <code>make_trail=True</code> in the sphere call so it draws its orbit. Then a second moon on another planet, and a key that reverses time by setting <code>sun.factor</code> to its negative.</p></div>
 </div></section>
-<section><h2>Ledger card</h2><p>Stamp 6: <code>return p</code> gives the object back, <code>earth.speed = 3</code> makes an attribute the object carries, a loop over a list reads each object's own attributes, a moon rotates around the sun and around its planet, a shared number lives on an object (<code>sun.factor</code>), <code>label(pos, text)</code> and moving it every pass, <code>scene.camera.follow</code> from a key, <code>str(n)</code> to join a number to words.</p><p><a href="vpython_ledger_card.html?v=5">Open the course ledger card</a></p></section>
+<section><h2>Ledger card</h2><p>Stamp 6: <code>return p</code> gives the object back, <code>earth.speed = 3</code> makes an attribute the object carries, a loop over a list reads each object's own attributes, a moon rotates around the sun and around its planet, a shared number lives on an object (<code>sun.factor</code>), <code>label(pos, text)</code> and moving it every pass, <code>scene.camera.follow</code> from a key, <code>str(n)</code> to join a number to words.</p><p><a href="vpython_ledger_card.html?v=6">Open the course ledger card</a></p></section>
 <details class="teacher"><summary>Teacher panel</summary>
 <h3>Timing, 90 minutes</h3><ul>
 <li>0:00 retrieval opener, 10 min</li>
@@ -534,8 +542,8 @@ Venus finished a year on pass 90   its label is at x = 4.0</pre><p>Pass 90: 360 
 </details>
 <section><h2>Running this in VS Code</h2><div class="grid2"><div class="card"><h3>Once, before the first run</h3><p>Open the terminal in VS Code and install the library: <code>pip install vpython</code>. Check it worked with <code>python -c "import vpython"</code>. It should print nothing at all and give you the prompt back. A traceback here is an install problem, not a problem with your program.</p></div><div class="card"><h3>Every run after that</h3><p>Save your file as <code>YourName_vpython06.py</code>: your first name, an underscore, then <code>vpython06</code>. Run it from the terminal. The 3D scene opens in a new browser tab, sometimes behind VS Code, so look for it before deciding that nothing happened. Click inside the scene before pressing any key. To end the program, close the tab or press Ctrl+C in the terminal. The program is written to run until you do. Run the file again and you get a fresh tab.</p></div></div><p class="note">VPython draws solid shapes that you can turn and zoom. Everything you print still goes to the terminal, and everything you draw goes to the browser tab. Words in the terminal, pictures in the tab.</p></section>
 </div></main>
-<nav class="pager"><a href="session05_a_car_with_wheels_that_roll.html?v=5">&larr; A car with wheels that roll along a road</a><a href="vpython_course_hub.html?v=5">Course home</a><a href="session07_a_game_catch_the_falling_balls.html?v=5">A game: catch the falling balls &rarr;</a></nav>
-<footer><div class="wrap"><p>Python in 3D: eleven sessions of VPython for ages 10 to 11, in the Lecture Light style, light ground for a projector, predict before reveal, three places to stop in every session.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-10-05 (NY-7.G.4 added 2026-10-26). <a href="standards_map.html?v=5">Full standards map</a> &middot; <a href="vpython_ledger_card.html?v=5">Ledger card</a></p></div></footer>
+<nav class="pager"><a href="session05_a_car_with_wheels_that_roll.html?v=6">&larr; A car with wheels that roll along a road</a><a href="vpython_course_hub.html?v=6">Course home</a><a href="session07_a_game_catch_the_falling_balls.html?v=6">A game: catch the falling balls &rarr;</a></nav>
+<footer><div class="wrap"><p>Python in 3D: eleven sessions of VPython for ages 10 to 11, in the Lecture Light style, light ground for a projector, predict before reveal, three places to stop in every session.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-10-05 (NY-7.G.4 added 2026-10-26). <a href="standards_map.html?v=6">Full standards map</a> &middot; <a href="vpython_ledger_card.html?v=6">Ledger card</a></p></div></footer>
 <script>
 document.addEventListener('click', function(e){
   var b = e.target.closest('button.rev');

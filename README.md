@@ -94,6 +94,14 @@ and 6 to 8px accent edges, 18px body text, code coloured by role the way VS Code
 Light+ theme colours it. `build/highlight.py` is the same file the beginner course
 uses; stripping its spans gives back every snippet exactly.
 
+Every code block shows the indent guides VS Code draws: a bar down each four-space
+step of indentation. They are 6px wide in `#595959`, not VS Code's 1px light grey,
+because thin light lines wash out on the projector, and they run unbroken through
+blank lines inside a block. `render.indent_guides` puts each step's four spaces in a
+`<span class="ig">`; the spaces stay spaces, so copied code keeps its indentation.
+The bars are borders, so they print. The beginner and Advanced courses draw the same
+guides inside their hints.
+
 Every chunk shows the code, then the prediction question, then a button reading
 "Run it first, then check here". The button reveals the verified terminal output and
 the explanation together. Nothing about what a program prints is visible until the
@@ -105,7 +113,7 @@ in, in pass order.
 - Flat repo. No subdirectories except `build/`, no `index.html`.
 - All CSS and JavaScript inline. Google Fonts is the only external dependency.
 - No `localStorage`, no `sessionStorage`, no `indexedDB`.
-- Internal links carry a version pin, `?v=1`. Bump it on every content change.
+- Internal links carry a version pin, `?v=6`. Bump it on every content change.
 - Zero em-dash and en-dash characters anywhere in the prose. The validator fails
   the build if one appears.
 - No reference to any other course, camp, or term, on the pages or in the programs.
@@ -190,7 +198,8 @@ reveal buttons, 14 pages.
 
 `validate.py` checks tag balance, reveal-button to answer-block parity, duplicate
 reveal ids, `aria-controls` and `aria-expanded` on every reveal button, escaped angle
-brackets inside `<pre>` blocks, absence of storage APIs, dash characters, banned
+brackets inside `<pre>` blocks, that every step of indentation in a code block sits
+in an indent guide span, absence of storage APIs, dash characters, banned
 filler phrases (including any mention of another course), dead internal links, the
 presence of a title and an h1 on every page, and that every teacher panel's timing
 rows sum to 90 minutes and include a ledger stamp row.
