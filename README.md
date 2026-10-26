@@ -100,7 +100,7 @@ because thin light lines wash out on the projector, and they run unbroken throug
 blank lines inside a block. `render.indent_guides` puts each step's four spaces in a
 `<span class="ig">`; the spaces stay spaces, so copied code keeps its indentation.
 The bars are borders, so they print. The beginner and Advanced courses draw the same
-guides inside their hints.
+guides on every code block.
 
 Every chunk shows the code, then the prediction question, then a button reading
 "Run it first, then check here". The button reveals the verified terminal output and
