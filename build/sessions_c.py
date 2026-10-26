@@ -1,4 +1,4 @@
-"""Sessions 7 to 10 of the VPython course: every word and every snippet.
+"""Sessions 8 to 11 of the VPython course: every word and every snippet.
 
 Same shape as sessions_a.py. render.py runs each snippet through
 vpython_harness.py and pastes the real terminal output into the page.
@@ -13,12 +13,12 @@ SESSIONS_C = [
 
 # =====================================================================
 {
- "num": 7,
- "slug": "session07_a_grid_world_from_a_list_of_strings",
+ "num": 8,
+ "slug": "session08_a_grid_world_from_a_list_of_strings",
  "title": "A grid world: a level from a list of strings",
  "subtitle": "A maze drawn from text, row and column numbers that become places, a player that moves one tile per tap and cannot walk through walls, a goal, and coins",
  "new": ["a level as a list of strings", "indexing a string", "row then column", "nested loops", "row and col as attributes", "a place function", "is_open and !=", "a goal tile", "coins in a list"],
- "reuse": "Session 1: a bound keydown function. Session 5: attributes on an object, a list of objects",
+ "reuse": "Session 1: a bound keydown function. Session 6: attributes on an object, a list of objects",
  "env_note": True,
  "reuse_note": "Row first, then column, and row is z. Both will be swapped by someone in the first ten minutes. Chunk 1 has the room print <code>level[2][2]</code> and <code>level[3][5]</code> and find them with a finger on the projected level before anything is drawn.",
  "opener": {
@@ -377,7 +377,7 @@ print("the goal, row 7 col 7, is at", vec(7 - mid_col, 0.5, 7 - mid_row))
    "middle": "The coin maze: walls that block, coins that score once, the text under the scene, the goal label, r to restart.",
    "stretch": "A second level as another list of strings. Reaching the G hides every wall of the first level, draws the second, and puts the player at its start. Then a timer: a counter in the loop that counts passes, shown as seconds under the scene.",
  },
- "ledger": "Stamp 7: a level is a list of strings, <code>level[row][col]</code> with row first, a string is indexed like a list, column becomes x and row becomes z, two loops with <code>range(len(...))</code>, <code>!=</code>, <code>is_open(row, col)</code> checked before the move, <code>place(thing)</code> from row and col attributes, a wall ring keeps the indexes inside the list, coins in a list hidden once.",
+ "ledger": "Stamp 8: a level is a list of strings, <code>level[row][col]</code> with row first, a string is indexed like a list, column becomes x and row becomes z, two loops with <code>range(len(...))</code>, <code>!=</code>, <code>is_open(row, col)</code> checked before the move, <code>place(thing)</code> from row and col attributes, a wall ring keeps the indexes inside the list, coins in a list hidden once.",
  "teacher": {
    "timing": [
      "0:00 retrieval opener, 10 min",
@@ -403,14 +403,14 @@ print("the goal, row 7 col 7, is at", vec(7 - mid_col, 0.5, 7 - mid_row))
 
 # =====================================================================
 {
- "num": 8,
- "slug": "session08_a_scene_editor_dragging_with_the_mouse",
+ "num": 9,
+ "slug": "session09_a_scene_editor_dragging_with_the_mouse",
  "title": "A scene editor: dragging with the mouse",
  "subtitle": "mousedown, mousemove and mouseup, a grabbed object that follows the mouse across the floor, a menu that picks the shape, and a checkbox that turns a click into a delete",
  "new": ["mousedown, mousemove, mouseup", "evt.press", "an attribute that holds what is held", "project onto the floor at a height", "snap with round on drop", "menu and m.selected", "checkbox and c.checked"],
- "reuse": "Session 1: click, scene.mouse.pick, the gate on None, project. Session 5: attributes that share a number between functions",
+ "reuse": "Session 1: click, scene.mouse.pick, the gate on None, project. Session 6: attributes that share a number between functions",
  "env_note": True,
- "reuse_note": "The shared thing here is an object, not a number: <code>floor.held</code> is the shape being dragged, or None. It is the same move as <code>sun.factor</code> in session 5. Say so when chunk 2 arrives, because three functions have to agree on what is held and students will reach for a plain variable.",
+ "reuse_note": "The shared thing here is an object, not a number: <code>floor.held</code> is the shape being dragged, or None. It is the same move as <code>sun.factor</code> in session 6. Say so when chunk 2 arrives, because three functions have to agree on what is held and students will reach for a plain variable.",
  "opener": {
    "title": "Retrieval: picks, None, and project",
    "minutes": 10,
@@ -717,7 +717,7 @@ while True:
    "middle": "The scene editor: two menus, make on click, drag, delete mode, the count, Reset.",
    "stretch": "A height slider: a dragged shape's y follows the slider, so shapes can be stacked. Then a Save key that prints every visible shape's kind and pos in the terminal, one line each, so a scene can be typed back in later.",
  },
- "ledger": "Stamp 8: <code>mousedown</code>, <code>mousemove</code>, <code>mouseup</code>, <code>evt.press</code>, what is held lives on an object (<code>floor.held</code>, or None), <code>project</code> onto a plane at the shape's height, <code>round</code> on drop, <code>menu(choices, bind)</code> and <code>m.selected</code>, <code>checkbox(text, bind)</code> and <code>c.checked</code>, <code>elif</code>, a hidden shape cannot be picked.",
+ "ledger": "Stamp 9: <code>mousedown</code>, <code>mousemove</code>, <code>mouseup</code>, <code>evt.press</code>, what is held lives on an object (<code>floor.held</code>, or None), <code>project</code> onto a plane at the shape's height, <code>round</code> on drop, <code>menu(choices, bind)</code> and <code>m.selected</code>, <code>checkbox(text, bind)</code> and <code>c.checked</code>, <code>elif</code>, a hidden shape cannot be picked.",
  "teacher": {
    "timing": [
      "0:00 retrieval opener, 10 min",
@@ -730,7 +730,7 @@ while True:
      "1:25 exits, ledger stamp, 5 min",
    ],
    "misconceptions": [
-     ["Keeps the held shape in a plain variable and the drag function never sees it.", "A function cannot assign to a plain variable outside itself. <code>floor.held</code> is where all three functions can reach it. This is session 5's idea again."],
+     ["Keeps the held shape in a plain variable and the drag function never sees it.", "A function cannot assign to a plain variable outside itself. <code>floor.held</code> is where all three functions can reach it. This is session 6's idea again."],
      ["Drags with <code>point=vec(0, 0, 0)</code> and the shape sinks.", "That is the hinge. The plane has to be at the height the shape's middle should have."],
      ["Forgets to set <code>floor.held</code> to None on mouseup and the shape follows the mouse forever.", "The drop has to end the drag. Print <code>floor.held</code> in <code>drag</code> and watch it never go back to None."],
      ["Grabs the floor and drags the whole ground away.", "The grab gate needs <code>or thing is floor</code>. Chunk 2's reveal says why."],
@@ -743,8 +743,8 @@ while True:
 
 # =====================================================================
 {
- "num": 9,
- "slug": "session09_your_project",
+ "num": 10,
+ "slug": "session10_your_project",
  "title": "Your project",
  "subtitle": "Pick one of three briefs, write the plan on one sheet, start from a skeleton that runs, and add one feature at a time",
  "new": ["a knob block of named numbers at the top", "a skeleton that runs before it does anything", "one feature, then run, then the next", "a plan sheet"],
@@ -757,7 +757,7 @@ while True:
    "body": "Talk this one out with a neighbour.",
    "questions": [
      {"q": "Pick any stamp on your ledger card and say, in one sentence each: what it lets a program do, and which session's build used it.",
-      "a": "Any stamp works. Two examples: <code>keysdown()</code> lets a program move something for as long as a key is held, and the car in session 4 used it to drive. <code>scene.mouse.pick</code> lets a click find the object under the mouse, and the editor in session 8 used it to grab."},
+      "a": "Any stamp works. Two examples: <code>keysdown()</code> lets a program move something for as long as a key is held, and the car in session 4 used it to drive. <code>scene.mouse.pick</code> lets a click find the object under the mouse, and the editor in session 9 used it to grab."},
      {"q": "Three functions in a program need to share one number. Where does it live?",
       "a": "On an object, as an attribute: <code>sun.factor</code>, <code>floor.held</code>, <code>player.score</code>. Any function that can see the object can read it and change it."},
    ],
@@ -875,8 +875,8 @@ print(scene.caption)
   {"title": "Three briefs. Pick one.",
    "html": '<div class="grid2">'
            '<div class="card"><h3>A. A model with a camera tour</h3><p>A scene with at least six shapes made by at least two functions of your own, from session 2. The keys 1, 2 and 3 move the camera to three views of it, using <code>scene.center</code> and <code>scene.forward</code> from session 4. One thing in the scene moves on its own: a spinning blade, a moon, a bouncing ball. A slider changes the speed of that thing.</p><p><b>Starter: card A below.</b></p></div>'
-           '<div class="card"><h3>B. A game</h3><p>A player moved by keys. Things that fall, or chase, or have to be collected, from sessions 6 and 7. A score and lives under the scene, a game-over state, and r to restart. One number that makes it harder as the score goes up.</p><p><b>Starter: card B below.</b></p></div>'
-           '<div class="card"><h3>C. An animation with controls</h3><p>Something that moves by itself, built from a list of objects turned or moved by one loop, from sessions 4 and 5. A slider for its speed, a checkbox that pauses it, and a button that puts it back to the start. A label on at least one moving thing.</p><p><b>Starter: card C below.</b></p></div>'
+           '<div class="card"><h3>B. A game</h3><p>A player moved by keys. Things that fall, or chase, or have to be collected, from sessions 7 and 8. A score and lives under the scene, a game-over state, and r to restart. One number that makes it harder as the score goes up.</p><p><b>Starter: card B below.</b></p></div>'
+           '<div class="card"><h3>C. An animation with controls</h3><p>Something that moves by itself, built from a list of objects turned or moved by one loop, from sessions 4 and 6. A slider for its speed, a checkbox that pauses it, and a button that puts it back to the start. A label on at least one moving thing.</p><p><b>Starter: card C below.</b></p></div>'
            '<div class="card"><h3>The plan sheet</h3><p>Four boxes on paper, filled in before the skeleton is typed:</p>'
            '<ol><li><b>What the viewer sees.</b> The objects, in a list, with their starting places.</li>'
            '<li><b>The controls.</b> Each key, click, slider or button, and what it does. This becomes the caption.</li>'
@@ -885,17 +885,17 @@ print(scene.caption)
            '</div>'},
  ],
  "hinge": {"q": "A student's plan sheet says the controls are: arrows move the player, space fires, r restarts, a slider for speed, and a Delete mode tick box. The program has two bound functions, a slider function, a checkbox function, and a loop. Which of the five controls go in the loop with <code>keysdown</code>, which go in a bound function, and which numbers from the sheet have to live on an object rather than in a plain variable?",
-           "a": "Arrows go in the loop with <code>keysdown</code>, because moving should continue while the key is held. Space and r go in a bound keydown function, because each should happen once per tap. The slider and the checkbox have their own bound functions.</p><p>Anything the slider or checkbox function changes has to live on an object: the speed and the delete flag. Anything that only the loop reads and changes can be a plain variable. The restart is the hard case: if r is in a bound function, every number it resets has to be on an object too; if r is read with <code>keysdown</code> in the loop instead, they can stay plain variables, which is what session 6 did."},
+           "a": "Arrows go in the loop with <code>keysdown</code>, because moving should continue while the key is held. Space and r go in a bound keydown function, because each should happen once per tap. The slider and the checkbox have their own bound functions.</p><p>Anything the slider or checkbox function changes has to live on an object: the speed and the delete flag. Anything that only the loop reads and changes can be a plain variable. The restart is the hard case: if r is in a bound function, every number it resets has to be on an object too; if r is read with <code>keysdown</code> in the loop instead, they can stay plain variables, which is what session 7 did."},
  "brief": {
    "title": "Build: the project, part one",
    "minutes": 40,
-   "intro": "Fill in the plan sheet. Then type the skeleton from your sheet: the knob block, the caption, every object, the empty functions, the bind lines, and the loop with only <code>rate(30)</code>. Run it. Then add the features in the order they are on your sheet, running after each one and filling in the expected and got sheet as you go. Session 10 is for finishing, polishing, and showing it.",
+   "intro": "Fill in the plan sheet. Then type the skeleton from your sheet: the knob block, the caption, every object, the empty functions, the bind lines, and the loop with only <code>rate(30)</code>. Run it. Then add the features in the order they are on your sheet, running after each one and filling in the expected and got sheet as you go. Session 11 is for finishing, polishing, and showing it.",
    "steps": [
      "Plan sheet, on paper, all four boxes. Show it to the teacher before typing anything.",
      "Type the skeleton from the sheet. Run it. The scene should appear and nothing should happen.",
      "Add the first control from box 2. Write what you expect on the sheet below, run, write what you got.",
      "Add the next control. Same again. Stop when the session ends, wherever you are.",
-     "At the end of the session, write on the plan sheet which features are done and which are next, so that session 10 starts from the sheet and not from memory.",
+     "At the end of the session, write on the plan sheet which features are done and which are next, so that session 11 starts from the sheet and not from memory.",
    ],
    "cards": [
      {"title": "Card A: three camera views on three keys",
@@ -936,7 +936,7 @@ while True:
       "predict": "2 is pressed, then 3, then x. After the x, where does the camera look? Why does the print line run for x at all?",
       "reveal": "After x the camera still looks at <code>&lt;0, 2, 0&gt;</code>, facing <code>&lt;0, -1, -0.2&gt;</code>, the third view, because none of the three gates named x and nothing changed. The print line runs for every key, because it is after the gates and not inside any of them, so the output box has three lines.</p><p>View 2 looks at the tower from the side, and view 3 looks straight down at the middle of the ground. The number keys arrive as the strings <code>\"1\"</code>, <code>\"2\"</code> and <code>\"3\"</code>."},
      {"title": "Card B: blocks that fall, and a player that dodges",
-      "teach": "A game that is the catch game turned around: the blocks are the danger and the player has to not be under them. The hit gate is the catch gate from session 6. A hit costs a life and sends the block back to the top. The blocks are a list, each with its own velocity, so one loop serves all of them. For this test run the player starts directly under the lowest block, so the first hit is certain; in the game the player starts in the middle and dodges.",
+      "teach": "A game that is the catch game turned around: the blocks are the danger and the player has to not be under them. The hit gate is the catch gate from session 7. A hit costs a life and sends the block back to the top. The blocks are a list, each with its own velocity, so one loop serves all of them. For this test run the player starts directly under the lowest block, so the first hit is certain; in the game the player starts in the middle and dodges.",
       "code": code('''
 from vpython import *
 from random import randint
@@ -1040,9 +1040,9 @@ while True:
  "exits": {
    "floor": "The plan sheet filled in, and the skeleton running with every object in place and a caption that names the planned controls.",
    "middle": "The skeleton plus two working controls, checked against the sheet.",
-   "stretch": "Everything on the plan sheet working, so session 10 is polish and the demo only.",
+   "stretch": "Everything on the plan sheet working, so session 11 is polish and the demo only.",
  },
- "ledger": "Stamp 9: knobs in capitals at the top, the skeleton runs before any feature, one feature then run then the next, write the expected value before running, the caption is the plan, the plan sheet: what is seen, the controls, what is remembered and where, the knobs.",
+ "ledger": "Stamp 10: knobs in capitals at the top, the skeleton runs before any feature, one feature then run then the next, write the expected value before running, the caption is the plan, the plan sheet: what is seen, the controls, what is remembered and where, the knobs.",
  "teacher": {
    "timing": [
      "0:00 retrieval opener, 5 min",
@@ -1056,7 +1056,7 @@ while True:
    "misconceptions": [
      ["Starts typing the whole program from the brief, with no sheet and no skeleton.", "Stop them at the first error and ask which of the five things they typed caused it. The skeleton exists so that the answer is always one thing."],
      ["Picks brief B and plans six kinds of enemy.", "One kind of falling thing, in a list. Card B is brief B at the floor; everything else is a feature to add after it works."],
-     ["Puts the speed in a plain variable and the slider never changes it.", "Session 5's chunk 5. The slider's function needs the number on an object."],
+     ["Puts the speed in a plain variable and the slider never changes it.", "Session 6's chunk 5. The slider's function needs the number on an object."],
      ["Cannot write the caption and keeps changing the plan.", "That is the caption doing its job. Write the three sentences first; the sentences are the features."],
      ["Adds three features between runs and then has a bug.", "Comment out two of them, run, and find out which one. Then say why the course says one at a time."],
    ],
@@ -1067,8 +1067,8 @@ while True:
 
 # =====================================================================
 {
- "num": 10,
- "slug": "session10_finish_polish_and_show",
+ "num": 11,
+ "slug": "session11_finish_polish_and_show",
  "title": "Finish, polish, and show",
  "subtitle": "A start screen, a Reset that puts everything back, three lines of polish, a partner's test, and a two-minute demo",
  "new": ["a start state and a space key", "a home attribute for Reset", "scene.background and scene.title", "a partner test", "the demo script"],
@@ -1078,7 +1078,7 @@ while True:
  "opener": {
    "title": "Retrieval: the plan sheet",
    "minutes": 5,
-   "body": "Open your plan sheet from session 9.",
+   "body": "Open your plan sheet from session 10.",
    "questions": [
      {"q": "Read box 3 of your sheet, what the program remembers. For each thing on it, say where it lives in your program now: a plain variable in the loop, or an attribute on which object. Is anything on the sheet that the program does not keep yet?",
       "a": "Any honest answer is right. Something on the sheet that the program does not keep yet is the first thing to add today, before any polish."},
@@ -1088,7 +1088,7 @@ while True:
  },
  "chunks": [
   {"title": "A start screen: a title, and a key that begins",
-   "teach": "A program that starts moving the moment it opens gives the viewer no time to read the caption. Keep a <code>state</code> that starts as <code>\"start\"</code>, show a title label, and gate everything that moves on <code>state == \"play\"</code>. The space key, which arrives as the string <code>\" \"</code>, changes the state and hides the title. This is session 6's state name with one more value.",
+   "teach": "A program that starts moving the moment it opens gives the viewer no time to read the caption. Keep a <code>state</code> that starts as <code>\"start\"</code>, show a title label, and gate everything that moves on <code>state == \"play\"</code>. The space key, which arrives as the string <code>\" \"</code>, changes the state and hides the title. This is session 7's state name with one more value.",
    "code": code('''
 from vpython import *
 
@@ -1214,11 +1214,11 @@ print("background:", scene.background, "  ground opacity:", ground.opacity)
    ],
  },
  "exits": {
-   "floor": "The project as it was at the end of session 9, with a caption that only promises what works, and a two-minute demo of it.",
+   "floor": "The project as it was at the end of session 10, with a caption that only promises what works, and a two-minute demo of it.",
    "middle": "The project with a start screen, a Reset, a partner test done, and the demo.",
    "stretch": "The project with every feature on the plan sheet, a visitor's slip of ideas read, and one of those ideas added.",
  },
- "ledger": "Stamp 10: a <code>state</code> that starts as start, the space key is <code>\" \"</code>, a <code>home</code> copy on every moving thing (<code>vec(p.x, p.y, p.z)</code>), Reset loops over the list, <code>scene.title</code>, <code>scene.background</code>, the partner test from the caption alone, the demo: what it is, what it does, what was hard, what is next.",
+ "ledger": "Stamp 11: a <code>state</code> that starts as start, the space key is <code>\" \"</code>, a <code>home</code> copy on every moving thing (<code>vec(p.x, p.y, p.z)</code>), Reset loops over the list, <code>scene.title</code>, <code>scene.background</code>, the partner test from the caption alone, the demo: what it is, what it does, what was hard, what is next.",
  "teacher": {
    "timing": [
      "0:00 plan sheet opener, 5 min",

@@ -36,7 +36,7 @@ STDMAP = "standards_map"
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("VPL_OUT", ROOT)
-VERSION = "1"
+VERSION = "2"
 TMP = os.environ.get("VPL_TMP",
                      os.path.join(tempfile.gettempdir(), "vpython_lesson_build"))
 HARNESS = os.path.join(HERE, "vpython_harness.py")
@@ -705,7 +705,7 @@ def pager(prev_s, next_s):
 
 def footer():
     return ('<footer><div class="wrap">'
-            '<p>' + COURSE + ': ten sessions of VPython for ages 10 to 11, in the Lecture '
+            '<p>' + COURSE + ': eleven sessions of VPython for ages 10 to 11, in the Lecture '
             'Light style, light ground for a projector, predict before reveal, three '
             'places to stop in every session.</p>'
             '<p>Mapped to NY Next Generation Learning Standards and the Standards for '
@@ -721,7 +721,7 @@ def render_hub():
     b = ['<header class="top"><div class="wrap">']
     b.append('<p class="eyebrow">' + COURSE + ' &middot; VPython &middot; Course home</p>')
     b.append('<h1>' + COURSE + ': 3D models, keys, and clicks</h1>')
-    b.append('<p class="sub">Ten sessions of VPython for ages 10 to 11. A world made of '
+    b.append('<p class="sub">Eleven sessions of VPython for ages 10 to 11. A world made of '
              'boxes and spheres, three numbers for every place, and programs that do '
              'something when you press a key or click the mouse.</p>')
     b.append('<div class="dates"><span class="pill"><b>Sessions</b> ' + str(len(SESSIONS))
@@ -777,7 +777,7 @@ def render_hub():
              'classes, <code>break</code>, <code>try</code>, list comprehensions, file '
              'reading or writing, <code>compound</code>, 3D <code>text</code>, and '
              '<code>extrusion</code>. Shared state lives on objects as attributes, which '
-             'session 5 teaches. Every output box on the site was captured by running the '
+             'session 6 teaches. Every output box on the site was captured by running the '
              'program; nothing was typed from expectation.</p></section>')
 
     b.append(env_section(1).replace('vpython01', 'vpythonNN').replace(

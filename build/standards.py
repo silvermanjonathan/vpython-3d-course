@@ -5,7 +5,7 @@ Each entry was resolved through the Learning Commons Knowledge Graph connector
 Nothing here was written from memory.
 """
 
-RESOLVED_ON = '2026-10-05'
+RESOLVED_ON = '2026-10-05 (NY-7.G.4 added 2026-10-26)'
 CONNECTOR = 'Learning Commons Knowledge Graph (CASE Network)'
 
 NY_MATH = 'NY Next Generation Mathematics Learning Standards'
@@ -109,6 +109,17 @@ STANDARDS = {
             'second coordinate.'
         ),
         'lcs': [], 'uuid': '70d83247-d7cc-11e8-824f-0242ac160002',
+    },
+    'NY-7.G.4': {
+        'jurisdiction': 'New York', 'framework': NY_MATH, 'subject': 'Mathematics',
+        'grades': '7',
+        'statement': (
+            'Apply the formulas for the area and circumference of a circle to '
+            'solve problems.'
+        ),
+        'lcs': ['Find the circumference of a circle to solve problems, including by '
+                'using the formula for circumference of a circle'],
+        'uuid': '70d89048-d7cc-11e8-824f-0242ac160002',
     },
     'MP1': {
         'jurisdiction': 'Multi-State', 'framework': MP, 'subject': 'Mathematics',

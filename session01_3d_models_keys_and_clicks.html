@@ -257,7 +257,7 @@ a.btn.quiet:hover{background:#EFE9DA}
 </head>
 <body>
 <header class="top"><div class="wrap">
-<p class="eyebrow">Python in 3D &middot; VPython &middot; Session 1 of 10</p>
+<p class="eyebrow">Python in 3D &middot; VPython &middot; Session 1 of 11</p>
 <h1>3D models that answer keys and clicks</h1>
 <p class="sub">A world made of boxes and spheres, three numbers for every place, and the first program that does something when you press a key or click the mouse</p>
 <div class="dates">
@@ -505,7 +505,7 @@ block placed at &lt;-6, 0.5, 7&gt;</pre><p class="note">Fed in by the build scri
 <div class="exit middle"><p class="tag">Middle</p><p>The block builder: click the floor to place a block, click a block to stack one on top, the paint pot and the menu for colour.</p></div>
 <div class="exit stretch"><p class="tag">Stretch</p><p>A Delete mode checkbox under the scene. While it is ticked, a click on a block sets its <code>visible</code> to False instead of stacking. Then a <code>wtext</code> under the scene that shows how many blocks are standing, updated by every click and by Reset.</p></div>
 </div></section>
-<section><h2>Ledger card</h2><p>Stamp 1: <code>from vpython import *</code>, <code>vec(x, y, z)</code> with x right, y up, z toward you, <code>pos</code> is the middle, <code>while True:</code> with <code>rate(30)</code> in it, <code>scene.bind("keydown", f)</code> and <code>evt.key</code>, <code>keysdown()</code> inside the loop, <code>scene.mouse.pick</code> and the gate on None, <code>button</code> and <code>slider</code> with <code>bind=</code>.</p><p><a href="vpython_ledger_card.html?v=1">Open the course ledger card</a></p></section>
+<section><h2>Ledger card</h2><p>Stamp 1: <code>from vpython import *</code>, <code>vec(x, y, z)</code> with x right, y up, z toward you, <code>pos</code> is the middle, <code>while True:</code> with <code>rate(30)</code> in it, <code>scene.bind("keydown", f)</code> and <code>evt.key</code>, <code>keysdown()</code> inside the loop, <code>scene.mouse.pick</code> and the gate on None, <code>button</code> and <code>slider</code> with <code>bind=</code>.</p><p><a href="vpython_ledger_card.html?v=2">Open the course ledger card</a></p></section>
 <details class="teacher"><summary>Teacher panel</summary>
 <h3>Timing, 90 minutes</h3><ul>
 <li>0:00 retrieval opener, 10 min</li>
@@ -532,8 +532,8 @@ block placed at &lt;-6, 0.5, 7&gt;</pre><p class="note">Fed in by the build scri
 </details>
 <section><h2>Running this in VS Code</h2><div class="grid2"><div class="card"><h3>Once, before the first run</h3><p>Open the terminal in VS Code and install the library: <code>pip install vpython</code>. Check it worked with <code>python -c "import vpython"</code>. It should print nothing at all and give you the prompt back. A traceback here is an install problem, not a problem with your program.</p></div><div class="card"><h3>Every run after that</h3><p>Save your file as <code>YourName_vpython01.py</code>: your first name, an underscore, then <code>vpython01</code>. Run it from the terminal. The 3D scene opens in a new browser tab, sometimes behind VS Code, so look for it before deciding that nothing happened. Click inside the scene before pressing any key. To end the program, close the tab or press Ctrl+C in the terminal. The program is written to run until you do. Run the file again and you get a fresh tab.</p></div></div><p class="note">VPython draws solid shapes that you can turn and zoom. Everything you print still goes to the terminal, and everything you draw goes to the browser tab. Words in the terminal, pictures in the tab.</p></section>
 </div></main>
-<nav class="pager"><span></span><a href="vpython_course_hub.html?v=1">Course home</a><a href="session02_shapes_and_a_model_from_a_function.html?v=1">Shapes, and a model built by a function &rarr;</a></nav>
-<footer><div class="wrap"><p>Python in 3D: ten sessions of VPython for ages 10 to 11, in the Lecture Light style, light ground for a projector, predict before reveal, three places to stop in every session.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-10-05. <a href="standards_map.html?v=1">Full standards map</a> &middot; <a href="vpython_ledger_card.html?v=1">Ledger card</a></p></div></footer>
+<nav class="pager"><span></span><a href="vpython_course_hub.html?v=2">Course home</a><a href="session02_shapes_and_a_model_from_a_function.html?v=2">Shapes, and a model built by a function &rarr;</a></nav>
+<footer><div class="wrap"><p>Python in 3D: eleven sessions of VPython for ages 10 to 11, in the Lecture Light style, light ground for a projector, predict before reveal, three places to stop in every session.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-10-05 (NY-7.G.4 added 2026-10-26). <a href="standards_map.html?v=2">Full standards map</a> &middot; <a href="vpython_ledger_card.html?v=2">Ledger card</a></p></div></footer>
 <script>
 document.addEventListener('click', function(e){
   var b = e.target.closest('button.rev');

@@ -1,4 +1,4 @@
-"""Sessions 4 to 6 of the VPython course: every word and every snippet.
+"""Sessions 4 to 7 of the VPython course: every word and every snippet.
 
 Same shape as sessions_a.py. render.py runs each snippet through
 vpython_harness.py and pastes the real terminal output into the page.
@@ -269,7 +269,350 @@ while True:
 # =====================================================================
 {
  "num": 5,
- "slug": "session05_a_solar_system_objects_carry_their_numbers",
+ "slug": "session05_a_car_with_wheels_that_roll",
+ "title": "A car with wheels that roll along a road",
+ "subtitle": "A wheel is a cylinder on its side, one speed moves every part, and the wheels turn by exactly as far as the car travels",
+ "new": ["a wheel sits on its radius", "two lists for one model: parts and rolling", "a road built by a loop", "speed in units per second with dt", "rolling: 360 degrees per circumference", "a negative angle rolls backwards", "a loop-back gate that shifts every part"],
+ "reuse": "Session 2: a function that makes objects, a model in a list, cylinder and axis. Session 3: dt and a speed. Session 4: rotate with radians, a degrees counter, the camera that follows",
+ "env_note": True,
+ "reuse_note": "The whole session is the car from session 4 given wheels. The one new idea is in chunk 5: how far a wheel should turn is worked out from how far the car moved, not picked. Everything before chunk 5 is setup for it, and the hinge question checks that the room got it. Keep the setup brisk.",
+ "opener": {
+   "title": "Retrieval: turning, the axis, and the loop",
+   "minutes": 10,
+   "body": "Paper first. Three questions from the car you drove in session 4.",
+   "questions": [
+     {"q": "What does <code>radians(30)</code> mean in this line, and what goes wrong if the <code>radians</code> is left off?",
+      "code": 'car.rotate(angle=radians(30), axis=vec(0, 1, 0))',
+      "a": "It is how you write 30 degrees to VPython. Without it the 30 means something much bigger, nearly five full turns, and the car spins wildly on every tap."},
+     {"q": "A cylinder is made with <code>pos=vec(2, 0, 0)</code> and <code>axis=vec(0, 0, 3)</code>. Where is its other end? Is its pos in the middle of it?",
+      "a": "The other end is at <code>&lt;2, 0, 3&gt;</code>, pos plus axis. No: for a cylinder, pos is one flat end, not the middle. A box and a sphere have their pos in the middle, a cylinder does not."},
+     {"q": "The car's three parts were kept in a list and moved by one loop. Why not three separate move lines?",
+      "a": "Three lines would need changing every time a part was added. The loop does the same thing to every part, however many there are, and the distances between the parts cannot drift, because each part gets the same vector."},
+   ],
+ },
+ "chunks": [
+  {"title": "A wheel is a cylinder lying on its side",
+   "teach": "A wheel is a cylinder whose axis points along z, so its flat faces look left and right and its round side touches the ground. <code>pos</code> is one flat face, from session 2, and <code>pos + axis</code> is the other. The wheel here is 0.3 thick, from z = 0.7 to z = 1.0, which is where the right side of a car 1.4 wide would be.</p><p>How high to put it is the session 1 question again, with a different answer. A box 1 tall is lifted by 0.5, half its height. A wheel is lifted by its <b>radius</b>: the lowest point of the round side is the radius below the middle. Radius 0.4 means <code>pos.y = 0.4</code>, and then the wheel just touches a ground whose top is at y = 0.",
+   "code": code('''
+from vpython import *
+
+ground = box(pos=vec(0, -0.1, 0), size=vec(20, 0.2, 20), color=color.green)
+wheel = cylinder(pos=vec(1, 0.4, 0.7), axis=vec(0, 0, 0.3), radius=0.4, color=color.black)
+print("one face is at", wheel.pos)
+print("the other face is at", wheel.pos + wheel.axis)
+print("the lowest point of the wheel is at y =", wheel.pos.y - wheel.radius)
+'''),
+   "run": "vpython",
+   "predict": "The wheel's pos is <code>&lt;1, 0.4, 0.7&gt;</code>. Where is its other flat face? And where is the lowest point of the wheel: on the ground, under it, or floating above it?",
+   "reveal": "The other face is at <code>&lt;1, 0.4, 1&gt;</code>: pos plus the axis, which adds 0.3 to z and nothing else.</p><p>The lowest point is at y = 0.0, exactly on the ground. The middle of the wheel is 0.4 up and the round side reaches 0.4 below it, the radius. Change the radius to 0.6 and leave pos alone, and the wheel sinks 0.2 into the ground. For a wheel, the lift is the radius."},
+
+  {"title": "Four wheels from one function, into two lists",
+   "teach": "<code>add_wheel(x, z)</code> is session 2's tree function with a different job: a black cylinder and a white <b>spoke</b> at the place you give it. The spoke is a thin box across the middle of the wheel, so that you can see the wheel turn. A plain black cylinder looks the same whether it is turning or not.</p><p>The function has no return line. It puts what it makes into lists. Every part goes in <code>parts</code>, the list of everything that moves with the car. The spoke also goes in <code>rolling</code>, the list of everything that turns when the car rolls. One object can be in two lists at once.",
+   "code": code('''
+from vpython import *
+
+ground = box(pos=vec(0, -0.1, 0), size=vec(20, 0.2, 20), color=color.green)
+body = box(pos=vec(0, 0.9, 0), size=vec(3, 0.8, 1.4), color=color.red)
+parts = [body]
+rolling = []
+
+def add_wheel(x, z):
+    wheel = cylinder(pos=vec(x, 0.4, z), axis=vec(0, 0, 0.3), radius=0.4, color=color.black)
+    spoke = box(pos=vec(x, 0.4, z + 0.15), size=vec(0.7, 0.08, 0.32), color=color.white)
+    parts.append(wheel)
+    parts.append(spoke)
+    rolling.append(spoke)
+
+add_wheel(1, 0.7)
+add_wheel(-1, 0.7)
+add_wheel(1, -1)
+add_wheel(-1, -1)
+print(len(parts), "parts move with the car")
+print(len(rolling), "of them turn when it rolls")
+print("the first spoke is at", rolling[0].pos)
+'''),
+   "run": "vpython",
+   "predict": "The function is called four times. How many objects end up in <code>parts</code>, counting the body? How many in <code>rolling</code>? And is the first spoke inside its wheel, or beside it?",
+   "reveal": "Nine in <code>parts</code>: the body, plus a wheel and a spoke from each of the four calls. Four in <code>rolling</code>: only the spokes.</p><p>The first spoke is inside its wheel, at <code>&lt;1, 0.4, 0.85&gt;</code>. Its z is the wheel's z plus 0.15, which is halfway along the wheel's axis of 0.3, so the spoke's middle is the wheel's middle. Its size is 0.32 deep, a little more than the wheel is thick, so the white shows at both faces. The wheels on the left have z = -1, and their faces run from -1 to -0.7, against the left side of the body."},
+
+  {"title": "A road made by a loop",
+   "teach": "The road is one long, thin grey box with its top at y = 0, so the wheels from chunk 1 sit on it. The dashes down the middle are ten small yellow boxes, placed by a loop. Each one is 4 further along than the one before, starting at x = -18. A dash is 0.02 tall and sits at y = 0.01, so it lies on the road instead of inside it.</p><p>A counter in the loop checks that the loop ran the number of times you meant, the way session 4's degrees counter checked a spin.",
+   "code": code('''
+from vpython import *
+
+grass = box(pos=vec(0, -0.2, 0), size=vec(60, 0.2, 30), color=color.green)
+road = box(pos=vec(0, -0.05, 0), size=vec(40, 0.1, 4), color=color.gray(0.4))
+dashes = 0
+
+for i in range(10):
+    dash = box(pos=vec(-18 + i * 4, 0.01, 0), size=vec(1.5, 0.02, 0.2), color=color.yellow)
+    dashes = dashes + 1
+
+print(dashes, "dashes, the last one at x =", dash.pos.x)
+print("the road runs from x =", road.pos.x - road.size.x / 2, "to x =", road.pos.x + road.size.x / 2)
+'''),
+   "run": "vpython",
+   "predict": "The first dash is at x = -18 and each is 4 further on. Where is the tenth dash? Is it still on the road, which is 40 long with its middle at 0?",
+   "reveal": "The tenth dash is at x = 18: the loop's <code>i</code> runs from 0 to 9, and -18 plus 9 times 4 is 18. The road runs from x = -20 to x = 20, so the last dash is 2 short of the end, with the same gap at the other end.</p><p>After the loop, <code>dash</code> holds the last box it made, which is why the print line can ask it for its pos. The other nine dashes are in the world but no name points at them, and that is fine, because nothing in this program moves a dash."},
+
+  {"title": "One speed moves every part",
+   "teach": "Session 3 moved a ball by its velocity times <code>dt</code>, where <code>dt</code> is the slice of a second that one pass takes. The car does the same. <code>speed</code> is 3, in units per second, and <code>step</code> is how far one pass moves it: 3 times 1/30, which is 0.1.</p><p>The loop over <code>parts</code> adds the same <code>vec(step, 0, 0)</code> to every part, so the wheels stay where they are on the body. <code>parts[1]</code> is the first wheel, 1 ahead of the body, and the print lines check that it stays 1 ahead.",
+   "code": code('''
+from vpython import *
+
+ground = box(pos=vec(0, -0.1, 0), size=vec(60, 0.2, 20), color=color.green)
+body = box(pos=vec(0, 0.9, 0), size=vec(3, 0.8, 1.4), color=color.red)
+parts = [body]
+
+def add_wheel(x, z):
+    wheel = cylinder(pos=vec(x, 0.4, z), axis=vec(0, 0, 0.3), radius=0.4, color=color.black)
+    parts.append(wheel)
+
+add_wheel(1, 0.7)
+add_wheel(-1, 0.7)
+add_wheel(1, -1)
+add_wheel(-1, -1)
+
+speed = 3
+dt = 1 / 30
+passes = 0
+
+while True:
+    rate(30)
+    passes = passes + 1
+    step = speed * dt
+    for part in parts:
+        part.pos = part.pos + vec(step, 0, 0)
+
+    if passes == 30:
+        print("after 1 second the body is at x =", round(body.pos.x, 2), " front wheel at x =", round(parts[1].pos.x, 2))
+    if passes == 60:
+        print("after 2 seconds the body is at x =", round(body.pos.x, 2), " front wheel at x =", round(parts[1].pos.x, 2))
+'''),
+   "run": "vpython",
+   "frames": 60,
+   "predict": "The speed is 3 units per second. Where is the body after one second, and after two? Is the front wheel still exactly 1 ahead of the body on both lines?",
+   "reveal": "After one second the body is at x = 3.0 and after two it is at x = 6.0: thirty passes of 0.1 each, then thirty more. The front wheel is at 4.0 and then 7.0, still 1 ahead on both lines, because every part got the same step on every pass.</p><p>Change <code>speed</code> to 6 and the body is at 6.0 after one second with nothing else touched. That is why the speed is a number of units per second and not a number per pass: you can read it, and <code>rate</code> can change without the car changing speed."},
+
+  {"title": "The wheels roll: one circumference is one full turn",
+   "teach": "A wheel that slides along without turning looks wrong at once. It should turn by exactly as much as it travels. A wheel that rolls one full turn, 360 degrees, has travelled once around its own rim: its <b>circumference</b>, which is <code>2 * pi * radius</code>. So the degrees for one pass are 360 times the step, divided by the circumference.</p><p>The car rolls to the right, and a wheel rolling to the right turns clockwise, which is a negative angle around z, the way session 4 turned the car right with <code>radians(-30)</code>. The spokes are in <code>rolling</code>, and each one rotates around a line along z through its own pos, which is the middle of its wheel. A <code>turned</code> counter adds up the degrees.</p><p>The wheel's radius is 0.4, so its circumference is 2.51. The car moves 0.1 per pass.",
+   "code": code('''
+from vpython import *
+
+ground = box(pos=vec(0, -0.1, 0), size=vec(60, 0.2, 20), color=color.green)
+body = box(pos=vec(0, 0.9, 0), size=vec(3, 0.8, 1.4), color=color.red)
+parts = [body]
+rolling = []
+
+def add_wheel(x, z):
+    wheel = cylinder(pos=vec(x, 0.4, z), axis=vec(0, 0, 0.3), radius=0.4, color=color.black)
+    spoke = box(pos=vec(x, 0.4, z + 0.15), size=vec(0.7, 0.08, 0.32), color=color.white)
+    parts.append(wheel)
+    parts.append(spoke)
+    rolling.append(spoke)
+
+add_wheel(1, 0.7)
+add_wheel(-1, 0.7)
+add_wheel(1, -1)
+add_wheel(-1, -1)
+
+radius = 0.4
+speed = 3
+dt = 1 / 30
+moved = 0
+turned = 0
+passes = 0
+print("circumference of a wheel:", round(2 * pi * radius, 2))
+
+while True:
+    rate(30)
+    passes = passes + 1
+    step = speed * dt
+    for part in parts:
+        part.pos = part.pos + vec(step, 0, 0)
+    moved = moved + step
+
+    turn = 360 * step / (2 * pi * radius)
+    for spoke in rolling:
+        spoke.rotate(angle=radians(-turn), axis=vec(0, 0, 1))
+    turned = turned + turn
+
+    if passes == 25:
+        print("pass 25: moved", round(moved, 2), " turned", round(turned, 1), "degrees")
+    if passes == 26:
+        print("pass 26: moved", round(moved, 2), " turned", round(turned, 1), "degrees")
+    if passes == 30:
+        print("pass 30: moved", round(moved, 2), " turned", round(turned, 1), "degrees, which is",
+              round(turned / 360, 2), "full turns")
+'''),
+   "run": "vpython",
+   "frames": 30,
+   "predict": "The circumference is 2.51 and the car moves 0.1 per pass. On which pass does <code>turned</code> go past 360? After one second the car has moved 3: is that more or less than one full turn of the wheel?",
+   "reveal": "On pass 26. After 25 passes the car has moved 2.5, just short of one circumference, and <code>turned</code> is 358.1. One more pass takes it to 2.6 and 372.4 degrees. The spoke has gone once round and a little more.</p><p>More than one full turn: 3 is bigger than 2.51, and the output box shows 429.7 degrees, which is 1.19 turns. A bigger wheel would turn less for the same trip: with radius 0.8 the circumference doubles and the same 3 units is only 0.6 of a turn. The turn line works that out from <code>radius</code>, so changing the wheel changes the turn with it."},
+
+  {"title": "Off the end of the road, and back to the start",
+   "teach": "The road is 40 long, so the car reaches its end. A gate on the body's x sends the car back to the other end once the body is past x = 21, which is when the back wheel has left the road. The gate must not put the body back on its own, because the wheels would then be 42 units behind it. Every part gets the same move, as always: subtract <code>vec(42, 0, 0)</code> from all five, and the car is off the left end of the road in one piece, ready to drive on again.</p><p>The speed is 4 here so that the trip takes less time. Nothing else about the moving changes.</p><p>Session 4's camera lines are here too. <code>scene.camera.follow(body)</code> keeps the car in view the whole way, and the road slides past under it.",
+   "code": code('''
+from vpython import *
+
+grass = box(pos=vec(0, -0.2, 0), size=vec(60, 0.2, 30), color=color.green)
+road = box(pos=vec(0, -0.05, 0), size=vec(40, 0.1, 4), color=color.gray(0.4))
+body = box(pos=vec(0, 0.9, 0), size=vec(3, 0.8, 1.4), color=color.red)
+parts = [body]
+
+def add_wheel(x, z):
+    wheel = cylinder(pos=vec(x, 0.4, z), axis=vec(0, 0, 0.3), radius=0.4, color=color.black)
+    parts.append(wheel)
+
+add_wheel(1, 0.7)
+add_wheel(-1, 0.7)
+add_wheel(1, -1)
+add_wheel(-1, -1)
+
+scene.autoscale = False
+scene.range = 8
+scene.forward = vec(0, -0.5, -1)
+scene.camera.follow(body)
+
+speed = 4
+dt = 1 / 30
+passes = 0
+
+while True:
+    rate(30)
+    passes = passes + 1
+    step = speed * dt
+    for part in parts:
+        part.pos = part.pos + vec(step, 0, 0)
+
+    if passes == 157:
+        print("pass 157: body at x =", round(body.pos.x, 2))
+    if body.pos.x > 21:
+        for part in parts:
+            part.pos = part.pos - vec(42, 0, 0)
+        print("back to the other end on pass", passes, " body at x =", round(body.pos.x, 2),
+              " front wheel at x =", round(parts[1].pos.x, 2))
+'''),
+   "run": "vpython",
+   "frames": 160,
+   "predict": "The body starts at x = 0 and speed 4 moves it 0.13 per pass, a little more. About how many passes until the body is past 21? Right after the gate fires, is the front wheel still 1 ahead of the body?",
+   "reveal": "About 158 passes: 21 divided by 0.13 is a little under 158. After 157 passes the body is at 20.93, not yet past 21, so the gate waits. On pass 158 it is at 21.07, the gate fires, and 42 is taken off, which puts the body at x = -20.93 and the front wheel at -19.93, still 1 ahead.</p><p>In the tab the car vanishes past the right end of the road and comes on at the left end, with the camera jumping to it. If the gate had done <code>body.pos = vec(0, 0.9, 0)</code> instead, the body would jump and the wheels would carry on without it, so the loop over the parts is the whole point of the gate."},
+ ],
+ "hinge": {"q": "Two students each write the wheel line as <code>spoke.rotate(angle=radians(5), axis=vec(0, 0, 1))</code>, 5 degrees on every pass. One car has <code>speed = 6</code>. The other has <code>speed = 1</code>. Describe what each car's wheels look like, and say what the one fix is for both.",
+           "a": "The fast car's wheels turn far too slowly for how far it travels: they look like they are skidding along the road. The slow car's wheels turn far too fast for its crawl: they look like they are spinning on ice. A fixed 5 degrees cannot be right for both, because the right turn depends on the step.</p><p>The fix is the chunk 5 line: <code>turn = 360 * step / (2 * pi * radius)</code>, then <code>radians(-turn)</code>. At speed 6 that is 28.6 degrees per pass, and at speed 1 it is 4.8. Whatever the speed, the wheel turns by exactly as far as the car moves."},
+ "brief": {
+   "title": "Build: the road trip",
+   "minutes": 15,
+   "intro": "A red car with four black wheels and white spokes drives along a grey road with yellow dashes, through green grass with lamp posts beside it. The up arrow speeds it up and the down arrow slows it, right down past zero into reverse, and the spokes roll the right way in both directions. The camera follows the car, and when it runs off either end of the road it comes back on at the other end.",
+   "steps": [
+     "Start from the card below: the car, the two lists, the speed on the arrow keys, and the rolling spokes.",
+     "Add the road and the ten dashes from chunk 3, and the grass under them, above the loop.",
+     "Add the loop-back gate from chunk 6, and then a second gate the other way: when <code>body.pos.x</code> is less than -21, add <code>vec(42, 0, 0)</code> to every part. The car can now reverse off the left end too.",
+     "Add the camera lines from chunk 6 above the loop, so the road slides past under the car.",
+     "Lamp posts: a function like session 2's <code>make_tree</code>, a thin grey cylinder 2 tall with a yellow sphere on top, called by a loop every 8 units along x at z = 3 and again at z = -3.",
+     "Write a caption that says what the two keys do.",
+   ],
+   "cards": [
+     {"title": "Speed on the keys, and wheels that roll backwards",
+      "teach": "The speed starts at 0 and the keys change it a little on every pass they are held, so holding up is a smooth start and not a jump. Two gates keep it between -3 and 6. A negative speed makes a negative step, and a negative step makes a negative <code>turn</code>, so <code>radians(-turn)</code> comes out positive and the spokes turn the other way. Nothing in the rolling lines knows which way the car is going. The sign does the work.",
+      "code": code('''
+from vpython import *
+
+scene.caption = "Click the scene. Up speeds the car up, down slows it and then reverses it."
+ground = box(pos=vec(0, -0.1, 0), size=vec(60, 0.2, 20), color=color.green)
+body = box(pos=vec(0, 0.9, 0), size=vec(3, 0.8, 1.4), color=color.red)
+parts = [body]
+rolling = []
+
+def add_wheel(x, z):
+    wheel = cylinder(pos=vec(x, 0.4, z), axis=vec(0, 0, 0.3), radius=0.4, color=color.black)
+    spoke = box(pos=vec(x, 0.4, z + 0.15), size=vec(0.7, 0.08, 0.32), color=color.white)
+    parts.append(wheel)
+    parts.append(spoke)
+    rolling.append(spoke)
+
+add_wheel(1, 0.7)
+add_wheel(-1, 0.7)
+add_wheel(1, -1)
+add_wheel(-1, -1)
+
+radius = 0.4
+speed = 0
+dt = 1 / 30
+
+while True:
+    rate(30)
+    keys = keysdown()
+    if "up" in keys:
+        speed = speed + 0.2
+    if "down" in keys:
+        speed = speed - 0.2
+    if speed > 6:
+        speed = 6
+    if speed < -3:
+        speed = -3
+
+    step = speed * dt
+    for part in parts:
+        part.pos = part.pos + vec(step, 0, 0)
+
+    turn = 360 * step / (2 * pi * radius)
+    for spoke in rolling:
+        spoke.rotate(angle=radians(-turn), axis=vec(0, 0, 1))
+
+    if len(keys) > 0:
+        print(keys, " speed", round(speed, 1), " turn this pass", round(turn, 2), "degrees")
+'''),
+      "run": "vpython",
+      "frames": 10,
+      "inject": [[2, "HOLD", "up"], [3, "HOLD", "up"], [4, "HOLD", "up"], [6, "HOLD", "down"], [7, "HOLD", "down"], [8, "HOLD", "down"], [9, "HOLD", "down"], [10, "HOLD", "down"]],
+      "predict": "Up is held for three passes, then down for five. What is the speed after the three ups, and after the five downs? Does the sign of <code>turn</code> change, and what does that look like on the spokes?",
+      "reveal": "After three ups the speed is 0.6: three steps of 0.2. Five downs take off 1.0, so it ends at -0.4 and the car is reversing. On the passes with no key held, the speed stays where it is and the car keeps going at that speed, because nothing in the loop slows it down.</p><p>The sign changes with the speed. While the car goes right the turn is positive, 2.86 degrees on the first pass of speed 0.6, and the spokes turn clockwise. At speed -0.4 the turn is -1.91, <code>radians(-turn)</code> is a positive angle, and the spokes turn the other way. Reverse rolls the wheels backwards without a single extra line."},
+   ],
+   "expected_got": [
+     ["Every wheel touches the road and none sinks into it", ""],
+     ["The spokes turn when the car moves and stop when it stops", ""],
+     ["Holding down past zero reverses the car and the spokes turn the other way", ""],
+     ["Running off either end of the road brings the whole car back on at the other end", ""],
+     ["The car never leaves the view", ""],
+   ],
+ },
+ "exits": {
+   "floor": "The car with four wheels standing on the road, every wheel touching and none sunk, and the car driving right at one steady speed with the spokes rolling.",
+   "middle": "The road trip: speed on the keys, reverse, the loop-back at both ends, the camera following, and the dashes.",
+   "stretch": "Lamp posts both sides, then brake lights: two small red boxes on the back of the car, in <code>parts</code>, whose <code>emissive</code> is True only while the down arrow is held. Then a second car in its own two lists, driving the other way at its own speed.",
+ },
+ "ledger": "Stamp 5: a wheel is <code>cylinder(axis=vec(0, 0, w), radius=r)</code> lifted by its radius, two lists for one model (<code>parts</code> moves, <code>rolling</code> turns), a road placed by a loop with a counter, <code>step = speed * dt</code> moves every part, one circumference <code>2 * pi * radius</code> is one full turn, <code>turn = 360 * step / (2 * pi * radius)</code> then <code>radians(-turn)</code>, a negative step rolls backwards on its own, a loop-back gate shifts every part by the same vector.",
+ "teacher": {
+   "timing": [
+     "0:00 retrieval opener, 10 min",
+     "0:10 chunks 1 and 2, the wheel and the two lists, 15 min",
+     "0:25 chunk 3, the road, 8 min",
+     "0:33 chunk 4, one speed for every part, 10 min",
+     "0:43 chunk 5, rolling, 15 min (the circumference line is the teaching point; do it on the projector with a real wheel or a lid)",
+     "0:58 chunk 6, the loop-back and the camera, 7 min",
+     "1:05 hinge question, 5 min",
+     "1:10 build brief, 15 min (most rooms get speed on the keys and stop; the loop-back both ways is the middle exit)",
+     "1:25 exits, ledger stamp, 5 min",
+   ],
+   "misconceptions": [
+     ["Lifts the wheel by 0.5 like a box and it floats, or by nothing and it is half under the road.", "A wheel is lifted by its radius. Have them print <code>wheel.pos.y - wheel.radius</code>, as chunk 1 does, and read off where the bottom is."],
+     ["Puts the spokes in <code>rolling</code> but not in <code>parts</code>, and they stay behind when the car drives off.", "Everything that moves goes in <code>parts</code>. The spokes are in both lists, and chunk 2's print shows nine in one and four in the other."],
+     ["Writes a fixed <code>radians(5)</code> for the wheel turn.", "That is the hinge. The turn has to come from the step, or the wheels skid at one speed and spin at another."],
+     ["Puts the body back at 0 in the loop-back gate and the wheels carry on without it.", "The gate moves every part by the same vector, the way every other move in the course does. Ask what happens to a wheel that was 1 ahead when only the body jumps."],
+     ["Rotates the wheel cylinders as well as the spokes and sees no difference.", "A plain cylinder turning around its own axis looks the same. Only the spoke shows the turn, which is why the cylinders are not in <code>rolling</code>. Turning them too does no harm but does nothing either."],
+     ["Spokes turn the wrong way: forward looks like reverse.", "The minus is missing from <code>radians(-turn)</code>. Rolling right is clockwise around z, which is a negative angle, as the right turn was in session 4."],
+   ],
+   "standards": ["NY-7.G.4", "NY-6.NS.5", "MP8"],
+   "routing": "Chunk 3 can be cut to a single grey box for the road with no dashes; the dashes come back in the build. Chunk 6 can be cut to the camera lines shown on the projector, and the loop-back becomes a build step. Chunk 5 is not cuttable, and neither is the hinge; a room that skips the circumference line ships skidding wheels.",
+   "setup": "The output boxes on this page come from running each snippet against the installed library with no browser open and the keys fed in by the build script. The picture is not checked, so run chunk 5 once on the projector machine before class and watch that the spokes turn clockwise while the car moves right.",
+ },
+},
+
+# =====================================================================
+{
+ "num": 6,
+ "slug": "session06_a_solar_system_objects_carry_their_numbers",
  "title": "A solar system: objects that carry their own numbers",
  "subtitle": "A function that returns a planet, a speed that lives on the planet itself, a list of planets turned by one loop, a moon with two motions, and a slider that runs time",
  "new": ["a function that returns an object", "an attribute you give an object", "planet.speed and planet.turned", "a moon with two rotates", "a slider that sets a number on an object", "label", "scene.camera.follow from a key"],
@@ -534,7 +877,7 @@ while True:
    "middle": "The solar system: four planets with labels, a moon, the time slider, and the number keys choosing what the camera follows.",
    "stretch": "Give each planet a <code>make_trail=True</code> in the sphere call so it draws its orbit. Then a second moon on another planet, and a key that reverses time by setting <code>sun.factor</code> to its negative.",
  },
- "ledger": "Stamp 5: <code>return p</code> gives the object back, <code>earth.speed = 3</code> makes an attribute the object carries, a loop over a list reads each object's own attributes, a moon rotates around the sun and around its planet, a shared number lives on an object (<code>sun.factor</code>), <code>label(pos, text)</code> and moving it every pass, <code>scene.camera.follow</code> from a key, <code>str(n)</code> to join a number to words.",
+ "ledger": "Stamp 6: <code>return p</code> gives the object back, <code>earth.speed = 3</code> makes an attribute the object carries, a loop over a list reads each object's own attributes, a moon rotates around the sun and around its planet, a shared number lives on an object (<code>sun.factor</code>), <code>label(pos, text)</code> and moving it every pass, <code>scene.camera.follow</code> from a key, <code>str(n)</code> to join a number to words.",
  "teacher": {
    "timing": [
      "0:00 retrieval opener, 10 min",
@@ -555,18 +898,18 @@ while True:
      ["Checks <code>p.turned == 360</code> with a speed that does not divide 360, like 7, and no year is ever printed.", "The counter steps over 360 without landing on it. Use <code>&gt;=</code> and subtract 360, the way chunk 5 does."],
    ],
    "standards": ["NY-5.G.2", "NY-6.EE.2", "MP7"],
-   "routing": "Chunk 6 can be cut; the card covers labels. Chunk 4 can become the stretch. Chunk 2 cannot be cut or shortened, because sessions 6, 7 and 8 all use attributes to share state between a bound function and the loop.",
+   "routing": "Chunk 6 can be cut; the card covers labels. Chunk 4 can become the stretch. Chunk 2 cannot be cut or shortened, because sessions 7, 8 and 9 all use attributes to share state between a bound function and the loop.",
  },
 },
 
 # =====================================================================
 {
- "num": 6,
- "slug": "session06_a_game_catch_the_falling_balls",
+ "num": 7,
+ "slug": "session07_a_game_catch_the_falling_balls",
  "title": "A game: catch the falling balls",
  "subtitle": "A paddle on keys, a ball that falls, one gate that decides a catch, a score on screen, lives, game over, and a key that starts again",
  "new": ["abs for a distance", "randint", "a catch gate with and", "str to put a number in text", "wtext for a score", "lives", "a state name", "restart from inside the loop", "harder each catch"],
- "reuse": "Session 3: velocity on the ball, keysdown in the loop. Session 5: attributes on an object",
+ "reuse": "Session 3: velocity on the ball, keysdown in the loop. Session 6: attributes on an object",
  "env_note": True,
  "reuse_note": "Every piece of state in this game is a plain variable inside the loop, because there are no bound functions: the restart is a key read with keysdown. Say that at the start. Students who try to add a Reset button will hit the shared-state problem and should use the r key instead, or put the numbers on the paddle as attributes.",
  "opener": {
@@ -584,7 +927,7 @@ while True:
  },
  "chunks": [
   {"title": "A paddle on the keys and a ball that falls",
-   "teach": "The paddle is a flat box that slides along x while an arrow key is held. The ball falls at a steady speed: its velocity is <code>vec(0, -4, 0)</code>, 4 per second downward, and there is no gravity line, so the speed never changes. The ball's velocity is an attribute on the ball, <code>ball.vel</code>, the way session 5 put a speed on a planet.",
+   "teach": "The paddle is a flat box that slides along x while an arrow key is held. The ball falls at a steady speed: its velocity is <code>vec(0, -4, 0)</code>, 4 per second downward, and there is no gravity line, so the speed never changes. The ball's velocity is an attribute on the ball, <code>ball.vel</code>, the way session 6 put a speed on a planet.",
    "code": code('''
 from vpython import *
 
@@ -859,7 +1202,7 @@ while True:
    "middle": "The 3D catch game: two gaps, score and lives under the scene, game over, r to restart, faster each catch.",
    "stretch": "Two balls in a list, each with its own <code>vel</code>, both falling, with the catch and miss gates inside a loop over the list. Then a bonus ball in a different colour that is worth 3.",
  },
- "ledger": "Stamp 6: <code>abs(a - b)</code> is a gap, <code>randint(lo, hi)</code> from <code>random</code>, a catch is two checks joined by <code>and</code>, a gate that should fire once must change what it checks, <code>wtext</code> and <code>text = \"Score: \" + str(score)</code>, lives, a <code>state</code> name gated on everywhere, restart with a key in the loop, <code>ball.vel.y - 1</code> to speed up.",
+ "ledger": "Stamp 7: <code>abs(a - b)</code> is a gap, <code>randint(lo, hi)</code> from <code>random</code>, a catch is two checks joined by <code>and</code>, a gate that should fire once must change what it checks, <code>wtext</code> and <code>text = \"Score: \" + str(score)</code>, lives, a <code>state</code> name gated on everywhere, restart with a key in the loop, <code>ball.vel.y - 1</code> to speed up.",
  "teacher": {
    "timing": [
      "0:00 retrieval opener, 10 min",
@@ -876,7 +1219,7 @@ while True:
      ["Catches the same ball on every pass and the score runs away.", "That is the hinge. The gate's body has to send the ball back to the top so the gate closes."],
      ["Writes the x gap without <code>abs</code> and only catches balls on one side of the paddle.", "A ball 1 to the left gives a gap of -1, which is less than 1.5, but a ball 1 to the right gives 1. Without abs, the check is about which side, not how far. Print the gap for a ball on each side."],
      ["Joins the score to the text with <code>+ score</code> and gets a TypeError.", "A number and a string cannot be joined. <code>str(score)</code> first. Chunk 4's reveal has the exact error."],
-     ["Puts the restart in a Reset button and finds that score and lives do not change.", "The button's function cannot assign to the loop's variables. Use the r key inside the loop, as chunk 5 does, or put the numbers on the paddle as attributes, as session 5 did with the sun."],
+     ["Puts the restart in a Reset button and finds that score and lives do not change.", "The button's function cannot assign to the loop's variables. Use the r key inside the loop, as chunk 5 does, or put the numbers on the paddle as attributes, as session 6 did with the sun."],
      ["Lets the game keep dropping balls after lives hit 0, and lives go negative.", "The ball's movement has to be gated on <code>state == \"play\"</code>. Every line that belongs to playing gets that gate."],
    ],
    "standards": ["NY-6.NS.8", "NY-6.EE.5", "MP1"],
