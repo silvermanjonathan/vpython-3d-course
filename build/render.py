@@ -36,7 +36,7 @@ STDMAP = "standards_map"
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("VPL_OUT", ROOT)
-VERSION = "2"
+VERSION = "3"
 TMP = os.environ.get("VPL_TMP",
                      os.path.join(tempfile.gettempdir(), "vpython_lesson_build"))
 HARNESS = os.path.join(HERE, "vpython_harness.py")

@@ -273,26 +273,27 @@ while True:
  "title": "A car with wheels that roll along a road",
  "subtitle": "A wheel is a cylinder on its side, one speed moves every part, and the wheels turn by exactly as far as the car travels",
  "new": ["a wheel sits on its radius", "two lists for one model: parts and rolling", "a road built by a loop", "speed in units per second with dt", "rolling: 360 degrees per circumference", "a negative angle rolls backwards", "a loop-back gate that shifts every part"],
- "reuse": "Session 2: a function that makes objects, a model in a list, cylinder and axis. Session 3: dt and a speed. Session 4: rotate with radians, a degrees counter, the camera that follows",
+ "reuse": "A function that makes objects, a model kept in a list, a cylinder and its axis, dt and a speed, rotate with radians, and the camera lines. Each one is shown again on this page where it is used",
  "env_note": True,
- "reuse_note": "The whole session is the car from session 4 given wheels. The one new idea is in chunk 5: how far a wheel should turn is worked out from how far the car moved, not picked. Everything before chunk 5 is setup for it, and the hinge question checks that the room got it. Keep the setup brisk.",
+ "reuse_note": "The one new idea is in chunk 5: how far a wheel should turn is worked out from how far the car moved, not picked. Everything before chunk 5 sets that up, and the hinge question checks it. The opener shows the three older ideas the page leans on, turning a shape, the two ends of a cylinder, and a model kept in a list, each with its own code, so the page can be followed on its own.",
  "opener": {
    "title": "Retrieval: turning, the axis, and the loop",
    "minutes": 10,
-   "body": "Paper first. Three questions from the car you drove in session 4.",
+   "body": "Paper first. Three questions about three ideas today's car is built from: turning a shape, where the two ends of a cylinder are, and moving a model that is kept in a list. Each question shows all the code it asks about.",
    "questions": [
-     {"q": "What does <code>radians(30)</code> mean in this line, and what goes wrong if the <code>radians</code> is left off?",
-      "code": 'car.rotate(angle=radians(30), axis=vec(0, 1, 0))',
-      "a": "It is how you write 30 degrees to VPython. Without it the 30 means something much bigger, nearly five full turns, and the car spins wildly on every tap."},
+     {"q": "The first line makes a red box and gives it the name <code>car</code>. The second line turns it. Which object turns? What does <code>radians(30)</code> mean, and what goes wrong if the <code>radians</code> is left off?",
+      "code": 'car = box(pos=vec(0, 0.5, 0), size=vec(2, 1, 1), color=color.red)\ncar.rotate(angle=radians(30), axis=vec(0, 1, 0))',
+      "a": "The red box turns. <code>car</code> is the name the first line gave it, and <code>car.rotate</code> means turn that box: the part before the dot says which object, the part after says what to do. It turns around a line that points up, <code>vec(0, 1, 0)</code>, through the box's middle, so it turns like a car steering on flat ground.</p><p><code>radians(30)</code> is how you write 30 degrees to VPython. Without it the 30 means something much bigger, nearly five full turns, and the box spins far too far."},
      {"q": "A cylinder is made with <code>pos=vec(2, 0, 0)</code> and <code>axis=vec(0, 0, 3)</code>. Where is its other end? Is its pos in the middle of it?",
       "a": "The other end is at <code>&lt;2, 0, 3&gt;</code>, pos plus axis. No: for a cylinder, pos is one flat end, not the middle. A box and a sphere have their pos in the middle, a cylinder does not."},
-     {"q": "The car's three parts were kept in a list and moved by one loop. Why not three separate move lines?",
-      "a": "Three lines would need changing every time a part was added. The loop does the same thing to every part, however many there are, and the distances between the parts cannot drift, because each part gets the same vector."},
+     {"q": "A model made of a box and a sphere is kept in a list called <code>parts</code>. What does the loop do to each part? After it, is the sphere still 1 to the right of the box?",
+      "code": 'parts = [box(pos=vec(0, 0.5, 0)), sphere(pos=vec(1, 0.5, 0), radius=0.3)]\n\nfor part in parts:\n    part.pos = part.pos + vec(2, 0, 0)',
+      "a": "It adds <code>vec(2, 0, 0)</code> to each part's pos, so the box and the sphere both move 2 to the right. The sphere is still 1 to the right of the box, because both got the same vector.</p><p>That is why a model is kept in a list. One loop moves every part, however many there are, and the parts stay together. Today's car has nine parts, and every move it makes is a loop like this one."},
    ],
  },
  "chunks": [
   {"title": "A wheel is a cylinder lying on its side",
-   "teach": "A wheel is a cylinder whose axis points along z, so its flat faces look left and right and its round side touches the ground. <code>pos</code> is one flat face, from session 2, and <code>pos + axis</code> is the other. The wheel here is 0.3 thick, from z = 0.7 to z = 1.0, which is where the right side of a car 1.4 wide would be.</p><p>How high to put it is the session 1 question again, with a different answer. A box 1 tall is lifted by 0.5, half its height. A wheel is lifted by its <b>radius</b>: the lowest point of the round side is the radius below the middle. Radius 0.4 means <code>pos.y = 0.4</code>, and then the wheel just touches a ground whose top is at y = 0.",
+   "teach": "A wheel is a cylinder whose axis points along z, so its flat faces look left and right and its round side touches the ground. <code>pos</code> is one flat face, not the middle, and <code>pos + axis</code> is the other. The wheel here is 0.3 thick, from z = 0.7 to z = 1.0, which is where the right side of a car 1.4 wide would be.</p><p>How high to put it needs care, because every shape in VPython is placed by its pos. A box 1 tall is lifted by 0.5, half its height. A wheel is lifted by its <b>radius</b>: the lowest point of the round side is the radius below the middle. Radius 0.4 means <code>pos.y = 0.4</code>, and then the wheel just touches a ground whose top is at y = 0.",
    "code": code('''
 from vpython import *
 
@@ -307,7 +308,7 @@ print("the lowest point of the wheel is at y =", wheel.pos.y - wheel.radius)
    "reveal": "The other face is at <code>&lt;1, 0.4, 1&gt;</code>: pos plus the axis, which adds 0.3 to z and nothing else.</p><p>The lowest point is at y = 0.0, exactly on the ground. The middle of the wheel is 0.4 up and the round side reaches 0.4 below it, the radius. Change the radius to 0.6 and leave pos alone, and the wheel sinks 0.2 into the ground. For a wheel, the lift is the radius."},
 
   {"title": "Four wheels from one function, into two lists",
-   "teach": "<code>add_wheel(x, z)</code> is session 2's tree function with a different job: a black cylinder and a white <b>spoke</b> at the place you give it. The spoke is a thin box across the middle of the wheel, so that you can see the wheel turn. A plain black cylinder looks the same whether it is turning or not.</p><p>The function has no return line. It puts what it makes into lists. Every part goes in <code>parts</code>, the list of everything that moves with the car. The spoke also goes in <code>rolling</code>, the list of everything that turns when the car rolls. One object can be in two lists at once.",
+   "teach": "<code>add_wheel(x, z)</code> is a function whose job is to make objects: a black cylinder and a white <b>spoke</b> at the place you give it. The spoke is a thin box across the middle of the wheel, so that you can see the wheel turn. A plain black cylinder looks the same whether it is turning or not.</p><p>The function has no return line. It puts what it makes into lists. Every part goes in <code>parts</code>, the list of everything that moves with the car. The spoke also goes in <code>rolling</code>, the list of everything that turns when the car rolls. One object can be in two lists at once.",
    "code": code('''
 from vpython import *
 
@@ -336,7 +337,7 @@ print("the first spoke is at", rolling[0].pos)
    "reveal": "Nine in <code>parts</code>: the body, plus a wheel and a spoke from each of the four calls. Four in <code>rolling</code>: only the spokes.</p><p>The first spoke is inside its wheel, at <code>&lt;1, 0.4, 0.85&gt;</code>. Its z is the wheel's z plus 0.15, which is halfway along the wheel's axis of 0.3, so the spoke's middle is the wheel's middle. Its size is 0.32 deep, a little more than the wheel is thick, so the white shows at both faces. The wheels on the left have z = -1, and their faces run from -1 to -0.7, against the left side of the body."},
 
   {"title": "A road made by a loop",
-   "teach": "The road is one long, thin grey box with its top at y = 0, so the wheels from chunk 1 sit on it. The dashes down the middle are ten small yellow boxes, placed by a loop. Each one is 4 further along than the one before, starting at x = -18. A dash is 0.02 tall and sits at y = 0.01, so it lies on the road instead of inside it.</p><p>A counter in the loop checks that the loop ran the number of times you meant, the way session 4's degrees counter checked a spin.",
+   "teach": "The road is one long, thin grey box with its top at y = 0, so the wheels from chunk 1 sit on it. The dashes down the middle are ten small yellow boxes, placed by a loop. Each one is 4 further along than the one before, starting at x = -18. A dash is 0.02 tall and sits at y = 0.01, so it lies on the road instead of inside it.</p><p>A counter in the loop checks that the loop ran the number of times you meant.",
    "code": code('''
 from vpython import *
 
@@ -356,7 +357,7 @@ print("the road runs from x =", road.pos.x - road.size.x / 2, "to x =", road.pos
    "reveal": "The tenth dash is at x = 18: the loop's <code>i</code> runs from 0 to 9, and -18 plus 9 times 4 is 18. The road runs from x = -20 to x = 20, so the last dash is 2 short of the end, with the same gap at the other end.</p><p>After the loop, <code>dash</code> holds the last box it made, which is why the print line can ask it for its pos. The other nine dashes are in the world but no name points at them, and that is fine, because nothing in this program moves a dash."},
 
   {"title": "One speed moves every part",
-   "teach": "Session 3 moved a ball by its velocity times <code>dt</code>, where <code>dt</code> is the slice of a second that one pass takes. The car does the same. <code>speed</code> is 3, in units per second, and <code>step</code> is how far one pass moves it: 3 times 1/30, which is 0.1.</p><p>The loop over <code>parts</code> adds the same <code>vec(step, 0, 0)</code> to every part, so the wheels stay where they are on the body. <code>parts[1]</code> is the first wheel, 1 ahead of the body, and the print lines check that it stays 1 ahead.",
+   "teach": "<code>dt</code> is the slice of a second that one pass of the loop takes: 1/30, because <code>rate(30)</code> runs 30 passes a second. Multiply a speed by <code>dt</code> and you get how far to move on one pass. <code>speed</code> is 3, in units per second, and <code>step</code> is how far one pass moves it: 3 times 1/30, which is 0.1.</p><p>The loop over <code>parts</code> adds the same <code>vec(step, 0, 0)</code> to every part, so the wheels stay where they are on the body. <code>parts[1]</code> is the first wheel, 1 ahead of the body, and the print lines check that it stays 1 ahead.",
    "code": code('''
 from vpython import *
 
@@ -395,7 +396,7 @@ while True:
    "reveal": "After one second the body is at x = 3.0 and after two it is at x = 6.0: thirty passes of 0.1 each, then thirty more. The front wheel is at 4.0 and then 7.0, still 1 ahead on both lines, because every part got the same step on every pass.</p><p>Change <code>speed</code> to 6 and the body is at 6.0 after one second with nothing else touched. That is why the speed is a number of units per second and not a number per pass: you can read it, and <code>rate</code> can change without the car changing speed."},
 
   {"title": "The wheels roll: one circumference is one full turn",
-   "teach": "A wheel that slides along without turning looks wrong at once. It should turn by exactly as much as it travels. A wheel that rolls one full turn, 360 degrees, has travelled once around its own rim: its <b>circumference</b>, which is <code>2 * pi * radius</code>. So the degrees for one pass are 360 times the step, divided by the circumference.</p><p>The car rolls to the right, and a wheel rolling to the right turns clockwise, which is a negative angle around z, the way session 4 turned the car right with <code>radians(-30)</code>. The spokes are in <code>rolling</code>, and each one rotates around a line along z through its own pos, which is the middle of its wheel. A <code>turned</code> counter adds up the degrees.</p><p>The wheel's radius is 0.4, so its circumference is 2.51. The car moves 0.1 per pass.",
+   "teach": "A wheel that slides along without turning looks wrong at once. It should turn by exactly as much as it travels. A wheel that rolls one full turn, 360 degrees, has travelled once around its own rim: its <b>circumference</b>, which is <code>2 * pi * radius</code>. So the degrees for one pass are 360 times the step, divided by the circumference.</p><p>The car rolls to the right, and a wheel rolling to the right turns clockwise, which is a negative angle around z. A positive angle turns anticlockwise as you look at the screen, and a minus sign turns the other way. The spokes are in <code>rolling</code>, and each one rotates around a line along z through its own pos, which is the middle of its wheel. A <code>turned</code> counter adds up the degrees.</p><p>The wheel's radius is 0.4, so its circumference is 2.51. The car moves 0.1 per pass.",
    "code": code('''
 from vpython import *
 
@@ -451,7 +452,7 @@ while True:
    "reveal": "On pass 26. After 25 passes the car has moved 2.5, just short of one circumference, and <code>turned</code> is 358.1. One more pass takes it to 2.6 and 372.4 degrees. The spoke has gone once round and a little more.</p><p>More than one full turn: 3 is bigger than 2.51, and the output box shows 429.7 degrees, which is 1.19 turns. A bigger wheel would turn less for the same trip: with radius 0.8 the circumference doubles and the same 3 units is only 0.6 of a turn. The turn line works that out from <code>radius</code>, so changing the wheel changes the turn with it."},
 
   {"title": "Off the end of the road, and back to the start",
-   "teach": "The road is 40 long, so the car reaches its end. A gate on the body's x sends the car back to the other end once the body is past x = 21, which is when the back wheel has left the road. The gate must not put the body back on its own, because the wheels would then be 42 units behind it. Every part gets the same move, as always: subtract <code>vec(42, 0, 0)</code> from all five, and the car is off the left end of the road in one piece, ready to drive on again.</p><p>The speed is 4 here so that the trip takes less time. Nothing else about the moving changes.</p><p>Session 4's camera lines are here too. <code>scene.camera.follow(body)</code> keeps the car in view the whole way, and the road slides past under it.",
+   "teach": "The road is 40 long, so the car reaches its end. A gate on the body's x sends the car back to the other end once the body is past x = 21, which is when the back wheel has left the road. The gate must not put the body back on its own, because the wheels would then be 42 units behind it. Every part gets the same move, as always: subtract <code>vec(42, 0, 0)</code> from all five, and the car is off the left end of the road in one piece, ready to drive on again.</p><p>The speed is 4 here so that the trip takes less time. Nothing else about the moving changes.</p><p>Four camera lines go above the loop. <code>scene.autoscale = False</code> stops the camera zooming out on its own, <code>scene.range = 8</code> shows 8 units from the middle of the view to its edge, and <code>scene.forward = vec(0, -0.5, -1)</code> points the camera away from you and a little down, so the road is seen from above. <code>scene.camera.follow(body)</code> keeps the car in view the whole way, and the road slides past under it.",
    "code": code('''
 from vpython import *
 
@@ -509,7 +510,7 @@ while True:
      "Add the road and the ten dashes from chunk 3, and the grass under them, above the loop.",
      "Add the loop-back gate from chunk 6, and then a second gate the other way: when <code>body.pos.x</code> is less than -21, add <code>vec(42, 0, 0)</code> to every part. The car can now reverse off the left end too.",
      "Add the camera lines from chunk 6 above the loop, so the road slides past under the car.",
-     "Lamp posts: a function like session 2's <code>make_tree</code>, a thin grey cylinder 2 tall with a yellow sphere on top, called by a loop every 8 units along x at z = 3 and again at z = -3.",
+     "Lamp posts: a function like <code>add_wheel</code> from chunk 2, a thin grey cylinder 2 tall with a yellow sphere on top, called by a loop every 8 units along x at z = 3 and again at z = -3.",
      "Write a caption that says what the two keys do.",
    ],
    "cards": [
