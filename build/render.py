@@ -36,7 +36,7 @@ STDMAP = "standards_map"
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("VPL_OUT", ROOT)
-VERSION = "3"
+VERSION = "4"
 TMP = os.environ.get("VPL_TMP",
                      os.path.join(tempfile.gettempdir(), "vpython_lesson_build"))
 HARNESS = os.path.join(HERE, "vpython_harness.py")
@@ -506,6 +506,55 @@ def output_extra(ch, out, mode, tag):
     return extra
 
 
+# ------------------------------------------------- shape settings reference
+
+# Every setting a shape or widget is given by name on the pages. Each session
+# page shows the rows for the settings its own code uses, found by scanning the
+# code, so the table never falls out of step with the programs.
+PARAMS = [
+    ("pos", "Where the shape is: three numbers, <code>vec(x, y, z)</code>. x is right, y is up, z is toward you. For a box or a sphere, pos is the middle. For a cylinder, cone, or arrow, pos is one end."),
+    ("size", "A box's three measurements, <code>vec(long, tall, deep)</code>: along x, along y, along z. Each starts at 1 if you do not say."),
+    ("radius", "How big round a sphere, cylinder, cone, or ring is: the distance from the middle to the edge. The lowest point is the radius below the middle."),
+    ("axis", "For a cylinder, cone, or arrow: which way it points and how long it is, as a vector. The far end is at <code>pos + axis</code>. A wheel's axis points sideways, along z, so its round side touches the ground. For <code>rotate</code>: the line the thing turns around."),
+    ("angle", "How far <code>rotate</code> turns, always written <code>radians(degrees)</code>. A minus sign turns the other way."),
+    ("origin", "For <code>rotate</code>: a point to turn around instead of the shape's own pos, like a moon going around a planet."),
+    ("color", "<code>color.red</code>, <code>color.gray(0.4)</code>, or <code>vec(r, g, b)</code> with each number from 0 to 1."),
+    ("opacity", "How see-through: 1 is solid, 0 is invisible, 0.5 is glass."),
+    ("text", "The words a label, button, or wtext shows."),
+    ("height", "For a label: the size of its letters, in pixels."),
+    ("box", "For a label: <code>box=False</code> takes away the frame drawn around its words."),
+    ("yoffset", "For a label: how many pixels above its pos the words sit."),
+    ("bind", "The name of the function to run when a key, click, or widget happens. The name alone, no brackets."),
+    ("min", "The smallest number a slider can be set to."),
+    ("max", "The biggest number a slider can be set to."),
+    ("value", "The number a slider starts at."),
+    ("step", "How much a slider moves when it is nudged."),
+    ("choices", "The list of words a menu offers."),
+    ("normal", "For <code>scene.mouse.project</code>: which way the flat plane faces. <code>vec(0, 1, 0)</code> is a plane facing up, like a floor."),
+    ("point", "For <code>scene.mouse.project</code>: one point the flat plane passes through, which sets its height."),
+]
+
+
+def params_section(s):
+    codes = [c["code"] for c in s["chunks"]] + [c["code"] for c in s["brief"].get("cards", [])]
+    used = set()
+    for c in codes:
+        used |= set(re.findall(r"\b(\w+)=", c))
+    rows = [(k, v) for k, v in PARAMS if k in used]
+    if not rows:
+        return ""
+    b = ['<section><h2>Settings used on this page</h2>'
+         '<p>Every shape and widget is made by naming its settings, like '
+         '<code>box(pos=vec(0, 0.5, 0), size=vec(2, 1, 1))</code>. These are the '
+         'ones the programs on this page use. The name before the <code>=</code> is the '
+         'setting, and the value after it is what you give it.</p>'
+         '<table><tr><th>Setting</th><th>What it means</th></tr>']
+    for k, v in rows:
+        b.append('<tr><td><code>' + k + '</code></td><td>' + v + '</td></tr>')
+    b.append('</table></section>')
+    return "".join(b)
+
+
 # ---------------------------------------------------------------- session page
 
 def render_session(s, prev_s, next_s):
@@ -537,6 +586,8 @@ def render_session(s, prev_s, next_s):
     if s["reuse"]:
         b.append('<p><b>Deliberately re-used:</b> ' + html.escape(s["reuse"]) + '.</p>')
     b.append('<p class="note">' + s["reuse_note"] + '</p></section>')
+
+    b.append(params_section(s))
 
     op = s["opener"]
     b.append('<section class="opener"><p class="chunk-no">Opener &middot; '
